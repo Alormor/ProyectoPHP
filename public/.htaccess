@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /ProyectoPHP/public/
+    
+    # Permitir acceso a archivos y carpetas existentes
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redirigir todas las solicitudes al index.php
+    RewriteRule ^(.*)$ index.php?uri=$1 [QSA,L]
+</IfModule>
