@@ -50,7 +50,7 @@ class Pedido{
     public function getSubtotal(): float { return $this->subtotal; }
     public function getImpuestos(): float { return $this->impuestos; }
     public function getCosteTotal(): float { return $this->coste_total; }
-    public function getEstado(): EstadoPedido { return $this->estado; }
+    public function getEstado(): string { return $this->estado; }
     public function getFechaPedido(): DateTime { return $this->fecha_pedido; }
 
     // Setters
@@ -62,6 +62,6 @@ class Pedido{
     public function setSubtotal(float $subtotal): void { $this->subtotal = $subtotal; }
     public function setImpuestos(float $impuestos): void { $this->impuestos = $impuestos; }
     public function setCosteTotal(float $coste_total): void { $this->coste_total = $coste_total; }
-    public function setEstado(EstadoPedido $estado): void { $this->estado = $estado; }
+    public function setEstado(string $estado): void { $this->estado = $estado; }
     public function setFechaPedido(DateTime $fecha_pedido): void { $this->fecha_pedido = $fecha_pedido; }
 }
