@@ -14,7 +14,7 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
     );
 
     public static $prefixLengthsPsr4 = array (
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -22,28 +22,32 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
             'Symfony\\Component\\Routing\\' => 26,
             'Services\\' => 9,
         ),
-        'R' => 
+        'R' =>
         array (
             'Request\\' => 8,
             'Repositories\\' => 13,
         ),
-        'P' => 
+        'P' =>
         array (
             'PhpOption\\' => 10,
         ),
-        'M' => 
+        'M' =>
         array (
             'Models\\' => 7,
         ),
-        'G' => 
+        'G' =>
         array (
             'GrahamCampbell\\ResultType\\' => 26,
         ),
-        'D' => 
+        'E' =>
+        array (
+            'Enum\\' => 5,
+        ),
+        'D' =>
         array (
             'Dotenv\\' => 7,
         ),
-        'C' => 
+        'C' =>
         array (
             'Core\\' => 5,
             'Controllers\\' => 12,
@@ -51,55 +55,59 @@ class ComposerStaticInitd751713988987e9331980363e24189ce
     );
 
     public static $prefixDirsPsr4 = array (
-        'Symfony\\Polyfill\\Php80\\' => 
+        'Symfony\\Polyfill\\Php80\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Component\\Routing\\' => 
+        'Symfony\\Component\\Routing\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
         ),
-        'Services\\' => 
+        'Services\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/Services',
         ),
-        'Request\\' => 
+        'Request\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/Request',
         ),
-        'Repositories\\' => 
+        'Repositories\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/Repositories',
         ),
-        'PhpOption\\' => 
+        'PhpOption\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
         ),
-        'Models\\' => 
+        'Models\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/Models',
         ),
-        'GrahamCampbell\\ResultType\\' => 
+        'GrahamCampbell\\ResultType\\' =>
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
         ),
-        'Dotenv\\' => 
+        'Enum\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/src/Enum',
+        ),
+        'Dotenv\\' =>
         array (
             0 => __DIR__ . '/..' . '/vlucas/phpdotenv/src',
         ),
-        'Core\\' => 
+        'Core\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/Core',
         ),
-        'Controllers\\' => 
+        'Controllers\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/Controllers',
         ),

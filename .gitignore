@@ -2,3 +2,5 @@
 .switchboard
 
 .env
+
+vendor

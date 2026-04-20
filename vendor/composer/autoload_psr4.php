@@ -16,6 +16,7 @@ return array(
     'PhpOption\\' => array($vendorDir . '/phpoption/phpoption/src/PhpOption'),
     'Models\\' => array($baseDir . '/src/Models'),
     'GrahamCampbell\\ResultType\\' => array($vendorDir . '/graham-campbell/result-type/src'),
+    'Enum\\' => array($baseDir . '/src/Enum'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
     'Core\\' => array($baseDir . '/src/Core'),
     'Controllers\\' => array($baseDir . '/src/Controllers'),

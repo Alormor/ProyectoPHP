@@ -3,7 +3,7 @@
         'name' => 'cubo3/proyectophp',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '847a3862bd014da38277a813df1b66eba8573556',
+        'reference' => 'e929b2a680ef0f44dd2bff9b03f72a635025abdd',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'cubo3/proyectophp' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '847a3862bd014da38277a813df1b66eba8573556',
+            'reference' => 'e929b2a680ef0f44dd2bff9b03f72a635025abdd',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
