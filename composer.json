@@ -1,2 +1,22 @@
 {
+    "name": "cubo3/proyectophp",
+    "description": "Proyecto tienda",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Controllers\\": "src/Controllers/",
+            "Models\\": "src/Models/",
+            "Core\\": "src/Core/",
+            "Repositories\\": "src/Repositories/",
+            "Request\\": "src/Request",
+            "Services\\": "src/Services"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "vlucas/phpdotenv": "^5.6",
+        "ext-pdo": "*",
+        "symfony/routing": "^7.4",
+        "stefangabos/zebra_pagination": "^2.4"
+    }
 }
