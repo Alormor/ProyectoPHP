@@ -1,0 +1,70 @@
+body {
+    font-family: "Roboto Light";
+    background-color: #c5c5c1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+div {
+    font-size: 1rem;
+    background: linear-gradient(rgba(0, 51, 255, 0.2), rgba(0, 0, 0, 0.2)),
+    url("https://i.pinimg.com/736x/05/7f/93/057f93d928bb9291f0e3018d955c0f18.jpg");
+    text-align: center;
+    color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.8rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 20rem;
+}
+
+div::after {
+    content: ""; /* Obligatorio para los pseudoelementos */
+    position: absolute; /* Posiciona el pseudoelemento absolutamente con respecto a su contenedor */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://i.pinimg.com/736x/05/7f/93/057f93d928bb9291f0e3018d955c0f18.jpg");
+    opacity: 0.5; /* Ajusta este valor para controlar la intensidad de la imagen (de 0 a 1) */
+    z-index: -1; /* Posiciona el pseudoelemento detrás del contenido principal */
+}
+
+.error {
+    font-weight: bold;
+    color: #c60000;
+    background-color: #F5F5DC;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+}
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 0.1rem solid #F5F5DC;
+    border-radius: 0.4rem;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #F5F5DC;
+    color: #292627;
+    padding: 1rem 1.5rem;
+    border: 0.1rem solid #c60000;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover{
+    background-color: #292627;
+    color:#F5F5DC;
+    padding: 1rem 1.5rem;
+    border: 0.1rem solid #ff6200;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    width: 100%;
+}
