@@ -8,3 +8,4 @@ $router = new Router();
 $router->get('/', function() {
     echo 'Página de inicio';
 });
+

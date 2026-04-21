@@ -1,3 +1,3 @@
 <?php
 
-const BASE_URL = "/ProyectoPhp/Public/";
+const BASE_URL = "/ProyectoPhp/Public";

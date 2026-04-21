@@ -7,13 +7,14 @@ class Controller
     protected function view($file, $data = [])
     {
         extract($data);
-        $viewPath = dirname(__DIR__) . "/Views/{$file}.php";
+        $contentFile = dirname(__DIR__) . "/Views/{$file}.php";
         
-        if (!file_exists($viewPath)) {
+        if (!file_exists($contentFile)) {
             throw new \Exception("Vista no encontrada: {$file}");
         }
         
-        include $viewPath;
+        $layoutFile = dirname(__DIR__) . "/Views/layout/app.php";
+        include $layoutFile;
     }
     
     protected function json($data, $statusCode = 200)
