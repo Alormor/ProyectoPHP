@@ -10,10 +10,12 @@ class HomeController extends Controller
     {
         $data = [
             'title' => 'Bienvenido',
-            'message' => 'Bienvenido a tu aplicación'
+            'message' => 'Bienvenido a tu aplicación',
+            'base_url' => BASE_URL
         ];
         
         return $this->view('home', $data);
     }
 }
+
 ?>

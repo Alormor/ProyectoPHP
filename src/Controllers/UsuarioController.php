@@ -6,6 +6,7 @@ use Core\Controller;
 
 class UsuarioController extends Controller
 {
+
     public function index()
     {
         // Listar todos los usuarios
@@ -41,4 +42,3 @@ class UsuarioController extends Controller
         // Eliminar un usuario
     }
 }
-?>
