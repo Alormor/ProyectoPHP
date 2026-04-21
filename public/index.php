@@ -3,7 +3,6 @@ require_once '../vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
-// Cargar variables de entorno
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
@@ -13,6 +12,9 @@ session_start();
 // Configurar zona horaria
 date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'UTC');
 
-// Aquí va la lógica principal de tu aplicación
+include_once __DIR__ . '/../src/Views/layout/header.php';
+
 echo 'Bienvenido a tu aplicación PHP';
+
+include_once __DIR__ . '/../src/Views/layout/footer.php';
 ?>
