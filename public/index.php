@@ -15,4 +15,6 @@ date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'UTC');
 include_once __DIR__ . '/../src/Views/layout/header.php';
 
 echo 'Bienvenido a tu aplicación PHP';
+
+include_once __DIR__ . '/../src/Views/layout/footer.php';
 ?>

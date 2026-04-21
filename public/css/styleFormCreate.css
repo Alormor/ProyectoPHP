@@ -21,15 +21,15 @@ div {
 }
 
 div::after {
-    content: ""; /* Obligatorio para los pseudoelementos */
-    position: absolute; /* Posiciona el pseudoelemento absolutamente con respecto a su contenedor */
+    content: "";
+    position: absolute; 
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-image: url("https://i.pinimg.com/736x/05/7f/93/057f93d928bb9291f0e3018d955c0f18.jpg");
-    opacity: 0.5; /* Ajusta este valor para controlar la intensidad de la imagen (de 0 a 1) */
-    z-index: -1; /* Posiciona el pseudoelemento detrás del contenido principal */
+    opacity: 0.5;
+    z-index: -1; 
 }
 
 .error {
