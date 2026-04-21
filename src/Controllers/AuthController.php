@@ -120,6 +120,36 @@ class AuthController extends Controller
         return $this->view('usuarios/formlogin', $data);
     }
     
+    public function authenticate()
+    {
+        try {
+            $email = $_POST['email'] ?? '';
+            $password = $_POST['password'] ?? '';
+            
+            if (empty($email) || empty($password)) {
+                $_SESSION['errors'] = ['Email y contraseña son requeridos'];
+                $this->redirect('/login');
+                return;
+            }
+            
+            $usuarioService = new UsuarioService();
+            $usuario = $usuarioService->autenticar($email, $password);
+            
+            if ($usuario) {
+                $_SESSION['usuario'] = $usuario;
+                $_SESSION['success'] = 'Sesión iniciada correctamente';
+                $this->redirect('/');
+            } else {
+                $_SESSION['errors'] = ['Email o contraseña incorrectos'];
+                $this->redirect('/login');
+            }
+            
+        } catch (\Exception $e) {
+            $_SESSION['errors'] = ['Error: ' . $e->getMessage()];
+            $this->redirect('/login');
+        }
+    }
+    
     public function logout()
     {
         session_destroy();

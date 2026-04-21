@@ -89,8 +89,31 @@ class UsuarioService extends Service
     
     public function autenticar($email, $password)
     {
-        // TODO: Implementar autenticación
-        return false;
+        try {
+            // Buscar usuario por email
+            $usuario = $this->usuarioRepository->findByEmail($email);
+            
+            if (!$usuario) {
+                return false;
+            }
+            
+            // Verificar que contraseña coincida
+            if (!password_verify($password, $usuario['password'])) {
+                return false;
+            }
+            
+            // Retornar datos del usuario
+            return [
+                'id'        => $usuario['id'],
+                'nombre'    => $usuario['nombre'],
+                'apellidos' => $usuario['apellidos'],
+                'email'     => $usuario['email'],
+                'rol'       => $usuario['rol'],
+            ];
+            
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }
 ?>
