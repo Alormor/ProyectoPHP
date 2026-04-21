@@ -1,0 +1,130 @@
+<?php
+
+namespace Controllers;
+
+use Core\Controller;
+use Request\UserRequest;
+use Services\UsuarioService;
+
+class AuthController extends Controller
+{
+    public function register()
+    {
+        // Preparar datos para la vista
+        $data = [
+            'title' => 'Registro de Usuario',
+            'message' => 'Crear una nueva cuenta'
+        ];
+        
+        // Renderizar la vista del formulario de registro
+        return $this->view('usuarios/formregistro', $data);
+    }
+    
+    public function save()
+    {
+        try {
+            $userRequest = new UserRequest();
+            
+            if (!$userRequest->validate_and_sanitize()) {
+                $_SESSION['errors'] = $userRequest->getErrors();
+                header('Location: /registro');
+                exit();
+            }
+            
+            $userData = $userRequest->getSanitized();
+            $usuarioService = new UsuarioService();
+            $resultado = $usuarioService->registrar($userData);
+            
+            if ($resultado) {
+                $_SESSION['register'] = 'success';
+                $_SESSION['message'] = 'Usuario registrado correctamente. Por favor inicia sesión.';
+                header('Location: /login');
+                exit();
+            } else {
+                $_SESSION['errors'] = ['Error al registrar el usuario. Intenta de nuevo.'];
+                header('Location: /registro');
+                exit();
+            }
+            
+        } catch (\Exception $e) {
+            $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
+            header('Location: /registro');
+            exit();
+        }
+    }
+    
+    public function create()
+    {
+        // Solo los administradores pueden crear usuarios
+        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
+            $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
+            header('Location: /');
+            exit();
+        }
+        
+        $data = [
+            'title' => 'Crear Usuario',
+            'message' => 'Crear nueva cuenta de usuario',
+            'es_admin' => true
+        ];
+        
+        return $this->view('usuarios/formcreate', $data);
+    }
+    
+    public function store()
+    {
+        try {
+            // Verificar permisos de administrador
+            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
+                $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
+                header('Location: /');
+                exit();
+            }
+            
+            $userRequest = new UserRequest();
+            
+            if (!$userRequest->validate_and_sanitize('admin')) {
+                $_SESSION['errors'] = $userRequest->getErrors();
+                header('Location: /admin/usuarios/crear');
+                exit();
+            }
+            
+            $userData = $userRequest->getSanitized();
+            $usuarioService = new UsuarioService();
+            $resultado = $usuarioService->crear($userData, $_SESSION['usuario']['id']);
+            
+            if ($resultado) {
+                $_SESSION['success'] = 'Usuario creado correctamente.';
+                header('Location: /admin/usuarios');
+                exit();
+            } else {
+                $_SESSION['errors'] = ['Error al crear el usuario. Intenta de nuevo.'];
+                header('Location: /admin/usuarios/crear');
+                exit();
+            }
+            
+        } catch (\Exception $e) {
+            $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
+            header('Location: /admin/usuarios/crear');
+            exit();
+        }
+    }
+    
+    public function login()
+    {
+        $data = [
+            'title' => 'Iniciar Sesión',
+            'message' => 'Accede a tu cuenta'
+        ];
+        
+        return $this->view('usuarios/formlogin', $data);
+    }
+    
+    public function logout()
+    {
+        session_destroy();
+        header('Location: /');
+        exit();
+    }
+}
+?>

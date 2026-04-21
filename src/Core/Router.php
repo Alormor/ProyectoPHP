@@ -12,7 +12,7 @@ class Router
             'method' => $method,
             'path' => $path,
             'handler' => $handler
-        ];
+        ]; 
     }
     
     public function get($path, $handler)
