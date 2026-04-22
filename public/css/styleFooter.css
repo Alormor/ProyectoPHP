@@ -1,0 +1,23 @@
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    color: white;
+}
+
+.img-footer{
+    display: block;
+    margin-left: 0;
+    margin-right: auto;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+
+a:hover{
+    color: rgb(169, 168, 168);
+}
+

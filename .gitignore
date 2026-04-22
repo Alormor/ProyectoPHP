@@ -1,6 +1,4 @@
 .idea
 .switchboard
-
+vendor
 .env
-
-vendor/

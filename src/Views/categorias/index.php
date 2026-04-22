@@ -1,0 +1,3 @@
+<?php
+<!-- Vistas para categorías -->
+
