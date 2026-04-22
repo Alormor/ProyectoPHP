@@ -154,8 +154,8 @@ class UserRequest extends Request
         if (empty($this->sanitized['rol'])) {
             $this->errors[] = 'El rol es requerido';
         } else {
-            if (!in_array($this->sanitized['rol'], ['user', 'admin'])) {
-                $this->errors[] = 'El rol debe ser "user" o "admin"';
+            if (!in_array($this->sanitized['rol'], ['usuario', 'admin'])) {
+                $this->errors[] = 'El rol debe ser "usuario" o "admin"';
             }
         }
         

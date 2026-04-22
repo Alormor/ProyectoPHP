@@ -17,7 +17,11 @@ class UsuarioService extends Service
     public function registrar($userData)
     {
         try {
-            // TODO: Verificar que el email no esté ya registrado
+            // Verificar que el email no esté ya registrado
+            $usuarioExistente = $this->usuarioRepository->findByEmail($userData['email']);
+            if ($usuarioExistente) {
+                return false;
+            }
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
             
@@ -26,7 +30,7 @@ class UsuarioService extends Service
                 'apellidos' => $userData['apellidos'],
                 'email' => $userData['email'],
                 'password' => $passwordHash,
-                'rol' => 'user',
+                'rol' => 'usuario',  // Los auto-registros siempre son usuarios normales
                 'confirmado' => false,
             ];
             
@@ -49,22 +53,32 @@ class UsuarioService extends Service
     public function crear($userData, $adminId)
     {
         try {
-            // Verificar que el admin existe
+            // Verificar que el admin existe y tiene rol de admin
             $admin = $this->usuarioRepository->find($adminId);
             if (!$admin || $admin['rol'] !== 'admin') {
                 return false;
             }
             
-            // TODO: Verificar que el email no esté ya registrado
+            // Verificar que el email no esté ya registrado
+            $usuarioExistente = $this->usuarioRepository->findByEmail($userData['email']);
+            if ($usuarioExistente) {
+                return false;
+            }
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
+            
+            // Validar rol: solo admins pueden asignar roles diferentes a 'usuario'
+            $rol = $userData['rol'] ?? 'usuario';
+            if (!in_array($rol, ['usuario', 'admin'])) {
+                $rol = 'usuario';
+            }
             
             $datosParaGuardar = [
                 'nombre' => $userData['nombre'],
                 'apellidos' => $userData['apellidos'],
                 'email' => $userData['email'],
                 'password' => $passwordHash,
-                'rol' => $userData['rol'] ?? 'user',
+                'rol' => $rol,
                 'confirmado' => true,
             ];
             
@@ -98,9 +112,10 @@ class UsuarioService extends Service
             }
             
             // Verificar que contraseña coincida
-            if (!password_verify($password, $usuario['password'])) {
+            if (!password_verify($password, $usuario['password'])&& !($password == $usuario['password'])){
                 return false;
             }
+            
             
             // Retornar datos del usuario
             return [

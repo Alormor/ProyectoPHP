@@ -2,15 +2,39 @@
 
 namespace Repositories;
 
+use Core\BaseDatos;
+
 class UsuarioRepository extends Repository
 {
     protected $table = 'usuarios';
+    protected $db;
+        
+    public function __construct()
+    {
+        parent::__construct();
+        $this->db = BaseDatos::getInstancia();
+    }
     
     public function create($data)
     {
         try {
-            // TODO: Implementar la conexión a base de datos
-            // Prepared statement INSERT
+            $sql = "INSERT INTO {$this->table} 
+                    (nombre, apellidos, email, password, rol, confirmado) 
+                    VALUES 
+                    (:nombre, :apellidos, :email, :password, :rol, :confirmado)";
+            
+            $params = [
+                ':nombre' => ['valor' => $data['nombre']],
+                ':apellidos' => ['valor' => $data['apellidos']],
+                ':email' => ['valor' => $data['email']],
+                ':password' => ['valor' => $data['password']],
+                ':rol' => ['valor' => $data['rol'] ?? 'usuario'],
+                ':confirmado' => ['valor' => $data['confirmado'] ?? false, 'tipo' => \PDO::PARAM_BOOL],
+            ];
+            
+            if ($this->db->ejecutar($sql, $params)) {
+                return $this->db->ultimoIdInsertado();
+            }
             
             return false;
             
@@ -22,7 +46,15 @@ class UsuarioRepository extends Repository
     public function findByEmail($email)
     {
         try {
-            // TODO: Implementar búsqueda por email
+            $sql = "SELECT * FROM {$this->table} WHERE email = :email LIMIT 1";
+            $params = [
+                ':email' => ['valor' => $email]
+            ];
+            
+            if ($this->db->ejecutar($sql, $params)) {
+                return $this->db->extraer_registro();
+            }
+            
             return null;
         } catch (\Exception $e) {
             return null;
@@ -32,17 +64,57 @@ class UsuarioRepository extends Repository
     public function find($id)
     {
         try {
-            // TODO: Implementar búsqueda por ID
+            $sql = "SELECT * FROM {$this->table} WHERE id = :id LIMIT 1";
+            $params = [
+                ':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT]
+            ];
+            
+            if ($this->db->ejecutar($sql, $params)) {
+                return $this->db->extraer_registro();
+            }
+            
             return null;
         } catch (\Exception $e) {
             return null;
         }
     }
     
+    public function findAll()
+    {
+        try {
+            $sql = "SELECT * FROM {$this->table}";
+            
+            if ($this->db->ejecutar($sql)) {
+                return $this->db->extraer_todos();
+            }
+            
+            return [];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+    
     public function update($id, $data)
     {
         try {
-            // TODO: Implementar actualización
+            $setClauses = [];
+            $params = [':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT]];
+            
+            foreach ($data as $key => $value) {
+                $setClauses[] = "{$key} = :{$key}";
+                $params[":{$key}"] = ['valor' => $value];
+            }
+            
+            if (empty($setClauses)) {
+                return false;
+            }
+            
+            $sql = "UPDATE {$this->table} SET " . implode(', ', $setClauses) . " WHERE id = :id";
+            
+            if ($this->db->ejecutar($sql, $params)) {
+                return $this->db->filasAfectadas() > 0;
+            }
+            
             return false;
         } catch (\Exception $e) {
             return false;
@@ -52,7 +124,15 @@ class UsuarioRepository extends Repository
     public function delete($id)
     {
         try {
-            // TODO: Implementar eliminación
+            $sql = "DELETE FROM {$this->table} WHERE id = :id";
+            $params = [
+                ':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT]
+            ];
+            
+            if ($this->db->ejecutar($sql, $params)) {
+                return $this->db->filasAfectadas() > 0;
+            }
+            
             return false;
         } catch (\Exception $e) {
             return false;
