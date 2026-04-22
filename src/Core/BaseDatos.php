@@ -134,10 +134,11 @@ class BaseDatos
     {
         if (self::$instancia === null) {
             self::$instancia = new self(
-                $_ENV['DB_HOST'],
-                $_ENV['DB_USER'],
-                $_ENV['DB_PASS'],
-                $_ENV['DB_DATABASE']
+                DB_SERVIDOR,
+                DB_USUARIO,
+                DB_PASS,
+                DB_DATABASE,
+                DB_CHARSET
             );
         }
         return self::$instancia;
