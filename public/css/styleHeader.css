@@ -11,12 +11,10 @@
 }
 
 body {
-    margin: 0; /* Importante quitar el margen por defecto */
     min-height: 100vh;
     background-color: #222327;;
-    /* Flexbox */
     display: flex;
-    flex-direction: column; /* Para que los elementos se apilen verticalmente */
+    flex-direction: column;
 }
 
 .navigation {
@@ -71,64 +69,31 @@ body {
   opacity: 0;
   transform: translateY(-20px);
 }
-.navigation ul li a:hover .icon {
-  color: #0000FF;
-}
-.navigation ul li.active a .icon {
-  transform: translateY(45px);
-  color: #fff;
-}
-.navigation ul li.active a .text {
-  opacity: 1;
-  transform: translateY(-10px);
-}
-.navigation ul li:nth-child(1).active ~ .indicator {
-  transform: translateX(calc(70px * (1 - 1)));
-}
-.navigation ul li:nth-child(2).active ~ .indicator {
-  transform: translateX(calc(70px * (2 - 1)));
-}
-.navigation ul li:nth-child(3).active ~ .indicator {
-  transform: translateX(calc(70px * (3 - 1)));
-}
-.navigation ul li:nth-child(4).active ~ .indicator {
-  transform: translateX(calc(70px * (4 - 1)));
-}
 
-.navigation.active-clicked .indicator {
-  opacity: 1;
-}
-
-.indicator {
-  position: absolute;
-  top: 65%;
-  width: 70px;
-  height: 70px;
-  background: #29fd53;
-  border-radius: 50%;
-  border: 6px solid #222327;
-  transition: 0.5s;
-  z-index: 1;
+.navigation ul:hover .indicator {
   opacity: 0;
-  pointer-events: none;
 }
+
 .indicator::before, .indicator::after {
   content: "";
   position: absolute;
-  top: 65%;
+  top: 50%;
   width: 20px;
   height: 20px;
   background: transparent;
 }
-.indicator::before {
-  left: -22px;
-  border-top-right-radius: 20px;
-  box-shadow: 1px -10px 0 0 #222327;
-}
-.indicator::after {
-  right: -22px;
-  border-top-left-radius: 20px;
-  box-shadow: -1px -10px 0 0 #222327;
+
+.indicator {
+  position: absolute;
+  top: 35px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px solid #222327;
+  transition: 0.5s;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
 }
 
 img {
@@ -139,4 +104,86 @@ img {
     display: block;
     margin-left: auto;
     margin-right: auto;
+}
+
+.navigation ul li.active ~ .indicator {
+    opacity: 1;
+}
+
+.navigation ul li:nth-child(1).active ~ .indicator {
+  transform: translateX(0); 
+  background: #f44336; 
+}
+
+.navigation ul li:nth-child(2).active ~ .indicator { 
+  transform: translateX(70px); 
+  background: #ffa117; 
+}
+
+.navigation ul li:nth-child(3).active ~ .indicator { 
+  transform: translateX(140px); 
+  background: #2196f3; 
+}
+
+.navigation ul li:nth-child(4).active ~ .indicator { 
+  transform: translateX(210px); 
+  background: #b145e9; 
+}
+
+.navigation ul li.active a .icon {
+    transform: translateY(35px);
+    color: #fff;
+}
+
+.navigation ul li.active a .text {
+    opacity: 1;
+    transform: translateY(-15px);
+}
+
+.navigation ul li:hover ~ .indicator {
+    opacity: 1 !important;
+}
+
+.navigation ul li:nth-child(1):hover ~ .indicator { 
+  transform: translateX(0) !important; 
+  background: #f44336 !important; 
+}
+
+.navigation ul li:nth-child(2):hover ~ .indicator { 
+  transform: translateX(70px) !important; 
+  background: #ffa117 !important; 
+}
+
+.navigation ul li:nth-child(3):hover ~ .indicator { 
+  transform: translateX(140px) !important; 
+  background: #2196f3 !important; 
+}
+
+.navigation ul li:nth-child(4):hover ~ .indicator { 
+  transform: translateX(210px) !important; 
+  background: #b145e9 !important; 
+}
+
+.navigation ul li:hover a .icon {
+    transform: translateY(35px);
+    color: #fff;
+}
+
+.navigation ul li:hover a .text {
+    opacity: 1;
+    transform: translateY(-15px);
+}
+
+/* --- RESET AL HACER HOVER EN EL MENÚ --- */
+
+/* Cuando el mouse entra en el UL, el que estaba 'active' sube a su posición inicial 
+   A MENOS que el mouse esté justo encima de él */
+.navigation ul:hover li.active:not(:hover) a .icon {
+    transform: translateY(0);
+    color: #222327;
+}
+
+.navigation ul:hover li.active:not(:hover) a .text {
+    opacity: 0;
+    transform: translateY(-20px);
 }
