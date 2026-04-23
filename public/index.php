@@ -2,8 +2,9 @@
 require_once '../vendor/autoload.php';
 
 use Core\Application;
+use Dotenv\Dotenv;
 
-$dotenv = \Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
 // Definir BASE_URL

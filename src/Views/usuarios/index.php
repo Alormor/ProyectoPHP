@@ -1,3 +1,3 @@
 <?php
-<!-- Vistas para usuarios -->
+//<!-- Vistas para usuarios -->
 ?>

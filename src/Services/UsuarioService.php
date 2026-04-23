@@ -3,40 +3,46 @@
 namespace Services;
 
 use Repositories\UsuarioRepository;
+use Core\BaseDatos;
+use Models\Usuario;
 
 class UsuarioService extends Service
 {
-    private $usuarioRepository;
-    
-    public function __construct()
-    {
-        parent::__construct();
-        $this->usuarioRepository = new UsuarioRepository();
+    private UsuarioRepository $repository;
+    public function __construct(
+    private readonly BaseDatos $conexion
+    ){
+        $this->repository = new UsuarioRepository($this->conexion);
     }
+
+    
+    
     
     public function registrar($userData)
     {
         try {
-            // TODO: Verificar que el email no esté ya registrado
+            $usuario = $this->repository->findByEmail($userData['email']);
+            
+            if ($usuario) {
+                return false;
+            }
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
             
-            $datosParaGuardar = [
-                'nombre' => $userData['nombre'],
-                'apellidos' => $userData['apellidos'],
+            $nuevoUsuario = Usuario::fromArray([
                 'email' => $userData['email'],
                 'password' => $passwordHash,
-                'rol' => 'user',
+                'rol' => 'usuario',
                 'confirmado' => false,
-            ];
+            ]);
             
             // TODO: Generar token de confirmación de email
             
-            $usuarioId = $this->usuarioRepository->create($datosParaGuardar);
+            $exito = $this->repository->create($nuevoUsuario);         
             
-            if ($usuarioId) {
+            if ($exito) {
                 // TODO: Enviar email de bienvenida
-                return $usuarioId;
+                return $nuevoUsuario->getId();
             }
             
             return false;
@@ -50,7 +56,7 @@ class UsuarioService extends Service
     {
         try {
             // Verificar que el admin existe
-            $admin = $this->usuarioRepository->find($adminId);
+            $admin = $this->repository->find($adminId);
             if (!$admin || $admin['rol'] !== 'admin') {
                 return false;
             }
@@ -59,19 +65,17 @@ class UsuarioService extends Service
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
             
-            $datosParaGuardar = [
-                'nombre' => $userData['nombre'],
-                'apellidos' => $userData['apellidos'],
+            $nuevoUsuario = Usuario::fromArray([
                 'email' => $userData['email'],
                 'password' => $passwordHash,
-                'rol' => $userData['rol'] ?? 'user',
+                'rol' => $userData['rol'] ?? 'usuario',
                 'confirmado' => true,
-            ];
+            ]);
             
-            $usuarioId = $this->usuarioRepository->create($datosParaGuardar);
+            $exito = $this->repository->create($nuevoUsuario);
             
-            if ($usuarioId) {
-                return $usuarioId;
+            if ($exito) {
+                return $nuevoUsuario->getId();
             }
             
             return false;
@@ -81,34 +85,28 @@ class UsuarioService extends Service
         }
     }
     
-    public function buscarPorEmail($email)
-    {
-        // TODO: Implementar búsqueda de usuario por email
-        return null;
-    }
-    
     public function autenticar($email, $password)
     {
         try {
             // Buscar usuario por email
-            $usuario = $this->usuarioRepository->findByEmail($email);
+            $usuario = $this->repository->findByEmail($email);
             
             if (!$usuario) {
                 return false;
             }
             
             // Verificar que contraseña coincida
-            if (!password_verify($password, $usuario['password'])) {
+            if (!password_verify($password, $usuario->getPassword())) {
                 return false;
             }
             
             // Retornar datos del usuario
             return [
-                'id'        => $usuario['id'],
-                'nombre'    => $usuario['nombre'],
-                'apellidos' => $usuario['apellidos'],
-                'email'     => $usuario['email'],
-                'rol'       => $usuario['rol'],
+                'id'        => $usuario->getId(),
+                'nombre'    => $usuario->getNombre(),
+                'apellidos' => $usuario->getApellidos(),
+                'email'     => $usuario->getEmail(),
+                'rol'       => $usuario->getRol(),
             ];
             
         } catch (\Exception $e) {

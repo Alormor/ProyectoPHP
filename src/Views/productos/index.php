@@ -1,3 +1,3 @@
 <?php
-<!-- Vistas para productos -->
+//<!-- Vistas para productos -->
 ?>

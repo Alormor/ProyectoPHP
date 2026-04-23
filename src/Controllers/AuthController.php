@@ -2,6 +2,7 @@
 
 namespace Controllers;
 
+use Core\BaseDatos;
 use Core\Controller;
 use Request\UserRequest;
 use Services\UsuarioService;
@@ -17,7 +18,7 @@ class AuthController extends Controller
         ];
         
         // Renderizar la vista del formulario de registro
-        return $this->view('usuarios/formregistro', $data);
+        return $this->view('usuarios/formRegistro', $data);
     }
     
     public function save()
@@ -27,28 +28,28 @@ class AuthController extends Controller
             
             if (!$userRequest->validate_and_sanitize()) {
                 $_SESSION['errors'] = $userRequest->getErrors();
-                header('Location: /registro');
+                header('Location: ' . BASE_URL . '/registro');
                 exit();
             }
             
             $userData = $userRequest->getSanitized();
-            $usuarioService = new UsuarioService();
+            $usuarioService = new UsuarioService(BaseDatos::getInstancia());
             $resultado = $usuarioService->registrar($userData);
             
             if ($resultado) {
                 $_SESSION['register'] = 'success';
                 $_SESSION['message'] = 'Usuario registrado correctamente. Por favor inicia sesión.';
-                header('Location: /login');
+                header('Location: ' . BASE_URL . '/login');
                 exit();
             } else {
                 $_SESSION['errors'] = ['Error al registrar el usuario. Intenta de nuevo.'];
-                header('Location: /registro');
+                header('Location: ' . BASE_URL . '/registro');
                 exit();
             }
             
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            header('Location: /registro');
+            header('Location: ' . BASE_URL . '/registro');
             exit();
         }
     }
@@ -68,7 +69,7 @@ class AuthController extends Controller
             'es_admin' => true
         ];
         
-        return $this->view('usuarios/formcreate', $data);
+        return $this->view('usuarios/formCreate', $data);
     }
     
     public function store()
@@ -90,7 +91,7 @@ class AuthController extends Controller
             }
             
             $userData = $userRequest->getSanitized();
-            $usuarioService = new UsuarioService();
+            $usuarioService = new UsuarioService(BaseDatos::getInstancia());
             $resultado = $usuarioService->crear($userData, $_SESSION['usuario']['id']);
             
             if ($resultado) {
@@ -117,7 +118,7 @@ class AuthController extends Controller
             'message' => 'Accede a tu cuenta'
         ];
         
-        return $this->view('usuarios/formlogin', $data);
+        return $this->view('usuarios/formLogin', $data);
     }
     
     public function authenticate()
@@ -132,7 +133,7 @@ class AuthController extends Controller
                 return;
             }
             
-            $usuarioService = new UsuarioService();
+            $usuarioService = new UsuarioService(BaseDatos::getInstancia());
             $usuario = $usuarioService->autenticar($email, $password);
             
             if ($usuario) {
