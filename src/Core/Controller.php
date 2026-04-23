@@ -10,13 +10,23 @@ class Controller
         $contentFile = dirname(__DIR__) . "/Views/{$file}.php";
         
         if (!file_exists($contentFile)) {
-            throw new \Exception("Vista no encontrada: {$file}");
+            http_response_code(404);
+            $data['code'] = 404;
+            $data['message'] = 'Página no encontrada';
+            extract($data);
+            $contentFile = dirname(__DIR__) . "/Views/errors/Error.php";
+            
+            if (!file_exists($contentFile)) {
+                return "404 - Página no encontrada";
+            }
         }
         
         $layoutFile = dirname(__DIR__) . "/Views/layout/app.php";
+        
+        ob_start();
         include $layoutFile;
+        return ob_get_clean();
     }
-    
     protected function json($data, $statusCode = 200)
     {
         header('Content-Type: application/json');

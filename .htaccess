@@ -2,14 +2,16 @@
     RewriteEngine On
     RewriteBase /ProyectoPHP/
     
-    # Evitar acceso directo a archivos sensibles
+    # No reescribir archivos o directorios que existan
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Si la solicitud no es para /public, redirigir a public/
+    RewriteRule ^(?!public/)(.*)$ public/$1 [L]
+    
+    # Evitar acceso directo a carpetas sensibles
     RewriteRule ^vendor/ - [F,L]
     RewriteRule ^config/ - [F,L]
     RewriteRule ^src/ - [F,L]
-    RewriteRule ^\.env$ - [F,L]
-    
-    # Redirigir todas las solicitudes a public
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ public/index.php [QSA,L]
 </IfModule>
+

@@ -14,13 +14,35 @@ class UsuarioController extends Controller
     
     public function show($id)
     {
-        // Mostrar detalles de un usuario
+        $data = [
+            'title' => 'Detalle de Usuario',
+            'message' => "Mostrando detalles del usuario con ID: $id",
+            'showHeader' => true,
+            'showFooter' => true
+        ];
+        return $this->view('usuarios/userprofile', $data);
     }
     
     public function create()
     {
-        // Mostrar formulario de creación
+        // Solo los administradores pueden crear usuarios
+        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
+            $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
+            $this->redirect('/');
+            return;
+        }
+        
+        $data = [
+            'title' => 'Crear Usuario',
+            'message' => 'Crear nueva cuenta de usuario',
+            'es_admin' => true,
+            'showHeader' => true,
+            'showFooter' => true
+        ];
+        
+        return $this->view('usuarios/formcreate', $data);
     }
+    
     
     public function store()
     {
