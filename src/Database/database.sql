@@ -14,8 +14,8 @@ USE tienda;
 -- ------------------------------------------------------------
 CREATE TABLE `usuarios` (
     `id`          BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
-    `nombre`      VARCHAR(60)      NOT NULL,
-    `apellidos`   VARCHAR(60)      NOT NULL,
+    `nombre`      VARCHAR(60)      ,
+    `apellidos`   VARCHAR(60)      ,
     `email`       VARCHAR(255)     NOT NULL,
     `password`    VARCHAR(255)     NOT NULL,   -- hash 
     `rol`         ENUM('admin','usuario') NOT NULL DEFAULT 'usuario',
@@ -125,6 +125,7 @@ INSERT INTO `usuarios` (
     `nombre`, `apellidos`, `email`, `password`, `rol`, `confirmado`
 ) VALUES
 -- Administrador
+-- contraseña= admin123456
 (
     'Juan',
     'García López',
