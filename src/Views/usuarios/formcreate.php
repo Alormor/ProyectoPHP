@@ -15,13 +15,13 @@
     <form method="POST" action="<?php echo BASE_URL; ?>/admin/usuarios">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required 
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre"  
                    value="<?php echo htmlspecialchars($_POST['nombre'] ?? ''); ?>">
         </div>
         
         <div class="form-group">
             <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos" required 
+            <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos"  
                    value="<?php echo htmlspecialchars($_POST['apellidos'] ?? ''); ?>">
         </div>
         

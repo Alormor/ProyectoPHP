@@ -45,5 +45,11 @@ class ErrorController extends Controller
         
         return $this->view('errors/500', $data);
     }
+
+    public static function show_error404(): string
+    {
+        $controller = new self();
+        return $controller->notFound();
+    }
 }
 
