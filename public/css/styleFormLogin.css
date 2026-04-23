@@ -1,6 +1,5 @@
-body {
+.login{
     font-family: "Roboto Light";
-    background-color: #c5c5c1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,7 +7,7 @@ body {
     margin: 0;
 }
 
-div {
+.container {
     font-size: 1rem;
     background: linear-gradient(rgba(0, 51, 255, 0.2), rgba(0, 0, 0, 0.2)),
     url("https://i.pinimg.com/736x/05/7f/93/057f93d928bb9291f0e3018d955c0f18.jpg");
@@ -20,7 +19,7 @@ div {
     width: 20rem;
 }
 
-div::after {
+.container::after {
     content: "";
     position: absolute; 
     top: 0;
@@ -40,7 +39,7 @@ div::after {
     padding: 0.5rem;
 }
 
-input[type="text"], input[type="password"] {
+.input-email[type="email"], .input-passw[type="password"] {
     width: 100%;
     padding: 0.5rem;
     margin-bottom: 1rem;
@@ -49,7 +48,7 @@ input[type="text"], input[type="password"] {
     box-sizing: border-box;
 }
 
-button {
+.btn-acceso{
     background-color: #F5F5DC;
     color: #292627;
     padding: 1rem 1.5rem;
@@ -59,7 +58,7 @@ button {
     width: 100%;
 }
 
-button:hover{
+.btn-acceso:hover{
     background-color: #292627;
     color:#F5F5DC;
     padding: 1rem 1.5rem;
@@ -67,4 +66,24 @@ button:hover{
     border-radius: 0.4rem;
     cursor: pointer;
     width: 100%;
+}
+
+ .volver-inicio {
+    background-color: #F5F5DC;
+    color: #292627;
+    padding: 1rem 1.5rem;
+    border: 0.1rem solid #c60000;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    width: 50%;
+ }
+
+.volver-inicio:hover{
+    background-color: #292627;
+    color:#F5F5DC;
+    padding: 1rem 1.5rem;
+    border: 0.1rem solid #ff6200;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    width: 52%;
 }

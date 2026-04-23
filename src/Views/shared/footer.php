@@ -1,10 +1,10 @@
-<footer>
+<footer class="footer">
     <img class="img-footer" src="<?php echo BASE_URL; ?>/images/logo.png" alt="Imagen logo cubo de rubik">
-    <div>
-        <ul>
-            <li><a href="#">Contacto</a></li>
-            <li><a href="#">Ubicaci&oacute;n</a></li>
-            <li><a href="#">Sobre Nosotros</a></li>
+    <div class="div-footer">
+        <ul class="ul-footer">
+            <li class="li-enlace"><a href="#">Contacto</a></li>
+            <li class="li-enlace"><a href="#">Ubicaci&oacute;n</a></li>
+            <li class="li-enlace"><a href="#">Sobre Nosotros</a></li>
             <li>
                 <p>Redes Sociales</p>
                 <span class="icon">

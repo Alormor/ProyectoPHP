@@ -1,3 +1,4 @@
+@import "styleVariables.css";
 * {
     margin: 0;
     padding: 0;
@@ -6,28 +7,34 @@
 }
 
 body{
-    color: white;
+    color: var(--color-text-principal);
 }
 
 footer {
     padding: 40px 5%;
     display: flex;
-    flex-direction: column; /* Móvil: Todo centrado y apilado */
+    flex-direction: column;
     align-items: center;
     gap: 30px;
     font-size: 1.1rem;
+    border-top: 4px solid var(--tertiary-color);
+    border-image: linear-gradient(to right, transparent, #ccc, transparent) 1 ;
 }
 
 .img-footer{
     display: block;
     margin-left: 0;
     margin-right: auto;
+    width: 150px;
+    height: auto;
+    border-radius: 50%;
+    border: 2px solid var(--tertiary-color);
 }
 
-footer div ul {
+.ul-footer{
     list-style: none;
     display: flex;
-    flex-direction: column; /* Móvil: Enlaces en vertical */
+    flex-direction: column;
     align-items: center;
     gap: 20px;
 }
@@ -35,14 +42,25 @@ footer div ul {
 footer a {
     color: white;
     text-decoration: none;
-    transition: color 0.3s ease;
 }
 
 footer a:hover {
     color: #979797;
 }
 
-li:last-child {
+.li-enlace{
+    background-image: linear-gradient(white, white);
+    background-repeat: no-repeat;
+    background-position: bottom left;
+    background-size: 0% 2px;
+    transition: background-size 0.3s ease;
+}
+
+.li-enlace:hover{
+    background-size: 100% 2px;
+}
+
+footer .div-footer .ul-footer li:last-child {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -70,19 +88,19 @@ li:last-child {
         align-items: center;
     }
 
-    footer div ul {
+    .ul-footer {
         flex-direction: row;
         align-items: center;
         gap: 40px;
     }
 
-    li:last-child {
+    footer .div-footer .ul-footer li:last-child {
         align-items: flex-start;
     }
 }
 
 @media (min-width: 992px) {
-    li {
+    footer .div-footer .ul-footer li {
         grid-template-columns: repeat(4, 1fr);
     }
 }

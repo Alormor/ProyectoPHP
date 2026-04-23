@@ -3,18 +3,22 @@
     justify-content: center;
     align-items: center;
 }*/
+@import "styleVariables.css";
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Courier New", Courier, monospace;
 }
 
 body {
     min-height: 100vh;
-    background-color: #222327;;
+    background-color: var(--fondo);
     display: flex;
     flex-direction: column;
+}
+.letra-logo{
+  font-family: "Skranji", system-ui;
+  text-align: center;
 }
 
 .navigation {
@@ -112,22 +116,22 @@ img {
 
 .navigation ul li:nth-child(1).active ~ .indicator {
   transform: translateX(0); 
-  background: #f44336; 
+  background: var(--quinary-color); 
 }
 
 .navigation ul li:nth-child(2).active ~ .indicator { 
   transform: translateX(70px); 
-  background: #ffa117; 
+  background: var(--quaternary-color); 
 }
 
 .navigation ul li:nth-child(3).active ~ .indicator { 
   transform: translateX(140px); 
-  background: #2196f3; 
+  background: var(--primary-color); 
 }
 
 .navigation ul li:nth-child(4).active ~ .indicator { 
   transform: translateX(210px); 
-  background: #b145e9; 
+  background: var(--tertiary-color); 
 }
 
 .navigation ul li.active a .icon {
@@ -146,22 +150,22 @@ img {
 
 .navigation ul li:nth-child(1):hover ~ .indicator { 
   transform: translateX(0) !important; 
-  background: #f44336 !important; 
+  background: var(--quinary-color) !important; 
 }
 
 .navigation ul li:nth-child(2):hover ~ .indicator { 
   transform: translateX(70px) !important; 
-  background: #ffa117 !important; 
+  background: var(--quaternary-color) !important; 
 }
 
 .navigation ul li:nth-child(3):hover ~ .indicator { 
   transform: translateX(140px) !important; 
-  background: #2196f3 !important; 
+  background: var(--primary-color) !important; 
 }
 
 .navigation ul li:nth-child(4):hover ~ .indicator { 
   transform: translateX(210px) !important; 
-  background: #b145e9 !important; 
+  background: var(--tertiary-color) !important; 
 }
 
 .navigation ul li:hover a .icon {

@@ -1,8 +1,10 @@
-<div><img src="<?php echo BASE_URL; ?>/images/letras-logo.png" alt="Logo"></div>
+<div>
+    <h1 class="letra-logo">Cubos</h1>
+</div>
 <div class="navigation">
     <ul>
         <li class="list">
-            <a href="#">
+            <a href="<?php echo BASE_URL; ?>">
                 <span class="icon">
                     <ion-icon name="home-outline"></ion-icon>
                 </span>
