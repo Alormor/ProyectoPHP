@@ -56,25 +56,7 @@ class AuthController extends Controller
         }
     }
     
-    public function create()
-    {
-        // Solo los administradores pueden crear usuarios
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-            $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
-            $this->redirect('/');
-            return;
-        }
-        
-        $data = [
-            'title' => 'Crear Usuario',
-            'message' => 'Crear nueva cuenta de usuario',
-            'es_admin' => true,
-            'showHeader' => false,
-            'showFooter' => false
-        ];
-        
-        return $this->view('usuarios/formCreate', $data);
-    }
+
     
     public function store()
     {

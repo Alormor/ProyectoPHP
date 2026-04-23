@@ -8,7 +8,14 @@ class ProductoController extends Controller
 {
     public function index()
     {
-        // Listar todos los productos
+        $data=[
+            'title' => 'Listado de Productos',
+            'message' => 'Mostrando todos los productos disponibles',
+            'showHeader' => true,
+            'showFooter' => true
+        ];
+        
+        return $this->view('productos/index', $data);
     }
     
     public function show($id)
@@ -45,5 +52,6 @@ class ProductoController extends Controller
     {
         // Buscar productos por término
     }
+
+
 }
-?>

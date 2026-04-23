@@ -2,7 +2,7 @@
 <div class="navigation">
     <ul>
         <li class="list">
-            <a href="#">
+            <a href="<?php echo BASE_URL; ?>/">
                 <span class="icon">
                     <ion-icon name="home-outline"></ion-icon>
                 </span>
@@ -11,7 +11,7 @@
         </li>
 
         <li class="list" >
-             <a href="#">
+             <a href="<?php echo BASE_URL; ?>/usuarios/userprofile">
                 <span class="icon">
                     <ion-icon name="person-outline"></ion-icon>
                 </span>
