@@ -1,6 +1,6 @@
 <?php
 
-const BASE_URL = "/ProyectoPhp/Public";
+const BASE_URL = "/ProyectoPHP/public";
 
 // Configuración de Base de Datos (valores por defecto)
 const DB_SERVIDOR = 'localhost';
