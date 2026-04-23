@@ -7,8 +7,8 @@ use Dotenv\Dotenv;
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
-// Definir BASE_URL
-define('BASE_URL', $_ENV['BASE_URL'] ?? 'http://localhost/ProyectoPHP');
+// Cargar configuración (define constantes de BD)
+require_once '../config/config.php';
 
 // Iniciar sesión
 if (session_status() === PHP_SESSION_NONE) {

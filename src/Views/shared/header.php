@@ -10,7 +10,7 @@
             </a>
         </li>
 
-        <li class="list" data-color="#FFFF00">
+        <li class="list" >
              <a href="#">
                 <span class="icon">
                     <ion-icon name="person-outline"></ion-icon>
@@ -19,7 +19,7 @@
              </a>
         </li>
 
-        <li class="list" data-color="#FF8000">
+        <li class="list">
              <a href="#">
                 <span class="icon">
                     <ion-icon name="cart-outline"></ion-icon>
@@ -28,7 +28,7 @@
              </a>
         </li>
 
-        <li class="list" data-color="#f44336">
+        <li class="list">
              <a href="#">
                 <span class="icon">
                     <ion-icon name="heart-outline"></ion-icon>

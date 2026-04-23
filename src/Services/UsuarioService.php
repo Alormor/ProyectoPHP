@@ -61,7 +61,11 @@ class UsuarioService extends Service
                 return false;
             }
             
-            // TODO: Verificar que el email no esté ya registrado
+            // Verificar que el email no esté ya registrado
+            $usuarioExistente = $this->repository->findByEmail($userData['email']);
+            if ($usuarioExistente) {
+                return false;
+            }
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
             
@@ -99,6 +103,7 @@ class UsuarioService extends Service
             if (!password_verify($password, $usuario->getPassword())) {
                 return false;
             }
+            
             
             // Retornar datos del usuario
             return [

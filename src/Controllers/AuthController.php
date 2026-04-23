@@ -14,7 +14,9 @@ class AuthController extends Controller
         // Preparar datos para la vista
         $data = [
             'title' => 'Registro de Usuario',
-            'message' => 'Crear una nueva cuenta'
+            'message' => 'Crear una nueva cuenta',
+            'showHeader' => false,
+            'showFooter' => false
         ];
         
         // Renderizar la vista del formulario de registro
@@ -59,14 +61,16 @@ class AuthController extends Controller
         // Solo los administradores pueden crear usuarios
         if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
             $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
-            header('Location: /');
-            exit();
+            $this->redirect('/');
+            return;
         }
         
         $data = [
             'title' => 'Crear Usuario',
             'message' => 'Crear nueva cuenta de usuario',
-            'es_admin' => true
+            'es_admin' => true,
+            'showHeader' => false,
+            'showFooter' => false
         ];
         
         return $this->view('usuarios/formCreate', $data);
@@ -78,16 +82,16 @@ class AuthController extends Controller
             // Verificar permisos de administrador
             if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
                 $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
-                header('Location: /');
-                exit();
+                $this->redirect('/');
+                return;
             }
             
             $userRequest = new UserRequest();
             
             if (!$userRequest->validate_and_sanitize('admin')) {
                 $_SESSION['errors'] = $userRequest->getErrors();
-                header('Location: /admin/usuarios/crear');
-                exit();
+                $this->redirect('/admin/usuarios/crear');
+                return;
             }
             
             $userData = $userRequest->getSanitized();
@@ -96,18 +100,18 @@ class AuthController extends Controller
             
             if ($resultado) {
                 $_SESSION['success'] = 'Usuario creado correctamente.';
-                header('Location: /admin/usuarios');
-                exit();
+                $this->redirect('/admin/usuarios');
+                return;
             } else {
                 $_SESSION['errors'] = ['Error al crear el usuario. Intenta de nuevo.'];
-                header('Location: /admin/usuarios/crear');
-                exit();
+                $this->redirect('/admin/usuarios/crear');
+                return;
             }
             
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            header('Location: /admin/usuarios/crear');
-            exit();
+            $this->redirect('/admin/usuarios/crear');
+            return;
         }
     }
     
@@ -115,7 +119,9 @@ class AuthController extends Controller
     {
         $data = [
             'title' => 'Iniciar Sesión',
-            'message' => 'Accede a tu cuenta'
+            'message' => 'Accede a tu cuenta',
+            'showHeader' => false,
+            'showFooter' => false
         ];
         
         return $this->view('usuarios/formLogin', $data);
@@ -136,6 +142,7 @@ class AuthController extends Controller
             $usuarioService = new UsuarioService(BaseDatos::getInstancia());
             $usuario = $usuarioService->autenticar($email, $password);
             
+            
             if ($usuario) {
                 $_SESSION['usuario'] = $usuario;
                 $_SESSION['success'] = 'Sesión iniciada correctamente';
@@ -154,8 +161,8 @@ class AuthController extends Controller
     public function logout()
     {
         session_destroy();
-        header('Location: /');
-        exit();
+        $this->redirect('/');
+        return;
     }
 }
 ?>
