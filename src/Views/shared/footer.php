@@ -1,5 +1,5 @@
 <footer>
-    <img class="img-footer" src="<?php echo BASE_URL; ?>/images/logo.png" alt="Imagen logo cubo de rubik">
+    <img class="img-footer" src="<?php echo $_ENV['BASE_URL']; ?>/images/logo.png" alt="Imagen logo cubo de rubik">
     <div>
         <ul>
             <li><a href="#">Contacto</a></li>

@@ -38,27 +38,30 @@ class Controller
     protected function redirect($path)
     {
         if (strpos($path, 'http') !== 0 && strpos($path, '/') === 0) {
-            $path = BASE_URL . $path;
+            $baseUrl = $_ENV['BASE_URL'] ?? 'http://localhost';
+            $path = $baseUrl . $path;
         }
         header("Location: {$path}");
         exit;
     }
-    
+
     protected function url($path = '')
     {
+        $baseUrl = $_ENV['BASE_URL'] ?? 'http://localhost';
+
         if (empty($path)) {
-            return BASE_URL;
+            return $baseUrl;
         }
-        
+
         if (strpos($path, 'http') === 0) {
             return $path;
         }
-        
+
         if (strpos($path, '/') !== 0) {
             $path = '/' . $path;
         }
-        
-        return BASE_URL . $path;
+
+        return $baseUrl . $path;
     }
 }
 
