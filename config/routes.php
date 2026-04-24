@@ -42,6 +42,11 @@ Router::add('GET', '/logout', function() {
 });
 
 // Rutas admin
+Router::add('GET', '/admin/usuarios', function() {
+    $controller = new \Controllers\UsuarioController();
+    return $controller->index();
+});
+
 Router::add('GET', '/admin/usuarios/crear', function() {
     $controller = new \Controllers\UsuarioController();
     return $controller->create();
@@ -50,6 +55,37 @@ Router::add('GET', '/admin/usuarios/crear', function() {
 Router::add('POST', '/admin/usuarios', function() {
     $controller = new \Controllers\UsuarioController();
     return $controller->store();
+});
+
+Router::add('GET', '/admin/usuarios/:id/editar', function($id) {
+    $controller = new \Controllers\UsuarioController();
+    return $controller->edit($id);
+});
+
+Router::add('POST', '/admin/usuarios/:id', function($id) {
+    $controller = new \Controllers\UsuarioController();
+    return $controller->update($id);
+});
+
+Router::add('GET', '/admin/usuarios/:id/confirmar-eliminacion', function($id) {
+    $controller = new \Controllers\UsuarioController();
+    return $controller->confirmDelete($id);
+});
+
+Router::add('POST', '/admin/usuarios/:id/eliminar', function($id) {
+    $controller = new \Controllers\UsuarioController();
+    return $controller->delete($id);
+});
+
+// Rutas para perfil de usuario
+Router::add('GET', '/profile/:id/confirmar-eliminacion', function($id) {
+    $controller = new \Controllers\UsuarioController();
+    return $controller->confirmDeleteProfile($id);
+});
+
+Router::add('POST', '/profile/:id/eliminar', function($id) {
+    $controller = new \Controllers\UsuarioController();
+    return $controller->deleteProfile($id);
 });
 
 // Rutas de usuarios

@@ -15,13 +15,13 @@
             <p><?php echo htmlspecialchars($_SESSION['success']); ?></p>
         </div>
         <?php unset($_SESSION['success']); ?>
-    <?php endif; ?>
-    
-    <form method="POST" action="<?php echo BASE_URL; ?>/login">
+    <?php endif; ?> 
+        
+    <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/login">
         <input type="email" name="email" placeholder="Email" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
         <input type="password" name="password" placeholder="Contraseña" required>
         <button type="submit">Acceder</button>
     </form>
-    
-    <p>¿No tienes cuenta? <a href="<?php echo BASE_URL; ?>/registro">Regístrate aquí</a></p>
+
+    <p>¿No tienes cuenta? <a href="<?php echo $_ENV['BASE_URL']; ?>/registro">Regístrate aquí</a></p>
 </div>

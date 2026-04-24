@@ -18,12 +18,16 @@ class UsuarioRepository extends Repository
     public function create(Usuario $usuario)
     {
         try{
-            $sql = "INSERT INTO usuarios (email, password) 
-            VALUES (:email, :password)";
+            $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol, confirmado)
+            VALUES (:nombre, :apellidos, :email, :password, :rol, :confirmado)";
 
             $param = [
+                ":nombre" => ['valor' => $usuario->getNombre()],
+                ":apellidos" => ['valor' => $usuario->getApellidos()],
                 ":email" => ['valor' => $usuario->getEmail()],
                 ":password" => ['valor' => $usuario->getPassword()],
+                ":rol" => ['valor' => $usuario->getRol()],
+                ":confirmado" => ['valor' => $usuario->isConfirmado(), 'tipo' => \PDO::PARAM_BOOL],
             ];
 
             $exito = $this->conexion->ejecutar($sql, $param);
@@ -74,59 +78,59 @@ class UsuarioRepository extends Repository
             $params = [
                 ':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT]
             ];
-            
-            if ($this->db->ejecutar($sql, $params)) {
-                return $this->db->extraer_registro();
+
+            if ($this->conexion->ejecutar($sql, $params)) {
+                return $this->conexion->extraer_registro();
             }
-            
+
             return null;
         } catch (\Exception $e) {
             return null;
         }
     }
-    
+
     public function findAll()
     {
         try {
             $sql = "SELECT * FROM {$this->table}";
-            
-            if ($this->db->ejecutar($sql)) {
-                return $this->db->extraer_todos();
+
+            if ($this->conexion->ejecutar($sql)) {
+                return $this->conexion->extraer_todos();
             }
-            
+
             return [];
         } catch (\Exception $e) {
             return [];
         }
     }
-    
+
     public function update($id, $data)
     {
         try {
             $setClauses = [];
             $params = [':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT]];
-            
+
             foreach ($data as $key => $value) {
                 $setClauses[] = "{$key} = :{$key}";
                 $params[":{$key}"] = ['valor' => $value];
             }
-            
+
             if (empty($setClauses)) {
                 return false;
             }
-            
+
             $sql = "UPDATE {$this->table} SET " . implode(', ', $setClauses) . " WHERE id = :id";
-            
-            if ($this->db->ejecutar($sql, $params)) {
-                return $this->db->filasAfectadas() > 0;
+
+            if ($this->conexion->ejecutar($sql, $params)) {
+                return $this->conexion->filasAfectadas() > 0;
             }
-            
+
             return false;
         } catch (\Exception $e) {
             return false;
         }
     }
-    
+
     public function delete($id)
     {
         try {
@@ -134,11 +138,11 @@ class UsuarioRepository extends Repository
             $params = [
                 ':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT]
             ];
-            
-            if ($this->db->ejecutar($sql, $params)) {
-                return $this->db->filasAfectadas() > 0;
+
+            if ($this->conexion->ejecutar($sql, $params)) {
+                return $this->conexion->filasAfectadas() > 0;
             }
-            
+
             return false;
         } catch (\Exception $e) {
             return false;

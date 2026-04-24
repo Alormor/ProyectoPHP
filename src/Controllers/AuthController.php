@@ -30,28 +30,28 @@ class AuthController extends Controller
             
             if (!$userRequest->validate_and_sanitize()) {
                 $_SESSION['errors'] = $userRequest->getErrors();
-                header('Location: ' . BASE_URL . '/registro');
+                header('Location: ' . $_ENV['BASE_URL'] . '/registro');
                 exit();
             }
-            
+
             $userData = $userRequest->getSanitized();
             $usuarioService = new UsuarioService(BaseDatos::getInstancia());
             $resultado = $usuarioService->registrar($userData);
-            
+
             if ($resultado) {
                 $_SESSION['register'] = 'success';
                 $_SESSION['message'] = 'Usuario registrado correctamente. Por favor inicia sesión.';
-                header('Location: ' . BASE_URL . '/login');
+                header('Location: ' . $_ENV['BASE_URL'] . '/login');
                 exit();
             } else {
                 $_SESSION['errors'] = ['Error al registrar el usuario. Intenta de nuevo.'];
-                header('Location: ' . BASE_URL . '/registro');
+                header('Location: ' . $_ENV['BASE_URL'] . '/registro');
                 exit();
             }
-            
+
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            header('Location: ' . BASE_URL . '/registro');
+            header('Location: ' . $_ENV['BASE_URL'] . '/registro');
             exit();
         }
     }

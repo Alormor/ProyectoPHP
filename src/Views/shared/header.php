@@ -1,8 +1,8 @@
-<div><img src="<?php echo BASE_URL; ?>/images/letras-logo.png" alt="Logo"></div>
+<div><img src="<?php echo $_ENV['BASE_URL']; ?>/images/letras-logo.png" alt="Logo"></div>
 <div class="navigation">
     <ul>
         <li class="list">
-            <a href="<?php echo BASE_URL; ?>/">
+            <a href="<?php echo $_ENV['BASE_URL']; ?>/">
                 <span class="icon">
                     <ion-icon name="home-outline"></ion-icon>
                 </span>
@@ -11,7 +11,7 @@
         </li>
 
         <li class="list" >
-             <a href="<?php echo BASE_URL; ?>/usuarios/userprofile">
+             <a href="<?php echo $_ENV['BASE_URL']; ?>/usuarios/userprofile">
                 <span class="icon">
                     <ion-icon name="person-outline"></ion-icon>
                 </span>

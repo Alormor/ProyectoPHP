@@ -1,6 +1,6 @@
 <h2>Registrarse</h2>
 
-<form action="<?= BASE_URL ?>/registro" method="POST">
+<form action="<?= $_ENV['BASE_URL'] ?>/registro" method="POST">
     <div>
         <label for="email">Email:</label>
         <input type="email" name="data[email]" id="email" required>

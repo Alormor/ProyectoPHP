@@ -68,14 +68,16 @@ class UsuarioService extends Service
             }
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
-            
+
             $nuevoUsuario = Usuario::fromArray([
+                'nombre' => $userData['nombre'] ?? '',
+                'apellidos' => $userData['apellidos'] ?? '',
                 'email' => $userData['email'],
                 'password' => $passwordHash,
                 'rol' => $userData['rol'] ?? 'usuario',
                 'confirmado' => true,
             ]);
-            
+
             $exito = $this->repository->create($nuevoUsuario);
             
             if ($exito) {
