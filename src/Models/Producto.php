@@ -4,15 +4,15 @@ namespace Models;
 
 class Producto{
     public function __construct(
-        private int|null $id = null,
-        private int|null $categoria_id = null,
+        private ?int $id = null,
+        private ?int $categoria_id = null,
         private string $nombre = '',
-        private string|null $descripcion = null,
+        private ?string $descripcion = null,
         private float $precio = 0.0,
-        private float|null $precio_oferta = null,
+        private ?float $precio_oferta = null,
         private int $stock = 0,
         private int $activo = 1,
-        private string|null $imagen = null
+        private ?string $imagen = null
     ){}
 
     public static function fromArray(array $data): self
