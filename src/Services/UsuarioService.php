@@ -22,7 +22,7 @@ class UsuarioService extends Service
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
             $token = bin2hex(random_bytes(16));
-            $token_exp = date('Y-m-d H:i:s', strtotime('+1 minutes'));
+            $token_exp = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
             if ($usuarioExistente) {
                 // Si ya está confirmado, no se le deja registrar

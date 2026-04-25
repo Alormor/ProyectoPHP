@@ -6,15 +6,13 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
-
 class MailService
 {
     // Esta función privada configura el servidor (lo que siempre es igual)
     private function crearMailer()
     {
         $mail = new PHPMailer(true);
-        
+
         // Configuracion del servidor
         $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      
         $mail->isSMTP();                                            
