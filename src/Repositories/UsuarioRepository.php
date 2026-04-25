@@ -18,12 +18,14 @@ class UsuarioRepository extends Repository
     public function create(Usuario $usuario)
     {
         try{
-            $sql = "INSERT INTO usuarios (email, password) 
-            VALUES (:email, :password)";
+            $sql = "INSERT INTO usuarios (email, password, token, token_exp) 
+            VALUES (:email, :password, :token, :token_exp)";
 
             $param = [
                 ":email" => ['valor' => $usuario->getEmail()],
                 ":password" => ['valor' => $usuario->getPassword()],
+                ":token" => ['valor' => $usuario->getToken()],
+                ":token_exp" => ['valor' => $usuario->getToken_exp()],
             ];
 
             $exito = $this->conexion->ejecutar($sql, $param);
@@ -63,9 +65,7 @@ class UsuarioRepository extends Repository
         } catch (PDOException $e) {
             throw new RuntimeException("Error al buscar el usuario: {$e->getMessage()}", previous: $e);
         }
-    }
-
-    
+    } 
     
     public function find($id)
     {
@@ -84,7 +84,7 @@ class UsuarioRepository extends Repository
             return null;
         }
     }
-    
+
     public function findAll()
     {
         try {
@@ -144,5 +144,46 @@ class UsuarioRepository extends Repository
             return false;
         }
     }
+
+    public function findByToken(string $token): ?Usuario
+    {
+        $sql = "SELECT * FROM usuarios WHERE token = :token LIMIT 1";
+        $param = [":token" => ['valor' => $token]];
+        
+        $this->conexion->ejecutar($sql, $param);
+        $resultado = $this->conexion->extraer_registro();
+
+        if ($resultado) {
+            return Usuario::fromArray($resultado);
+        }
+        
+        return null;
+    }
+
+    // Confirma una cuenta si el token es correcto y no ha expirado
+    public function confirmarUsuario(int $id): bool
+    {
+        $sql = "UPDATE usuarios SET confirmado = 1, token = NULL WHERE id = :id";
+        $param = [":id" => ['valor' => $id]];
+        
+        return $this->conexion->ejecutar($sql, $param);
+    }
+
+    // Actualiza el token y su expiración
+    public function updateRegistro(Usuario $usuario): bool
+    {
+        // Actualizamos contraseña, token y expiración
+        $sql = "UPDATE usuarios SET password = :password, token = :token, token_exp = :token_exp WHERE id = :id";
+        $param = [
+            ":password"  => ['valor' => $usuario->getPassword()],
+            ":token"     => ['valor' => $usuario->getToken()],
+            ":token_exp" => ['valor' => $usuario->getToken_exp()],
+            ":id"        => ['valor' => $usuario->getId()],
+        ];
+        
+        return $this->conexion->ejecutar($sql, $param);
+    }
+
+
 }
 ?>

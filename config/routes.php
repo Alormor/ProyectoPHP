@@ -41,6 +41,13 @@ Router::add('GET', '/logout', function() {
     return $controller->logout();
 });
 
+//Ruta para confirmar cuenta
+Router::add('GET', '/confirmar-cuenta', function() {
+    $controller = new \Controllers\AuthController();
+    return $controller->confirmar();
+});
+
+
 // Rutas admin
 Router::add('GET', '/admin/usuarios/crear', function() {
     $controller = new \Controllers\UsuarioController();

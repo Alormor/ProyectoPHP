@@ -16,8 +16,17 @@
     <button type="submit">Registrarse</button>
 </form>
 
+<!-- Mensaje de Éxito -->
+<?php if (isset($_SESSION['register']) && $_SESSION['register'] == 'success'): ?>
+    <div class="alert alert-success">
+        <?= $_SESSION['message'] ?>
+    </div>
+    <?php unset($_SESSION['register'], $_SESSION['message']); ?>
+<?php endif; ?>
+
+<!-- Mensaje de Error -->
 <?php if (isset($_SESSION['errors'])): ?>
-    <div class="error">
+    <div class="alert alert-error">
         <ul>
             <?php foreach ($_SESSION['errors'] as $error): ?>
                 <li><?= $error ?></li>
