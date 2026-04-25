@@ -5,9 +5,9 @@ namespace Models;
 class LineasPedido{
 
     public function __construct(
-        private int|null $id = null,
-        private int|null $pedido_id = null,
-        private int|null $producto_id = null,
+        private ?int $id = null,
+        private ?int $pedido_id = null,
+        private ?int $producto_id = null,
         private int $unidades = 0,
         private float $precio_unitario = 0.0,
         private float $subtotal_linea = 0.0

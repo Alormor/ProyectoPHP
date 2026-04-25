@@ -5,44 +5,56 @@ namespace Services;
 use Repositories\UsuarioRepository;
 use Core\BaseDatos;
 use Models\Usuario;
+use Services\MailService;
 
 class UsuarioService extends Service
 {
     private UsuarioRepository $repository;
-    public function __construct(
-    private readonly BaseDatos $conexion
-    ){
-        $this->repository = new UsuarioRepository($this->conexion);
+    public function __construct()
+    {
+        $this->repository = new UsuarioRepository(BaseDatos::getInstancia());
     }
 
-    
-    
-    
     public function registrar($userData)
     {
         try {
-            $usuario = $this->repository->findByEmail($userData['email']);
-            
-            if ($usuario) {
-                return false;
-            }
+            $usuarioExistente = $this->repository->findByEmail($userData['email']);
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
-            
+            $token = bin2hex(random_bytes(16));
+            $token_exp = date('Y-m-d H:i:s', strtotime('+1 minutes'));
+
+            if ($usuarioExistente) {
+                // Si ya está confirmado, no se le deja registrar
+                if ($usuarioExistente->isConfirmado()) {
+                    return false; 
+                } 
+                
+                // Se actualiza password, token y expiración
+                $usuarioExistente->setPassword($passwordHash);
+                $usuarioExistente->setToken($token);
+                $usuarioExistente->setToken_exp($token_exp);
+                $this->repository->updateRegistro($usuarioExistente);
+                
+                $mailService = new MailService();
+                $mailService->enviarCorreoConfirmacion($userData['email'], $token);
+                
+                return "reenviado";
+            }
+
             $nuevoUsuario = Usuario::fromArray([
                 'email' => $userData['email'],
                 'password' => $passwordHash,
-                'rol' => 'usuario',
-                'confirmado' => false,
+                'token' => $token,
+                'token_exp' => $token_exp
             ]);
-            
-            // TODO: Generar token de confirmación de email
-            
+                        
             $exito = $this->repository->create($nuevoUsuario);         
             
             if ($exito) {
-                // TODO: Enviar email de bienvenida
-                return $nuevoUsuario->getId();
+                $mailService = new MailService();
+                $mailService->enviarCorreoConfirmacion($userData['email'], $token);
+                return "creado";
             }
             
             return false;
@@ -105,7 +117,10 @@ class UsuarioService extends Service
             if (!password_verify($password, $usuario->getPassword())) {
                 return false;
             }
-            
+
+            if (!$usuario->isConfirmado()) {
+                return "no_confirmado";
+            }      
             
             // Retornar datos del usuario
             return [
@@ -119,6 +134,25 @@ class UsuarioService extends Service
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function confirmarCuenta($token)
+    {
+        $usuario = $this->repository->findByToken($token);
+
+        // Comprobar si el token existe y no ha expirado
+        if ($usuario) {
+            $ahora = new \DateTime();
+            $fechaExpira = new \DateTime($usuario->getToken_exp());
+            
+            if ($ahora > $fechaExpira) {
+                return "expirado";
+            }
+            
+            return $this->repository->confirmarUsuario($usuario->getId());
+        }
+
+        return false;
     }
 }
 ?>
