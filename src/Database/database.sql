@@ -12,7 +12,7 @@ USE tienda;
 -- ------------------------------------------------------------
 -- USUARIOS
 -- ------------------------------------------------------------
-CREATE TABLE `usuarios` (
+CREATE TABLE IF NOT EXISTS usuarios (
     `id`          BIGINT UNSIGNED  NOT NULL AUTO_INCREMENT,
     `nombre`      VARCHAR(60)      ,
     `apellidos`   VARCHAR(60)      ,
@@ -58,7 +58,6 @@ CREATE TABLE IF NOT EXISTS productos (
     created_at     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                    ON UPDATE CURRENT_TIMESTAMP,
-    imagen          VARCHAR(255),
     CONSTRAINT pk_productos          PRIMARY KEY (id),
     CONSTRAINT fk_producto_categoria FOREIGN KEY (categoria_id)
         REFERENCES categorias (id) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -112,6 +111,21 @@ CREATE TABLE IF NOT EXISTS lineas_pedidos (
         REFERENCES pedidos (id)   ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_linea_producto  FOREIGN KEY (producto_id)
         REFERENCES productos (id) ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- ------------------------------------------------------------
+-- Carrito
+-- ------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS carrito (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    usuario_id BIGINT UNSIGNED NOT NULL,
+    producto_id INT UNSIGNED NOT NULL,
+    cantidad INT UNSIGNED NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_carrito_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_carrito_producto FOREIGN KEY (producto_id) REFERENCES productos(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
 -- ============================================================
