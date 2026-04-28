@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS productos (
     created_at     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at     DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP
                    ON UPDATE CURRENT_TIMESTAMP,
+
     CONSTRAINT pk_productos          PRIMARY KEY (id),
     CONSTRAINT fk_producto_categoria FOREIGN KEY (categoria_id)
         REFERENCES categorias (id) ON DELETE RESTRICT ON UPDATE CASCADE
@@ -134,7 +135,6 @@ CREATE TABLE IF NOT EXISTS carrito (
 
 -- USUARIOS DE PRUEBA
 -- Contraseña admin: admin
--- Contraseña usuario: usuario123
 
 INSERT INTO `usuarios` (
     `nombre`, `apellidos`, `email`, `password`, `rol`, `confirmado`

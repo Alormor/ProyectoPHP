@@ -5,6 +5,7 @@
         <p>Rol: <?php echo htmlspecialchars($_SESSION['usuario']['rol']); ?></p>
 
         <div class="profile-actions">
+            <a href="<?php echo $_ENV['BASE_URL']; ?>/profile/<?php echo $_SESSION['usuario']['id']; ?>/editar" class="btn btn-primary">Editar Mi Perfil</a>
             <a href="<?php echo $_ENV['BASE_URL']; ?>/logout" class="btn btn-secondary">Cerrar Sesión</a>
             <a href="<?php echo $_ENV['BASE_URL']; ?>/profile/<?php echo $_SESSION['usuario']['id']; ?>/confirmar-eliminacion" class="btn btn-danger">Eliminar Mi Cuenta</a>
         </div>

@@ -1,14 +1,26 @@
 <div class="productos-container">
     <h1><?php echo $title; ?></h1>
     <p><?php echo $message; ?></p>
-
+    
+    <div class="filtro-productos">
+        <input type="text" id="filtro-nombre" placeholder="Filtrar por nombre...">
+        <select id="filtro-categoria">
+            <option value="">Todas las categorías</option>
+            <?php foreach ($categorias as $categoria): ?>
+                <option value="<?php echo htmlspecialchars($categoria['id']); ?>">
+                    <?php echo htmlspecialchars($categoria['nombre']); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
     <?php if (empty($productos)): ?>
         <p>No hay productos disponibles en este momento.</p>
     <?php else: ?>
-        <div class="productos-grid">
+        <div class="productos-grid" id="productos-grid">
             <?php foreach ($productos as $producto): ?>
                 <form action="<?php echo $_ENV['BASE_URL']; ?>/carrito/agregar" method="POST">
-                    <div class="producto-card" id="prod-<?= $producto['id'] ?>">
+                    <div class="producto-card" id="prod-<?= $producto['id'] ?>" data-categoria="<?php echo htmlspecialchars($producto['categoria_id']); ?>" data-nombre="<?php echo htmlspecialchars(strtolower($producto['nombre'])); ?>">
                         <?php if (!empty($producto['imagen'])): ?>
                             <div class="producto-imagen">
                                 <img src="<?php echo htmlspecialchars($producto['imagen']); ?>"
@@ -74,3 +86,39 @@
         </div>
     <?php endif; ?>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filtroNombre = document.getElementById('filtro-nombre');
+    const filtroCategoria = document.getElementById('filtro-categoria');
+    const productosGrid = document.getElementById('productos-grid');
+    
+    if (!productosGrid) return;
+    
+    const productosCards = productosGrid.querySelectorAll('.producto-card');
+    
+    function aplicarFiltros() {
+        const nombreFiltro = filtroNombre.value.toLowerCase();
+        const categoriaFiltro = filtroCategoria.value;
+        
+        //Recojo por cada producto el nombre y la categoria, en realidad todo esta 
+        //bloqueo las cards de los productos no hago ninguna consulta sql.
+        productosCards.forEach(card => {
+            const nombre = card.getAttribute('data-nombre').toLocaleLowerCase();
+            const categoria = card.getAttribute('data-categoria');
+            
+            const coincideNombre = nombre.includes(nombreFiltro.toLowerCase());
+            const coincideCategoria = !categoriaFiltro || categoria === categoriaFiltro;
+            
+            if (coincideNombre && coincideCategoria) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+    
+    filtroNombre.addEventListener('input', aplicarFiltros);
+    filtroCategoria.addEventListener('change', aplicarFiltros);
+});
+</script>
