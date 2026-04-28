@@ -85,14 +85,24 @@ Router::add('POST', '/admin/usuarios/:id/eliminar', function($id) {
 });
 
 // Rutas para perfil de usuario
+Router::add('GET', '/profile/:id/editar', function($id) {
+    $controller = new \Controllers\UsuarioController();
+    return $controller->edit($id, 'profile');
+});
+
+Router::add('POST', '/profile/:id', function($id) {
+    $controller = new \Controllers\UsuarioController();
+    return $controller->update($id, 'profile');
+});
+
 Router::add('GET', '/profile/:id/confirmar-eliminacion', function($id) {
     $controller = new \Controllers\UsuarioController();
-    return $controller->confirmDeleteProfile($id);
+    return $controller->confirmDelete($id, 'profile');
 });
 
 Router::add('POST', '/profile/:id/eliminar', function($id) {
     $controller = new \Controllers\UsuarioController();
-    return $controller->deleteProfile($id);
+    return $controller->delete($id, 'profile');
 });
 
 // Rutas de usuarios

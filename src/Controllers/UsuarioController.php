@@ -175,13 +175,21 @@ class UsuarioController extends Controller
         }
     }
 
-    public function edit($id)
+    public function edit($id, $context = 'admin')
     {
-        // Verificar que es admin
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-            $_SESSION['errors'] = ['No tienes permisos para editar usuarios.'];
-            $this->redirect('/');
-            return;
+        // Verificar permisos según contexto
+        if ($context === 'admin') {
+            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
+                $_SESSION['errors'] = ['No tienes permisos para editar usuarios.'];
+                $this->redirect('/');
+                return;
+            }
+        } elseif ($context === 'profile') {
+            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['id'] != $id) {
+                $_SESSION['errors'] = ['No tienes permiso para editar este perfil.'];
+                $this->redirect('/');
+                return;
+            }
         }
 
         try {
@@ -190,205 +198,237 @@ class UsuarioController extends Controller
 
             if (!$usuario) {
                 $_SESSION['errors'] = ['El usuario no existe.'];
-                $this->redirect('/admin/usuarios');
+                $this->redirect($context === 'admin' ? '/admin/usuarios' : '/');
                 return;
             }
 
+            $view = $context === 'admin' ? 'usuarios/edit' : 'usuarios/edit-profile';
+            $title = $context === 'admin' ? 'Editar Usuario' : 'Editar Mi Perfil';
+            $message = $context === 'admin' ? 'Edita los datos del usuario' : 'Actualiza tus datos personales';
+
             $data = [
-                'title' => 'Editar Usuario',
-                'message' => 'Edita los datos del usuario',
+                'title' => $title,
+                'message' => $message,
                 'usuario' => $usuario,
-                'es_admin' => true,
+                'es_admin' => $context === 'admin',
+                'es_perfil' => $context === 'profile',
                 'showHeader' => true,
                 'showFooter' => true
             ];
-            return $this->view('usuarios/edit', $data);
+            return $this->view($view, $data);
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error al cargar el usuario: ' . $e->getMessage()];
-            $this->redirect('/admin/usuarios');
+            $this->redirect($context === 'admin' ? '/admin/usuarios' : '/');
             return;
         }
     }
 
-    public function update($id)
+    public function update($id, $context = 'admin')
     {
         try {
-            // Verificar permisos de administrador
-            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-                $_SESSION['errors'] = ['No tienes permisos para editar usuarios.'];
-                $this->redirect('/');
-                return;
+            // Verificar permisos según contexto
+            if ($context === 'admin') {
+                if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
+                    $_SESSION['errors'] = ['No tienes permisos para editar usuarios.'];
+                    $this->redirect('/');
+                    return;
+                }
+            } elseif ($context === 'profile') {
+                if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['id'] != $id) {
+                    $_SESSION['errors'] = ['No tienes permiso para editar este perfil.'];
+                    $this->redirect('/');
+                    return;
+                }
             }
 
             $errors = [];
-
-            // Obtener datos del formulario
             $nombre = trim($_POST['nombre'] ?? '');
             $apellidos = trim($_POST['apellidos'] ?? '');
             $email = trim(strtolower($_POST['email'] ?? ''));
-            $rol = trim(strtolower($_POST['rol'] ?? 'usuario'));
+            $rol = $context === 'admin' ? trim(strtolower($_POST['rol'] ?? 'usuario')) : null;
 
             // Validar datos
             if (empty($nombre)) {
                 $errors[] = 'El nombre es requerido';
             }
-
             if (empty($apellidos)) {
                 $errors[] = 'Los apellidos son requeridos';
             }
-
             if (empty($email)) {
                 $errors[] = 'El email es requerido';
             } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = 'El formato del email no es válido';
             }
-
-            if (!in_array($rol, ['usuario', 'admin'])) {
+            if ($context === 'admin' && !in_array($rol, ['usuario', 'admin'])) {
                 $errors[] = 'El rol no es válido';
             }
 
-            // Si hay errores, guardarlos en sesión y volver al formulario
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
-                $_SESSION['form_data'] = [
+                $_SESSION['form_data'] = array_filter([
                     'nombre' => $nombre,
                     'apellidos' => $apellidos,
                     'email' => $email,
-                    'rol' => $rol
-                ];
-                $this->redirect("/admin/usuarios/$id/editar");
+                    'rol' => $context === 'admin' ? $rol : null
+                ]);
+                $redirect = $context === 'admin' ? "/admin/usuarios/$id/editar" : "/profile/$id/editar";
+                $this->redirect($redirect);
                 return;
             }
 
-            // Verificar que el email no esté duplicado (si cambió)
             $usuarioRepository = new UsuarioRepository(BaseDatos::getInstancia());
             $usuarioActual = $usuarioRepository->find($id);
 
             if (!$usuarioActual) {
                 $_SESSION['errors'] = ['El usuario no existe.'];
-                $this->redirect('/admin/usuarios');
+                $this->redirect($context === 'admin' ? '/admin/usuarios' : '/');
                 return;
             }
 
-            // No permitir cambiar el rol de un admin
-            if ($usuarioActual['rol'] === 'admin' && $rol !== 'admin') {
-                $_SESSION['errors'] = ['No puedes cambiar el rol de un administrador.'];
-                $_SESSION['form_data'] = [
-                    'nombre' => $nombre,
-                    'apellidos' => $apellidos,
-                    'email' => $email,
-                    'rol' => $rol
-                ];
-                $this->redirect("/admin/usuarios/$id/editar");
-                return;
-            }
-
-            // Si el email cambió, verificar que no exista otro usuario con ese email
-            if ($email !== $usuarioActual['email']) {
-                $usuarioExistente = $usuarioRepository->findByEmail($email);
-                if ($usuarioExistente) {
-                    $_SESSION['errors'] = ['El email ya está en uso.'];
-                    $_SESSION['form_data'] = [
-                        'nombre' => $nombre,
-                        'apellidos' => $apellidos,
-                        'email' => $email,
-                        'rol' => $rol
-                    ];
+            // Validaciones adicionales para admin
+            if ($context === 'admin') {
+                if ($usuarioActual['rol'] === 'admin' && $rol !== 'admin') {
+                    $_SESSION['errors'] = ['No puedes cambiar el rol de un administrador.'];
+                    $_SESSION['form_data'] = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'rol' => $rol];
+                    $this->redirect("/admin/usuarios/$id/editar");
+                    return;
+                }
+                if ($usuarioActual['rol'] === 'admin' && $email !== $usuarioActual['email']) {
+                    $_SESSION['errors'] = ['No puedes cambiar el email de un administrador.'];
+                    $_SESSION['form_data'] = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'rol' => $rol];
                     $this->redirect("/admin/usuarios/$id/editar");
                     return;
                 }
             }
 
-            // Actualizar usuario en BD
-            $resultado = $usuarioRepository->update($id, [
-                'nombre' => $nombre,
-                'apellidos' => $apellidos,
-                'email' => $email,
-                'rol' => $rol
-            ]);
+            // Verificar email duplicado
+            if ($email !== $usuarioActual['email']) {
+                $usuarioExistente = $usuarioRepository->findByEmail($email);
+                if ($usuarioExistente) {
+                    $_SESSION['errors'] = ['El email ya está en uso.'];
+                    $_SESSION['form_data'] = array_filter([
+                        'nombre' => $nombre,
+                        'apellidos' => $apellidos,
+                        'email' => $email,
+                        'rol' => $context === 'admin' ? $rol : null
+                    ]);
+                    $redirect = $context === 'admin' ? "/admin/usuarios/$id/editar" : "/profile/$id/editar";
+                    $this->redirect($redirect);
+                    return;
+                }
+            }
+
+            // Preparar datos para actualizar
+            $updateData = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email];
+            if ($context === 'admin') {
+                $updateData['rol'] = $rol;
+            }
+
+            $resultado = $usuarioRepository->update($id, $updateData);
 
             if ($resultado) {
-                $_SESSION['success'] = 'Usuario actualizado correctamente.';
+                if ($context === 'profile') {
+                    $_SESSION['usuario']['nombre'] = $nombre;
+                    $_SESSION['usuario']['apellidos'] = $apellidos;
+                    $_SESSION['usuario']['email'] = $email;
+                }
+                $_SESSION['success'] = $context === 'admin' ? 'Usuario actualizado correctamente.' : 'Tu perfil ha sido actualizado correctamente.';
                 unset($_SESSION['form_data']);
-                $this->redirect('/admin/usuarios');
+                $redirect = $context === 'admin' ? '/admin/usuarios' : '/';
+                $this->redirect($redirect);
                 return;
             } else {
-                $_SESSION['errors'] = ['Error al actualizar el usuario.'];
-                $_SESSION['form_data'] = [
+                $_SESSION['errors'] = ['Error al actualizar ' . ($context === 'admin' ? 'el usuario' : 'tu perfil') . '.'];
+                $_SESSION['form_data'] = array_filter([
                     'nombre' => $nombre,
                     'apellidos' => $apellidos,
                     'email' => $email,
-                    'rol' => $rol
-                ];
-                $this->redirect("/admin/usuarios/$id/editar");
+                    'rol' => $context === 'admin' ? $rol : null
+                ]);
+                $redirect = $context === 'admin' ? "/admin/usuarios/$id/editar" : "/profile/$id/editar";
+                $this->redirect($redirect);
                 return;
             }
 
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            $this->redirect("/admin/usuarios/$id/editar");
+            $redirect = $context === 'admin' ? "/admin/usuarios/$id/editar" : "/profile/$id/editar";
+            $this->redirect($redirect);
             return;
         }
     }
 
-    public function confirmDelete($id)
+    public function confirmDelete($id, $context = 'admin')
     {
-        // Verificar que es admin
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-            $_SESSION['errors'] = ['No tienes permisos para eliminar usuarios.'];
-            $this->redirect('/');
-            return;
-        }
-
-        try {
+        // Verificar permisos según contexto
+        if ($context === 'admin') {
+            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
+                $_SESSION['errors'] = ['No tienes permisos para eliminar usuarios.'];
+                $this->redirect('/');
+                return;
+            }
             // Evitar que un admin se elimine a sí mismo
             if ($_SESSION['usuario']['id'] == $id) {
                 $_SESSION['errors'] = ['No puedes eliminar tu propia cuenta.'];
                 $this->redirect('/admin/usuarios');
                 return;
             }
+        } elseif ($context === 'profile') {
+            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['id'] != $id) {
+                $_SESSION['errors'] = ['No tienes permiso para eliminar esta cuenta.'];
+                $this->redirect('/');
+                return;
+            }
+        }
 
+        try {
             $usuarioRepository = new UsuarioRepository(BaseDatos::getInstancia());
             $usuario = $usuarioRepository->find($id);
 
             if (!$usuario) {
                 $_SESSION['errors'] = ['El usuario no existe.'];
-                $this->redirect('/admin/usuarios');
+                $this->redirect($context === 'admin' ? '/admin/usuarios' : '/');
                 return;
             }
 
             $data = [
-                'title' => 'Confirmar Eliminación',
-                'message' => 'Confirma que deseas eliminar este usuario',
+                'title' => $context === 'admin' ? 'Confirmar Eliminación' : 'Confirmar Eliminación de Cuenta',
+                'message' => $context === 'admin' ? 'Confirma que deseas eliminar este usuario' : '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.',
                 'usuario' => $usuario,
-                'es_admin' => true,
+                'es_admin' => $context === 'admin',
+                'es_perfil' => $context === 'profile',
                 'showHeader' => true,
                 'showFooter' => true
             ];
             return $this->view('usuarios/delete-confirm', $data);
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error al cargar el usuario: ' . $e->getMessage()];
-            $this->redirect('/admin/usuarios');
+            $this->redirect($context === 'admin' ? '/admin/usuarios' : '/');
             return;
         }
     }
 
-    public function delete($id)
+    public function delete($id, $context = 'admin')
     {
-        // Eliminar un usuario (solo admins, pero no otros admins)
         try {
-            // Verificar permisos de administrador
-            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-                $_SESSION['errors'] = ['No tienes permisos para eliminar usuarios.'];
-                $this->redirect('/');
-                return;
-            }
-
-            // Evitar que un admin se elimine a sí mismo
-            if ($_SESSION['usuario']['id'] == $id) {
-                $_SESSION['errors'] = ['No puedes eliminar tu propia cuenta desde aquí.'];
-                $this->redirect('/admin/usuarios');
-                return;
+            // Verificar permisos según contexto
+            if ($context === 'admin') {
+                if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
+                    $_SESSION['errors'] = ['No tienes permisos para eliminar usuarios.'];
+                    $this->redirect('/');
+                    return;
+                }
+                if ($_SESSION['usuario']['id'] == $id) {
+                    $_SESSION['errors'] = ['No puedes eliminar tu propia cuenta desde aquí.'];
+                    $this->redirect('/admin/usuarios');
+                    return;
+                }
+            } elseif ($context === 'profile') {
+                if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['id'] != $id) {
+                    $_SESSION['errors'] = ['No tienes permiso para eliminar esta cuenta.'];
+                    $this->redirect('/');
+                    return;
+                }
             }
 
             $usuarioRepository = new UsuarioRepository(BaseDatos::getInstancia());
@@ -396,113 +436,43 @@ class UsuarioController extends Controller
 
             if (!$usuario) {
                 $_SESSION['errors'] = ['El usuario no existe.'];
-                $this->redirect('/admin/usuarios');
+                $this->redirect($context === 'admin' ? '/admin/usuarios' : '/');
                 return;
             }
 
-            // No permitir eliminar a otros admins
-            if ($usuario['rol'] === 'admin') {
+            // No permitir eliminar a otros admins (solo para contexto admin)
+            if ($context === 'admin' && $usuario['rol'] === 'admin') {
                 $_SESSION['errors'] = ['No puedes eliminar a otros administradores.'];
                 $this->redirect('/admin/usuarios');
                 return;
             }
 
-            // Eliminar usuario
             $resultado = $usuarioRepository->delete($id);
 
             if ($resultado) {
-                $_SESSION['success'] = "Usuario '{$usuario['nombre']} {$usuario['apellidos']}' eliminado correctamente.";
-                $this->redirect('/admin/usuarios');
+                if ($context === 'profile') {
+                    session_destroy();
+                    $_SESSION = [];
+                    $_SESSION['success'] = 'Tu cuenta ha sido eliminada correctamente.';
+                    $this->redirect('/login');
+                } else {
+                    $_SESSION['success'] = "Usuario '{$usuario['nombre']} {$usuario['apellidos']}' eliminado correctamente.";
+                    $this->redirect('/admin/usuarios');
+                }
                 return;
             } else {
-                $_SESSION['errors'] = ['Error al eliminar el usuario.'];
-                $this->redirect('/admin/usuarios');
+                $_SESSION['errors'] = ['Error al eliminar ' . ($context === 'admin' ? 'el usuario' : 'tu cuenta') . '.'];
+                $this->redirect($context === 'admin' ? '/admin/usuarios' : '/');
                 return;
             }
 
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            $this->redirect('/admin/usuarios');
+            $this->redirect($context === 'admin' ? '/admin/usuarios' : '/');
             return;
         }
     }
 
-    public function confirmDeleteProfile($id)
-    {
-        // Verificar que el usuario que intenta eliminar su cuenta sea el mismo
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['id'] != $id) {
-            $_SESSION['errors'] = ['No tienes permiso para eliminar esta cuenta.'];
-            $this->redirect('/');
-            return;
-        }
 
-        try {
-            $usuarioRepository = new UsuarioRepository(BaseDatos::getInstancia());
-            $usuario = $usuarioRepository->find($id);
-
-            if (!$usuario) {
-                $_SESSION['errors'] = ['El usuario no existe.'];
-                $this->redirect('/');
-                return;
-            }
-
-            $data = [
-                'title' => 'Confirmar Eliminación de Cuenta',
-                'message' => '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.',
-                'usuario' => $usuario,
-                'showHeader' => true,
-                'showFooter' => true,
-                'es_perfil' => true
-            ];
-            return $this->view('usuarios/delete-confirm', $data);
-        } catch (\Exception $e) {
-            $_SESSION['errors'] = ['Error al cargar tu perfil: ' . $e->getMessage()];
-            $this->redirect('/');
-            return;
-        }
-    }
-
-    public function deleteProfile($id)
-    {
-        // Eliminar la propia cuenta
-        try {
-            // Verificar que el usuario que intenta eliminar su cuenta sea el mismo
-            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['id'] != $id) {
-                $_SESSION['errors'] = ['No tienes permiso para eliminar esta cuenta.'];
-                $this->redirect('/');
-                return;
-            }
-
-            $usuarioRepository = new UsuarioRepository(BaseDatos::getInstancia());
-            $usuario = $usuarioRepository->find($id);
-
-            if (!$usuario) {
-                $_SESSION['errors'] = ['El usuario no existe.'];
-                $this->redirect('/');
-                return;
-            }
-
-            // Eliminar usuario
-            $resultado = $usuarioRepository->delete($id);
-
-            if ($resultado) {
-                // Cerrar la sesión después de eliminar la cuenta
-                session_destroy();
-                $_SESSION = [];
-                $_SESSION['success'] = 'Tu cuenta ha sido eliminada correctamente.';
-                $this->redirect('/login');
-                return;
-            } else {
-                $_SESSION['errors'] = ['Error al eliminar tu cuenta.'];
-                $this->redirect('/');
-                return;
-            }
-
-        } catch (\Exception $e) {
-            $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            $this->redirect('/');
-            return;
-        }
-    }
 }
 

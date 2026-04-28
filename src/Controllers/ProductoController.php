@@ -4,24 +4,29 @@ namespace Controllers;
 
 use Core\Controller;
 use Repositories\ProductoRepository;
+use Repositories\CategoriaRepository;
 
 class ProductoController extends Controller
 {
     private $productoRepository;
+    private $categoriaRepository;
 
     public function __construct()
     {
         $this->productoRepository = new ProductoRepository();
+        $this->categoriaRepository = new CategoriaRepository();
     }
 
     public function index()
     {
         $productos = $this->productoRepository->findAll();
+        $categorias = $this->categoriaRepository->findAll();
 
         $data = [
             'title' => 'Listado de Productos',
             'message' => 'Mostrando todos los productos disponibles',
             'productos' => $productos,
+            'categorias' => $categorias,
             'showHeader' => true,
             'showFooter' => true
         ];
