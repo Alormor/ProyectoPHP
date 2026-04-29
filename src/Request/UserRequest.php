@@ -11,7 +11,7 @@ class UserRequest extends Request
     public function sanitize()
     {
         // Obtener datos del POST
-        $data = $this->post();
+        $data = $this->post('data', []);
         
         // Sanitizar nombre
         if (isset($data['nombre'])) {
@@ -75,15 +75,6 @@ class UserRequest extends Request
     
     public function validateUser()
     {
-        // Validación para auto-registro de usuarios
-        if (empty($this->sanitized['nombre'])) {
-            $this->errors[] = 'El nombre es requerido';
-        }
-        
-        if (empty($this->sanitized['apellidos'])) {
-            $this->errors[] = 'Los apellidos son requeridos';
-        }
-        
         if (empty($this->sanitized['email'])) {
             $this->errors[] = 'El email es requerido';
         } else {

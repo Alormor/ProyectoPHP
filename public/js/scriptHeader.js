@@ -1,10 +1,29 @@
-const list = document.querySelectorAll('.list');
+document.addEventListener("DOMContentLoaded", () => {
+    const items = document.querySelectorAll('.list');
+    const currentPath = window.location.pathname.toLowerCase();
 
-function activeLink() {
-    list.forEach((item) =>
-        item.classList.remove('active'));
-    this.classList.add('active');
-}
+    items.forEach(item => {
+        item.classList.remove('active');
 
-list.forEach((item) =>
-    item.addEventListener('click', activeLink));
+        const link = item.querySelector('a');
+        const href = link.getAttribute("href");
+
+        // Ignorar enlaces con #
+        if (!href || href === "#") return;
+
+        const linkPath = new URL(link.href).pathname.toLowerCase();
+
+        if (
+            (currentPath === "/" || currentPath.includes("index")) &&
+            (linkPath === "/" || linkPath.includes("index"))
+        ) {
+            //se queda activo 
+            item.classList.add('active');
+            return;
+        }
+
+        if (currentPath === linkPath) {
+            item.classList.add('active');
+        }
+    });
+});
