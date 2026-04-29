@@ -1,9 +1,5 @@
-/*@mixin flex-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}*/
 @import "styleVariables.css";
+
 * {
   margin: 0;
   padding: 0;
@@ -11,183 +7,194 @@
 }
 
 body {
-    min-height: 100vh;
+    min-height: 10rem;
     background-color: var(--fondo);
     display: flex;
     flex-direction: column;
 }
-.letra-logo{
-  font-family: "Skranji", system-ui;
-  text-align: center;
+
+/* HEADER */
+.div-header {
+    display: flex;
+    flex-direction: column; 
+    width: 100%;
+    background-color: var(--fondo-header);
 }
 
+.sup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--primary-color);
+    padding: 0.2rem 2rem;
+    width: 100%;
+}
+
+.envio {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--color-text-principal);
+    font-size: 0.9rem;
+}
+
+.social-icons {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.social-icons a {
+    color: var(--color-text-principal);
+    font-size: 1.2rem;
+    display: flex;
+    transition: transform 0.2s;
+}
+
+.social-icons a:hover { 
+  transform: scale(1.1); 
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+    width: 100%;
+    background-color: var(--fondo-header);
+}
+
+.img-header {
+    height: 100px;
+    width: auto;
+    display: block;
+}
+
+/*  NAV */
 .navigation {
   position: relative;
   width: 100%;
-  height: 70px;
-  background: #fff;
-  border-radius: 10px;
+  height: 5rem;
+  border-radius: 0rem 0rem 1rem 1rem;
   display: flex;
   justify-content: flex-end;
-
 }
+
 .navigation ul {
   display: flex;
-  width: 350px;
+  width: 18rem;
   padding: 0;
   margin: 0;
 }
+
 .navigation ul li {
   position: relative;
   list-style: none;
-  width: 70px;
-  height: 70px;
+  width: 4.4rem;
+  height: 4.4rem;
   z-index: 2;
 }
+
 .navigation ul li a {
   position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
   text-decoration: none;
-  display: flex;
   justify-content: center;
   align-items: center;
 }
+
+/* Reset para todos */
 .navigation ul li a .icon {
   position: relative;
   display: block;
-  line-height: 75px;
+  line-height: 4.5rem;
   font-size: 1.5rem;
   text-align: center;
   transition: 0.5s;
-  color: #222327;
+  color: var(--fondo);
+  transform: translateY(0);
 }
+
 .navigation ul li a .text {
   position: absolute;
-  color: #222327;
-  font-weight: 400;
-  font-size: 0.75em;
-  letter-spacing: 0.05em;
+  color: var(--fondo);
+  font-weight: 400rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.05rem;
   transition: 0.5s;
   opacity: 0;
   transform: translateY(-20px);
 }
 
-.navigation ul:hover .indicator {
-  opacity: 0;
+/* ACTIVO EL ICONO DE LA PAGINA QUE TE ENCUENTRAS */
+.navigation ul:hover li.active a .icon {
+    transform: translateY(0);
+}
+.navigation ul:hover li.active a .text {
+    opacity: 0;
+    transform: translateY(-1.25rem);
 }
 
-.indicator::before, .indicator::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 20px;
-  height: 20px;
-  background: transparent;
+/* BAJAR( si es ACTIVE (por defecto) o si es HOVER (gana por el !important)) */
+.navigation ul li.active a .icon,
+.navigation ul li:hover a .icon {
+    transform: translateY(2.2rem) !important;
 }
 
+.navigation ul li.active a .text,
+.navigation ul li:hover a .text {
+    opacity: 1 !important;
+    transform: translateY(-1.5rem) !important;
+}
+
+/* CÍRCULO */
 .indicator {
   position: absolute;
-  top: 35px;
-  width: 70px;
-  height: 70px;
+  top: 2.2rem;
+  width: 4.5rem;
+  height: 4.5rem;
   border-radius: 50%;
-  border: 2px solid #222327;
+  border: 0.15rem solid var(--fondo-header);
+  background-color: var(--primary-color);
   transition: 0.5s;
   z-index: 1;
   opacity: 0;
   pointer-events: none;
 }
 
-img {
-    width: auto;
-    height: 100px;
-    object-fit: cover;
-    object-position: center;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.navigation ul li.active ~ .indicator {
-    opacity: 1;
-}
-
-.navigation ul li:nth-child(1).active ~ .indicator {
-  transform: translateX(0); 
-  background: var(--quinary-color); 
-}
-
-.navigation ul li:nth-child(2).active ~ .indicator { 
-  transform: translateX(70px); 
-  background: var(--quaternary-color); 
-}
-
-.navigation ul li:nth-child(3).active ~ .indicator { 
-  transform: translateX(140px); 
-  background: var(--primary-color); 
-}
-
-.navigation ul li:nth-child(4).active ~ .indicator { 
-  transform: translateX(210px); 
-  background: var(--tertiary-color); 
-}
-
-.navigation ul li.active a .icon {
-    transform: translateY(35px);
-    color: #fff;
-}
-
-.navigation ul li.active a .text {
-    opacity: 1;
-    transform: translateY(-15px);
-}
-
-.navigation ul li:hover ~ .indicator {
+/* Mostrar circulo si activo o si hacemos hover */
+.navigation ul li.active ~ .indicator,
+.navigation ul:hover .indicator {
     opacity: 1 !important;
 }
 
+/* Posiciones */
+.navigation ul li:nth-child(1).active ~ .indicator, 
 .navigation ul li:nth-child(1):hover ~ .indicator { 
-  transform: translateX(0) !important; 
-  background: var(--quinary-color) !important; 
+  transform: translateX(0);
 }
 
+.navigation ul li:nth-child(2).active ~ .indicator, 
 .navigation ul li:nth-child(2):hover ~ .indicator { 
-  transform: translateX(70px) !important; 
-  background: var(--quaternary-color) !important; 
+  transform: translateX(4.4rem);
 }
 
+.navigation ul li:nth-child(3).active ~ .indicator, 
 .navigation ul li:nth-child(3):hover ~ .indicator { 
-  transform: translateX(140px) !important; 
-  background: var(--primary-color) !important; 
+  transform: translateX(8.75rem);
 }
 
-.navigation ul li:nth-child(4):hover ~ .indicator { 
-  transform: translateX(210px) !important; 
-  background: var(--tertiary-color) !important; 
+
+
+.navigation ul:has(li:nth-child(1).active) .indicator {
+    transform: translateX(0);
 }
 
-.navigation ul li:hover a .icon {
-    transform: translateY(35px);
-    color: #fff;
+.navigation ul:has(li:nth-child(2).active) .indicator {
+    transform: translateX(4.4rem);
 }
 
-.navigation ul li:hover a .text {
-    opacity: 1;
-    transform: translateY(-15px);
-}
-
-/* --- RESET AL HACER HOVER EN EL MENÚ --- */
-
-/* Cuando el mouse entra en el UL, el que estaba 'active' sube a su posición inicial 
-   A MENOS que el mouse esté justo encima de él */
-.navigation ul:hover li.active:not(:hover) a .icon {
-    transform: translateY(0);
-    color: #222327;
-}
-
-.navigation ul:hover li.active:not(:hover) a .text {
-    opacity: 0;
-    transform: translateY(-20px);
+.navigation ul:has(li:nth-child(3).active) .indicator {
+    transform: translateX(8.75rem);
 }

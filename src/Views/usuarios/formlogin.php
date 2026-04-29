@@ -27,6 +27,6 @@
         </form>
         
         <p>¿No tienes cuenta? <a href="<?php echo BASE_URL; ?>/registro">Regístrate aquí</a></p>
-        <button class="volver-inicio">Inicio</button>
+        <p><a class="volver-inicio" href="<?php echo BASE_URL; ?>/">Inicio</a></p>
     </div>
 </div>

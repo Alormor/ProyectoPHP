@@ -1,11 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Skranji:wght@400;700&display=swap');
 :root{
-    --primary-color: #04BF9D;
-    --secondary-color: #F2AEEE;
-    --tertiary-color: #BF6060;
-    --quaternary-color: #D9B036;
-    --quinary-color: #6D4F8C;
-    --fondo: #ACF2E5;
-    --color-text-principal: #01402E;
-    --color-text-secundario: #21A668;
+    --primary-color: #39c7ad;
+    --secondary-color: #e160d9;
+    --tertiary-color: #c16b6b;
+    --quaternary-color: #dbb647;
+    --quinary-color: #8f69b6;
+    --fondo-header: #2C5A71;
+    --fondo: #F2EEFB;
+    --color-text-principal: #003a57;
+    --color-text-secundario: #739baf;
 }
