@@ -15,12 +15,12 @@
         
     
         <div class="div-img-header">
-            <img class="img-header" src="<?php echo BASE_URL; ?>/images/logo-letras.png" alt="Imagen logo cubo de rubik">
+            <img class="img-header" src="<?php echo $_ENV['BASE_URL']; ?>/images/logo-letras.png" alt="Imagen logo cubo de rubik">
         </div>
         <div class="navigation">
             <ul>
                 <li class="list">
-                    <a href="<?php echo BASE_URL; ?>/">
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
                         </span>
@@ -28,25 +28,32 @@
                     </a>
                 </li>
 
-                <li class="list" >
-                    <a href="<?php echo BASE_URL; ?>/usuarios/userprofile">
-                        <span class="icon">
-                            <ion-icon name="person-outline"></ion-icon>
-                        </span>
-                        <span class="text">Perfil</span>
-                    </a>
-                </li>
+        <li class="list" >
+             <a href="<?php echo BASE_URL; ?>/usuarios/userprofile">
+                <span class="icon">
+                    <ion-icon name="person-outline"></ion-icon>
+                </span>
+                <span class="text">Perfil</span>
+             </a>
+        </li>
 
-                <li class="list">
-                    <a href="<?php echo BASE_URL; ?>/carrito">
-                        <span class="icon">
-                            <ion-icon name="cart-outline"></ion-icon>
-                        </span>
-                        <span class="text">Carrito</span>
-                    </a>
-                </li>
-                <div class="indicator"></div>
-            </ul>
-        </div>
-    </div>
+        <li class="list">
+             <a href="#">
+                <span class="icon">
+                    <ion-icon name="cart-outline"></ion-icon>
+                </span>
+                <span class="text">Carrito</span>
+             </a>
+        </li>
+
+        <li class="list">
+             <a href="#">
+                <span class="icon">
+                    <ion-icon name="heart-outline"></ion-icon>
+                </span>
+                <span class="text">Favoritos</span>
+             </a>
+        </li>
+        <div class="indicator"></div>
+    </ul>
 </div>

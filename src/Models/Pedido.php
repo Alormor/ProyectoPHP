@@ -7,8 +7,8 @@ use DateTime;
 class Pedido{
 
     public function __construct(
-        private int|null $id = null,
-        private int|null $usuario_id = null,
+        private ?int $id = null,
+        private ?int $usuario_id = null,
         private string $provincia = "",
         private string $localidad = "",
         private string $direccion = "",

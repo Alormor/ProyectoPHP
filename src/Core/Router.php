@@ -22,8 +22,9 @@ class Router {
         $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 
         // Remover BASE_URL del URI
-        $basePath = parse_url(BASE_URL, PHP_URL_PATH);
-        if (strpos($uri, $basePath) === 0) {
+        $baseUrl = $_ENV['BASE_URL'] ?? 'http://localhost';
+        $basePath = parse_url($baseUrl, PHP_URL_PATH);
+        if ($basePath && strpos($uri, $basePath) === 0) {
             $uri = substr($uri, strlen($basePath));
         }
 

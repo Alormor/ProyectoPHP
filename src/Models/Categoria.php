@@ -4,9 +4,9 @@ namespace Models;
 
 class Categoria{
     public function __construct(
-        private int|null $id = null,
+        private ?int $id = null,
         private string $nombre = '',
-        private string|null $descripcion = null,
+        private ?string $descripcion = null,
     ){}
 
     public static function fromArray(array $data): self
