@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $title ?? 'Tienda Online'; ?></title>
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleHeader.css">
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleFooter.css">
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/home.css">
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleUserWelcome.css">
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/errors.css">
-    <!-- <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleFormLogin.css"> -->
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/styleHeader.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/styleFooter.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/home.css">    
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/styleUserWelcome.css">    
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/errors.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/styleFormLogin.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/styleUserProfile.css">
 </head>
 <body>
     <!-- Header Navigation -->
