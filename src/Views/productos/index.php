@@ -1,25 +1,53 @@
 <div class="productos-container">
     <h1><?php echo $title; ?></h1>
     <p><?php echo $message; ?></p>
-    
-    <div class="filtro-productos">
-        <input type="text" id="filtro-nombre" placeholder="Filtrar por nombre...">
-        <select id="filtro-categoria">
-            <option value="">Todas las categorías</option>
-            <?php foreach ($categorias as $categoria): ?>
-                <option value="<?php echo htmlspecialchars($categoria['id']); ?>">
-                    <?php echo htmlspecialchars($categoria['nombre']); ?>
-                </option>
+
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="success-message">
+            <p><?php echo htmlspecialchars($_SESSION['success']); ?></p>
+        </div>
+        <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
+
+    <?php if (!empty($_SESSION['errors'])): ?>
+        <div class="error-message">
+            <?php foreach ($_SESSION['errors'] as $error): ?>
+                <p><?php echo htmlspecialchars($error); ?></p>
             <?php endforeach; ?>
-        </select>
+        </div>
+        <?php unset($_SESSION['errors']); ?>
+    <?php endif; ?>
+
+    <?php $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario']['rol'] === 'admin'; ?>
+
+    <div class="productos-controles">
+        <div class="filtro-productos">
+            <input type="text" id="filtro-nombre" placeholder="Filtrar por nombre...">
+            <select id="filtro-categoria">
+                <option value="">Todas las categorías</option>
+                <?php foreach ($categorias as $categoria): ?>
+                    <option value="<?php echo htmlspecialchars($categoria['id']); ?>">
+                        <?php echo htmlspecialchars($categoria['nombre']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <?php if ($isAdmin): ?>
+            <div class="admin-acciones">
+                <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/crear" class="btn btn-primary">
+                    <ion-icon name="add-circle-outline"></ion-icon> Crear Producto
+                </a>
+            </div>
+        <?php endif; ?>
     </div>
-    
+
     <?php if (empty($productos)): ?>
         <p>No hay productos disponibles en este momento.</p>
     <?php else: ?>
         <div class="productos-grid" id="productos-grid">
             <?php foreach ($productos as $producto): ?>
-                <form action="<?php echo $_ENV['BASE_URL']; ?>/carrito/agregar" method="POST">
+                <form action="<?php echo $isAdmin ? $_ENV['BASE_URL'] . '/admin/productos/' . $producto['id'] . '/eliminar' : $_ENV['BASE_URL'] . '/carrito/agregar'; ?>" method="POST" <?php if ($isAdmin): ?>onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');"<?php endif; ?>>
                     <div class="producto-card" id="prod-<?= $producto['id'] ?>" data-categoria="<?php echo htmlspecialchars($producto['categoria_id']); ?>" data-nombre="<?php echo htmlspecialchars(strtolower($producto['nombre'])); ?>">
                         <?php if (!empty($producto['imagen'])): ?>
                             <div class="producto-imagen">
@@ -46,11 +74,8 @@
 
                             <div class="producto-precio">
                                 <?php if (!empty($producto['precio_oferta'])): ?>
-                                    <span class="precio-original">
-                                        $<?php echo number_format($producto['precio'], 2); ?>
-                                    </span>
                                     <span class="precio-oferta">
-                                        $<?php echo number_format($producto['precio_oferta'], 2); ?>
+                                        $<?php echo number_format($producto['precio_oferta'], 2); ?> En oferta
                                     </span>
                                 <?php else: ?>
                                     <span class="precio">
@@ -79,6 +104,19 @@
                                     <button type="submit" class="btn-agregar-carrito">Agregar al Carrito</button>
                                 <?php endif; ?>
                             </div>
+
+                            <?php if ($isAdmin): ?>
+                                <div class="producto-acciones-admin">
+                                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/<?php echo $producto['id']; ?>/editar" class="btn-action btn-edit" title="Editar">
+                                        <ion-icon name="pencil-outline"></ion-icon> Editar
+                                    </a>
+                                    <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/<?php echo $producto['id']; ?>/eliminar" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');">
+                                        <button type="submit" class="btn-action btn-delete" title="Eliminar" style="border: none; background: none; padding: 0; cursor: pointer;">
+                                            <ion-icon name="trash-outline"></ion-icon> Eliminar
+                                        </button>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </form>

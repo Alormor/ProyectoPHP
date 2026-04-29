@@ -2,21 +2,17 @@
 
 namespace Controllers;
 
-use Core\Controller;
 use Core\BaseDatos;
 use Request\UserRequest;
 use Services\UsuarioService;
 use Repositories\UsuarioRepository;
 
-class UsuarioController extends Controller
+class UsuarioController extends AdminController
 {
 
     public function index()
     {
-        // Verificar que es admin
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-            $_SESSION['errors'] = ['No tienes permisos para acceder a esta página.'];
-            $this->redirect('/');
+        if (!$this->verificarPermisosAdmin()) {
             return;
         }
 
@@ -25,17 +21,17 @@ class UsuarioController extends Controller
             $usuarioRepository = new \Repositories\UsuarioRepository(BaseDatos::getInstancia());
             $usuarios = $usuarioRepository->findAll();
 
-            $data = [
-                'title' => 'Gestión de Usuarios',
-                'message' => 'Administra todos los usuarios del sistema.',
-                'usuarios' => $usuarios,
-                'es_admin' => true,
-                'showHeader' => true,
-                'showFooter' => true
-            ];
+            $data = $this->prepararDatosVista(
+                'Gestión de Usuarios',
+                'Administra todos los usuarios del sistema.',
+                [
+                    'usuarios' => $usuarios,
+                    'es_admin' => true
+                ]
+            );
             return $this->view('usuarios/index', $data);
         } catch (\Exception $e) {
-            $_SESSION['errors'] = ['Error al cargar los usuarios: ' . $e->getMessage()];
+            $this->guardarError('Error al cargar los usuarios: ' . $e->getMessage());
             $this->redirect('/');
             return;
         }
@@ -54,20 +50,15 @@ class UsuarioController extends Controller
 
     public function create()
     {
-        // Solo los administradores pueden crear usuarios
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-            $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
-            $this->redirect('/');
+        if (!$this->verificarPermisosAdmin()) {
             return;
         }
 
-        $data = [
-            'title' => 'Crear Usuario',
-            'message' => 'Crear nueva cuenta de usuario',
-            'es_admin' => true,
-            'showHeader' => true,
-            'showFooter' => true
-        ];
+        $data = $this->prepararDatosVista(
+            'Crear Usuario',
+            'Crear nueva cuenta de usuario',
+            ['es_admin' => true]
+        );
 
         return $this->view('usuarios/formcreate', $data);
     }
@@ -202,7 +193,7 @@ class UsuarioController extends Controller
                 return;
             }
 
-            $view = $context === 'admin' ? 'usuarios/edit' : 'usuarios/edit-profile';
+            $view = 'usuarios/edit';
             $title = $context === 'admin' ? 'Editar Usuario' : 'Editar Mi Perfil';
             $message = $context === 'admin' ? 'Edita los datos del usuario' : 'Actualiza tus datos personales';
 
