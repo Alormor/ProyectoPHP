@@ -29,7 +29,7 @@
                 </li>
 
         <li class="list" >
-             <a href="<?php echo BASE_URL; ?>/usuarios/userprofile">
+             <a href="<?php echo  $_ENV['BASE_URL']; ?>/usuarios/userprofile">
                 <span class="icon">
                     <ion-icon name="person-outline"></ion-icon>
                 </span>

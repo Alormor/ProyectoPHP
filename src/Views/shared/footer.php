@@ -1,6 +1,6 @@
 <footer class="footer">
     <div class="div-p-img">
-        <img class="img-footer" src="<?php echo BASE_URL; ?>/images/logo-letras.png" alt="Imagen logo cubo de rubik">
+        <img class="img-footer" src="<?php echo $_ENV['BASE_URL']; ?>/images/logo-letras.png" alt="Imagen logo cubo de rubik">
         <p>Tu tienda especializada en cubos de Rubik.</p>
     </div>
     <div class="div-footer">
