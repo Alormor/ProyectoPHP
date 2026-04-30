@@ -17,12 +17,14 @@ class BaseDatos
     private ?PDOStatement $stmt = null;
     private static ?BaseDatos $instancia = null;
 
+
     public function __construct(
         private readonly string $servidor,
         private readonly string $usuario,
         private readonly string $pass,
         private readonly string $name,
-        private readonly string $charset
+        private readonly string $charset,
+        private readonly string $port,
     )
     {
         $this->conexion = $this->conectar();
@@ -31,7 +33,7 @@ class BaseDatos
     private function conectar(): PDO
     {
         try {
-            $dsn = "mysql:host={$this->servidor};dbname={$this->name};charset={$this->charset}";
+            $dsn = "mysql:host={$this->servidor};dbname={$this->name};charset={$this->charset};port={$this->port}";
             $opciones = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -138,7 +140,8 @@ class BaseDatos
                 $_ENV['DB_USER'],
                 $_ENV['DB_PASS'],
                 $_ENV['DB_NAME'],   
-                $_ENV['DB_CHARSET']
+                $_ENV['DB_CHARSET'],
+                $_ENV['DB_PORT']
             );
         }
         return self::$instancia;
