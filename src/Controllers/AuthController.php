@@ -2,12 +2,20 @@
 
 namespace Controllers;
 
+use Core\BaseDatos;
 use Core\Controller;
 use Request\UserRequest;
 use Services\UsuarioService;
 
 class AuthController extends Controller
 {
+    private UsuarioService $service;
+    public function __construct()
+    {
+        $conexion = BaseDatos::getInstancia();
+        $this->service = new UsuarioService();
+    }
+    
     public function register()
     {
         // Preparar datos para la vista
@@ -19,7 +27,7 @@ class AuthController extends Controller
         ];
         
         // Renderizar la vista del formulario de registro
-        return $this->view('usuarios/formregistro', $data);
+        return $this->view('usuarios/formRegistro', $data);
     }
     
     public function save()
@@ -29,29 +37,39 @@ class AuthController extends Controller
             
             if (!$userRequest->validate_and_sanitize()) {
                 $_SESSION['errors'] = $userRequest->getErrors();
-                $this->redirect('/registro');
-                return;
+                header('Location: ' . $_ENV['BASE_URL'] . '/registro');
+                exit();
             }
-            
+
             $userData = $userRequest->getSanitized();
             $usuarioService = new UsuarioService();
             $resultado = $usuarioService->registrar($userData);
             
-            if ($resultado) {
-                $_SESSION['register'] = 'success';
-                $_SESSION['message'] = 'Usuario registrado correctamente. Por favor inicia sesión.';
-                $this->redirect('/login');
-                return;
-            } else {
-                $_SESSION['errors'] = ['Error al registrar el usuario. Intenta de nuevo.'];
-                $this->redirect('/registro');
-                return;
-            }
+            match ($resultado) {
+                "creado" => (function() use ($userData) {
+                    $_SESSION['register'] = 'success';
+                    $_SESSION['message'] = "¡Registro casi completado! Te hemos enviado un correo a {$userData['email']}.";
+                    $this->redirect('/registro');
+                })(),
+                
+                "reenviado" => (function() use ($userData) {
+                    $_SESSION['register'] = 'success';
+                    $_SESSION['message'] = "Ya tenías una cuenta pendiente. Te hemos enviado un nuevo código a {$userData['email']}.";
+                    $this->redirect('/registro');
+                })(),
+                
+                false => (function() {
+                    $_SESSION['errors'] = ['Correo en uso.'];
+                    $this->redirect('/registro');
+                })(),
+            };
+            
+            exit;
             
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            $this->redirect('/registro');
-            return;
+            header('Location: ' . $_ENV['BASE_URL'] . '/registro');
+            exit();
         }
     }
     
@@ -105,7 +123,7 @@ class AuthController extends Controller
             'showFooter' => false
         ];
         
-        return $this->view('usuarios/formlogin', $data);
+        return $this->view('usuarios/formLogin', $data);
     }
     
     public function authenticate()
@@ -123,8 +141,10 @@ class AuthController extends Controller
             $usuarioService = new UsuarioService();
             $usuario = $usuarioService->autenticar($email, $password);
             
-            
-            if ($usuario) {
+            if ($usuario === "no_confirmado") {
+                $_SESSION['errors'] = ['Tu cuenta no está confirmada. Por favor, revisa tu correo o regístrate de nuevo para recibir otro enlace.'];
+                $this->redirect('/login');
+            }elseif ($usuario) {
                 $_SESSION['usuario'] = $usuario;
                 $_SESSION['success'] = 'Sesión iniciada correctamente';
                 $this->redirect('/');
@@ -145,5 +165,29 @@ class AuthController extends Controller
         $this->redirect('/');
         return;
     }
+
+    public function confirmar()
+    {
+        $token = $_GET['token'] ?? null;
+        $status = 'error';
+
+        // Si el token existe, se confirma la cuenta
+        if ($token) {
+            $resultado = $this->service->confirmarCuenta($token);
+            
+            if ($resultado === true) {
+                $status = 'success';
+            } elseif ($resultado === "expirado") {
+                $status = 'expired';
+            }
+        }
+        
+        // Se carga la vista pasándole el estado
+        return $this->view('auth/confirmacion', [
+            'status' => $status,
+            'title' => 'Confirmación de cuenta'
+        ]);
+    }
+
 }
 ?>

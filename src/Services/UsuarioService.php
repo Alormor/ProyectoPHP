@@ -3,44 +3,58 @@
 namespace Services;
 
 use Repositories\UsuarioRepository;
+use Core\BaseDatos;
+use Models\Usuario;
+use Services\MailService;
 
 class UsuarioService extends Service
 {
-    private $usuarioRepository;
-    
+    private UsuarioRepository $repository;
     public function __construct()
     {
-        parent::__construct();
-        $this->usuarioRepository = new UsuarioRepository();
+        $this->repository = new UsuarioRepository(BaseDatos::getInstancia());
     }
-    
+
     public function registrar($userData)
     {
         try {
-            // Verificar que el email no esté ya registrado
-            $usuarioExistente = $this->usuarioRepository->findByEmail($userData['email']);
-            if ($usuarioExistente) {
-                return false;
-            }
+            $usuarioExistente = $this->repository->findByEmail($userData['email']);
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
-            
-            $datosParaGuardar = [
-                'nombre' => $userData['nombre'],
-                'apellidos' => $userData['apellidos'],
+            $token = bin2hex(random_bytes(16));
+            $token_exp = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+
+            if ($usuarioExistente) {
+                // Si ya está confirmado, no se le deja registrar
+                if ($usuarioExistente->isConfirmado()) {
+                    return false; 
+                } 
+                
+                // Se actualiza password, token y expiración
+                $usuarioExistente->setPassword($passwordHash);
+                $usuarioExistente->setToken($token);
+                $usuarioExistente->setToken_exp($token_exp);
+                $this->repository->updateRegistro($usuarioExistente);
+                
+                $mailService = new MailService();
+                $mailService->enviarCorreoConfirmacion($userData['email'], $token);
+                
+                return "reenviado";
+            }
+
+            $nuevoUsuario = Usuario::fromArray([
                 'email' => $userData['email'],
                 'password' => $passwordHash,
-                'rol' => 'usuario',  // Los auto-registros siempre son usuarios normales
-                'confirmado' => false,
-            ];
+                'token' => $token,
+                'token_exp' => $token_exp
+            ]);
+                        
+            $exito = $this->repository->create($nuevoUsuario);         
             
-            // TODO: Generar token de confirmación de email
-            
-            $usuarioId = $this->usuarioRepository->create($datosParaGuardar);
-            
-            if ($usuarioId) {
-                // TODO: Enviar email de bienvenida
-                return $usuarioId;
+            if ($exito) {
+                $mailService = new MailService();
+                $mailService->enviarCorreoConfirmacion($userData['email'], $token);
+                return "creado";
             }
             
             return false;
@@ -53,39 +67,33 @@ class UsuarioService extends Service
     public function crear($userData, $adminId)
     {
         try {
-            // Verificar que el admin existe y tiene rol de admin
-            $admin = $this->usuarioRepository->find($adminId);
+            // Verificar que el admin existe
+            $admin = $this->repository->find($adminId);
             if (!$admin || $admin['rol'] !== 'admin') {
                 return false;
             }
             
             // Verificar que el email no esté ya registrado
-            $usuarioExistente = $this->usuarioRepository->findByEmail($userData['email']);
+            $usuarioExistente = $this->repository->findByEmail($userData['email']);
             if ($usuarioExistente) {
                 return false;
             }
             
             $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
-            
-            // Validar rol: solo admins pueden asignar roles diferentes a 'usuario'
-            $rol = $userData['rol'] ?? 'usuario';
-            if (!in_array($rol, ['usuario', 'admin'])) {
-                $rol = 'usuario';
-            }
-            
-            $datosParaGuardar = [
-                'nombre' => $userData['nombre'],
-                'apellidos' => $userData['apellidos'],
+
+            $nuevoUsuario = Usuario::fromArray([
+                'nombre' => $userData['nombre'] ?? '',
+                'apellidos' => $userData['apellidos'] ?? '',
                 'email' => $userData['email'],
                 'password' => $passwordHash,
-                'rol' => $rol,
+                'rol' => $userData['rol'] ?? 'usuario',
                 'confirmado' => true,
-            ];
+            ]);
+
+            $exito = $this->repository->create($nuevoUsuario);
             
-            $usuarioId = $this->usuarioRepository->create($datosParaGuardar);
-            
-            if ($usuarioId) {
-                return $usuarioId;
+            if ($exito) {
+                return $nuevoUsuario->getId();
             }
             
             return false;
@@ -93,42 +101,58 @@ class UsuarioService extends Service
         } catch (\Exception $e) {
             return false;
         }
-    }
-    
-    public function buscarPorEmail($email)
-    {
-        // TODO: Implementar búsqueda de usuario por email
-        return null;
     }
     
     public function autenticar($email, $password)
     {
         try {
             // Buscar usuario por email
-            $usuario = $this->usuarioRepository->findByEmail($email);
+            $usuario = $this->repository->findByEmail($email);
             
             if (!$usuario) {
                 return false;
             }
             
             // Verificar que contraseña coincida
-            if (!password_verify($password, $usuario['password'])&& !($password == $usuario['password'])){
+            if (!password_verify($password, $usuario->getPassword())) {
                 return false;
             }
-            
+
+            if (!$usuario->isConfirmado()) {
+                return "no_confirmado";
+            }      
             
             // Retornar datos del usuario
             return [
-                'id'        => $usuario['id'],
-                'nombre'    => $usuario['nombre'],
-                'apellidos' => $usuario['apellidos'],
-                'email'     => $usuario['email'],
-                'rol'       => $usuario['rol'],
+                'id'        => $usuario->getId(),
+                'nombre'    => $usuario->getNombre(),
+                'apellidos' => $usuario->getApellidos(),
+                'email'     => $usuario->getEmail(),
+                'rol'       => $usuario->getRol(),
             ];
             
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function confirmarCuenta($token)
+    {
+        $usuario = $this->repository->findByToken($token);
+
+        // Comprobar si el token existe y no ha expirado
+        if ($usuario) {
+            $ahora = new \DateTime();
+            $fechaExpira = new \DateTime($usuario->getToken_exp());
+            
+            if ($ahora > $fechaExpira) {
+                return "expirado";
+            }
+            
+            return $this->repository->confirmarUsuario($usuario->getId());
+        }
+
+        return false;
     }
 }
 ?>

@@ -17,10 +17,12 @@
             </div>
             
             <div class="home-buttons">
-                <a href="<?php echo BASE_URL; ?>/productos" class="btn-productos">Ver Productos</a>
-                <a href="<?php echo BASE_URL; ?>/logout" class="btn-logout">Cerrar Sesión</a>
+                <a href="<?php echo $_ENV['BASE_URL']; ?>/productos" class="btn-productos">Ver Productos</a>
+                <a href="<?php echo $_ENV['BASE_URL']; ?>/logout" class="btn-logout">Cerrar Sesión</a>
+
                 <?php if ($_SESSION['usuario']['rol'] === 'admin'): ?>
-                    <a href="<?php echo BASE_URL; ?>/admin/usuarios/crear" class="btn-admin">Crear Usuario</a>
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios" class="btn-admin">Gestión de Usuarios</a>
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios/crear" class="btn-admin">Crear Usuario</a>
                 <?php endif; ?>
             </div>
         </div>

@@ -18,11 +18,11 @@ class BaseDatos
     private static ?BaseDatos $instancia = null;
 
     public function __construct(
-        private readonly string $servidor = DB_SERVIDOR,
-        private readonly string $usuario = DB_USUARIO,
-        private readonly string $pass = DB_PASS,
-        private readonly string $baseDatos = DB_DATABASE,
-        private readonly string $charset = DB_CHARSET
+        private readonly string $servidor,
+        private readonly string $usuario,
+        private readonly string $pass,
+        private readonly string $name,
+        private readonly string $charset
     )
     {
         $this->conexion = $this->conectar();
@@ -31,7 +31,7 @@ class BaseDatos
     private function conectar(): PDO
     {
         try {
-            $dsn = "mysql:host={$this->servidor};dbname={$this->baseDatos};charset={$this->charset}";
+            $dsn = "mysql:host={$this->servidor};dbname={$this->name};charset={$this->charset}";
             $opciones = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -134,11 +134,11 @@ class BaseDatos
     {
         if (self::$instancia === null) {
             self::$instancia = new self(
-                DB_SERVIDOR,
-                DB_USUARIO,
-                DB_PASS,
-                DB_DATABASE,
-                DB_CHARSET
+                $_ENV['DB_HOST'],
+                $_ENV['DB_USER'],
+                $_ENV['DB_PASS'],
+                $_ENV['DB_NAME'],   
+                $_ENV['DB_CHARSET']
             );
         }
         return self::$instancia;

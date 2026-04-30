@@ -3,17 +3,49 @@
 namespace Controllers;
 
 use Core\Controller;
+use Repositories\CategoriaRepository;
 
 class CategoriaController extends Controller
 {
+    private $categoriaRepository;
+
+    public function __construct()
+    {
+        $this->categoriaRepository = new CategoriaRepository();
+    }
+
     public function index()
     {
-        // Listar todas las categorías
+        $categorias = $this->categoriaRepository->findAll();
+
+        $data = [
+            'title' => 'Categorías',
+            'message' => 'Todas las categorías disponibles',
+            'categorias' => $categorias,
+            'showHeader' => true,
+            'showFooter' => true
+        ];
+
+        return $this->view('categorias/index', $data);
     }
     
     public function show($id)
     {
-        // Mostrar detalles de una categoría
+        $categoria = $this->categoriaRepository->find($id);
+
+        if (!$categoria) {
+            $this->redirect('/categorias');
+            return;
+        }
+
+        $data = [
+            'title' => $categoria['nombre'] ?? 'Categoría',
+            'categoria' => $categoria,
+            'showHeader' => true,
+            'showFooter' => true
+        ];
+
+        return $this->view('categorias/show', $data);
     }
     
     public function create()
