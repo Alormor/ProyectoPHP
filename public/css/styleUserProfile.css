@@ -1,71 +1,74 @@
 @import "styleVariables.css";
 
-.user-no, .user-si{
-    margin-left:6rem;
-    margin-top: 5rem;
+.user-no,
+.user-si {
+  margin-left: 6rem;
+  margin-top: 5rem;
 }
 
-.user-si h2, .user-no h2 {
-    font-size: 3.5rem;
-    color: var(--color-text-principal);
-    margin: 10px 0;
-    line-height: 1.1;
+.user-si h2,
+.user-no h2 {
+  font-size: 3.5rem;
+  color: var(--color-text-principal);
+  margin: 10px 0;
+  line-height: 1.1;
 }
 
-.user-no p, .user-si p {
-    display: block; 
-    padding: 0;
-    margin-bottom: 50px;
-    text-decoration: none;
-    color: var(--color-text-secundario);
+.user-no p,
+.user-si p {
+  display: block;
+  padding: 0;
+  margin-bottom: 50px;
+  text-decoration: none;
+  color: var(--color-text-secundario);
 }
 
 .enlace {
-    border: 2px solid var(--secondary-color);
-    color: var(--color-text-principal);
-    border-radius: 10px;
-    background-color: #e160d86f;
-    display: inline-block;
-    width: fit-content;
-    text-align: center;
-    margin: 0; 
+  border: 2px solid var(--secondary-color);
+  color: var(--color-text-principal);
+  border-radius: 10px;
+  background-color: #e160d86f;
+  display: inline-block;
+  width: fit-content;
+  text-align: center;
+  margin: 0;
 }
 
-.enlace:hover{
-    background-color: var(--secondary-color);
-    color: var(--fondo);
+.enlace:hover {
+  background-color: var(--secondary-color);
+  color: var(--fondo);
 }
 
-.enlace-registro{
-    border: 2px solid var(--quaternary-color);
-    color: var(--fondo);
-    border-radius: 10px;
-    background-color: var(--quaternary-color);
+.enlace-registro {
+  border: 2px solid var(--quaternary-color);
+  color: var(--fondo);
+  border-radius: 10px;
+  background-color: var(--quaternary-color);
 }
 
-.enlace-registro:hover{
-    background-color: #dbb64790;
-    color: var(--color-text-principal);
+.enlace-registro:hover {
+  background-color: #dbb64790;
+  color: var(--color-text-principal);
 }
 
 .enlaces-no-user {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.5rem;
-    margin-top: 2rem;
-    width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  width: fit-content;
 }
 
-.enlaces-no-user a{
-    text-decoration: none;
-    padding: 8px 30px;
+.enlaces-no-user a {
+  text-decoration: none;
+  padding: 8px 30px;
 }
 
 .registro-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    color: var(--color-text-secundario);
-    font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--color-text-secundario);
+  font-weight: 600;
 }
