@@ -5,9 +5,9 @@
             <span>Envíos gratis en compras superiores a 50€</span>
         </div>
         <div class="social-icons">
-            <a href="#"><ion-icon name="logo-instagram"></ion-icon></a>
-            <a href="#"><ion-icon name="logo-facebook"></ion-icon></a>
-            <a href="#"><ion-icon name="logo-tiktok"></ion-icon></a>
+            <a href="https://www.instagram.com/" target="blanck"><ion-icon name="logo-instagram"></ion-icon></a>
+            <a href="https://www.facebook.com/" target="blanck"><ion-icon name="logo-facebook"></ion-icon></a>
+            <a href="https://www.tiktok.com/" target="blanck"><ion-icon name="logo-tiktok"></ion-icon></a>
         </div>
     </div>
 
@@ -15,7 +15,7 @@
         
     
         <div class="div-img-header">
-            <img class="img-header" src="<?php echo BASE_URL; ?>/images/logo-letras.png" alt="Imagen logo cubo de rubik">
+            <a href="<?php echo BASE_URL; ?>/"><img class="img-header" src="<?php echo BASE_URL; ?>/images/logo-letras.png" alt="Imagen logo cubo de rubik"></a>
         </div>
         <div class="navigation">
             <ul>
