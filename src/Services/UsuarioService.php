@@ -154,5 +154,27 @@ class UsuarioService extends Service
 
         return false;
     }
+
+    public function solicitarPassword($email)
+    {
+        $usuario = $this->repository->findByEmail($email);
+        if ($usuario) {
+            $token = bin2hex(random_bytes(32));
+            $expiracion = date("Y-m-d H:i:s", strtotime('+10 minutes'));
+            
+            $this->repository->guardarTokenPassword($email, $token, $expiracion);
+            $mailService = new MailService();
+            return $mailService->enviarEmailReset($email, $token);
+        }  
+        return false;
+    }
+    
+    public function validarTokenReset($token) {
+        return $this->repository->validarToken($token);
+    }
+    public function completarReset($email, $password) {
+        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+        return $this->repository->cambiarPassword($email, $passwordHash);
+    }
 }
 ?>

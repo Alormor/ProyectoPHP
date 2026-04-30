@@ -155,3 +155,21 @@ Router::add('GET', '/carrito/decrementar/:id', function ($id) {
     return (new \Controllers\CarritoController())->decrementar($id);
 });
 
+// Formulario para pedir el reset
+Router::add('GET', '/passOlvidada', function () {
+    return (new \Controllers\AuthController())->forgotPassword();
+});
+
+Router::add('POST', '/passOlvidada', function () {
+    return (new \Controllers\AuthController())->forgotPassword();
+});
+
+// Formulario para poner la nueva contraseña
+Router::add('GET', '/resetPassword', function () {
+    return (new \Controllers\AuthController())->resetPassword();
+});
+
+Router::add('POST', '/resetPassword', function () {
+    return (new \Controllers\AuthController())->resetPassword();
+});
+
