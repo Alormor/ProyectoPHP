@@ -41,13 +41,13 @@
                 </p>
                 
                 <div class="home-buttons">
-                    <a href="<?php echo BASE_URL; ?>/productos" class="btn-productos">
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/productos" class="btn-productos">
                         <ion-icon name="cube-outline"></ion-icon> Ver Productos
                     </a>
-                    <a href="<?php echo BASE_URL; ?>/registro" class="btn-registro">
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/registro" class="btn-registro">
                         Registrarse
                     </a>
-                    <a href="<?php echo BASE_URL; ?>/login" class="btn-login">
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/login" class="btn-login">
                         Iniciar Sesión
                     </a>
                 </div>
@@ -80,7 +80,7 @@
             </div>
 
             <div class="hero-image">
-                <img class="img-inicio" src="<?php echo BASE_URL; ?>/images/inicio.png" alt="Foto cubo rubik inicio">
+                <img class="img-inicio" src="<?php echo $_ENV['BASE_URL']; ?>/images/inicio.png" alt="Foto cubo rubik inicio">
             </div>
 
         </div>

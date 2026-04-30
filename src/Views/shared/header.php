@@ -28,14 +28,14 @@
                     </a>
                 </li>
 
-        <li class="list" >
-             <a href="<?php echo BASE_URL; ?>/usuarios/userprofile">
-                <span class="icon">
-                    <ion-icon name="person-outline"></ion-icon>
-                </span>
-                <span class="text">Perfil</span>
-             </a>
-        </li>
+           <li class="list" >
+               <a href="<?php echo $_ENV['BASE_URL']; ?>/usuarios/userprofile">
+                    <span class="icon">
+                        <ion-icon name="person-outline"></ion-icon>
+                    </span>
+                    <span class="text">Perfil</span>
+                </a>
+            </li>
 
         <li class="list">
              <a href="#">
@@ -45,15 +45,10 @@
                 <span class="text">Carrito</span>
              </a>
         </li>
-
-        <li class="list">
-             <a href="#">
-                <span class="icon">
-                    <ion-icon name="heart-outline"></ion-icon>
-                </span>
-                <span class="text">Favoritos</span>
-             </a>
-        </li>
         <div class="indicator"></div>
-    </ul>
+        </ul>
+        </div>
+    </div>
 </div>
+
+<script src="<?php echo $_ENV['BASE_URL']; ?>/js/scriptHeader.js"></script>
