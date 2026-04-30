@@ -202,7 +202,7 @@ class UsuarioController extends Controller
                 return;
             }
 
-            $view = $context === 'admin' ? 'usuarios/edit' : 'usuarios/edit-profile';
+            $view = 'usuarios/edit';
             $title = $context === 'admin' ? 'Editar Usuario' : 'Editar Mi Perfil';
             $message = $context === 'admin' ? 'Edita los datos del usuario' : 'Actualiza tus datos personales';
 
