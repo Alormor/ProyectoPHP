@@ -188,6 +188,36 @@ class UsuarioRepository extends Repository
         return $this->conexion->ejecutar($sql, $param);
     }
 
+    //
+    public function guardarTokenPassword($email, $token, $expiracion) {
+        $sql = "UPDATE usuarios SET token = :token, token_exp = :exp WHERE email = :email";
+        $param =[
+            ":email" => ['valor' => $email],
+            ":token" => ['valor' => $token],
+            ":exp" => ['valor' => $expiracion],
+        ];
+        
+        $this->conexion->ejecutar($sql, $param);
+    }
+
+    public function validarToken($token) {
+        $sql = "SELECT email FROM usuarios WHERE token = :token AND token_exp > NOW()";
+        $param = [
+            ":token" => ['valor' => $token]
+        ];
+        $this->conexion->ejecutar($sql, $param);
+        $resultado = $this->conexion->extraer_registro();
+        return $resultado ? $resultado['email'] : false;
+    }
+
+    public function cambiarPassword($email, $password){
+        $sql = "UPDATE usuarios SET password = :password, token = NULL, token_exp = NULL WHERE email = :email";
+        $param = [
+            ":email" => ['valor' => $email],
+            ":password" => ['valor' => $password],
+        ];
+        return $this->conexion->ejecutar($sql, $param);
+    }
 
 }
 ?>

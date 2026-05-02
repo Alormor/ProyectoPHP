@@ -6,6 +6,7 @@ use Core\BaseDatos;
 use Core\Controller;
 use Request\UserRequest;
 use Services\UsuarioService;
+use Models\Usuario;
 
 class AuthController extends Controller
 {
@@ -72,7 +73,6 @@ class AuthController extends Controller
             exit();
         }
     }
-    
 
     
     public function store()
@@ -189,5 +189,44 @@ class AuthController extends Controller
         ]);
     }
 
+
+    public function forgotPassword() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'] ?? '';
+            // Usamos el servicio que ya tienes
+            if ($this->service->solicitarPassword($email)) {
+                $_SESSION['success'] = "Se ha enviado un enlace para restablecer tu contraseña.";
+            } else {
+                $_SESSION['errors'] = ["El correo no existe."];
+            }
+        }
+        return $this->view('usuarios/passOlvidada');
+    }
+    public function resetPassword()
+    {
+        $token = $_GET['token'] ?? $_POST['token'] ?? null;
+        if (!$token || !$this->service->validarTokenReset($token)) {
+            return $this->view('auth/confirmacion', ['status' => 'expired', 'title' => 'Enlace caducado']);
+        }
+        // Si el usuario envía el formulario con la nueva contraseña
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $password = $_POST['password'] ?? '';
+            $confirm = $_POST['confirm_password'] ?? '';
+            if ($password === $confirm && !empty($password)) {
+                $email = $this->service->validarTokenReset($token);
+                $this->service->completarReset($email, $password);
+                
+               
+                return $this->view('auth/confirmacionPass', [
+                    'title' => 'Exito',
+                    'showHeader' => false,
+                    'showFooter' => false
+                ]);
+            }
+            $_SESSION['errors'] = ["Las contraseñas no coinciden."];
+        }
+        // Si es GET, mostramos el formulario de "Nueva Contraseña"
+        return $this->view('usuarios/resetPassword', ['token' => $token]);
+    }
 }
 ?>
