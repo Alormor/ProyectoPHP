@@ -47,54 +47,54 @@
     <?php else: ?>
         <div class="productos-grid" id="productos-grid">
             <?php foreach ($productos as $producto): ?>
-                <form action="<?php echo $isAdmin ? $_ENV['BASE_URL'] . '/admin/productos/' . $producto['id'] . '/eliminar' : $_ENV['BASE_URL'] . '/carrito/agregar'; ?>" method="POST" <?php if ($isAdmin): ?>onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');"<?php endif; ?>>
                     <div class="producto-card" id="prod-<?= $producto['id'] ?>" data-categoria="<?php echo htmlspecialchars($producto['categoria_id']); ?>" data-nombre="<?php echo htmlspecialchars(strtolower($producto['nombre'])); ?>">
-                        <?php if (!empty($producto['imagen'])): ?>
-                            <div class="producto-imagen">
-                                <img src="<?php echo htmlspecialchars($producto['imagen']); ?>"
-                                    alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
-                            </div>
-                        <?php else: ?>
-                            <div class="producto-imagen sin-imagen">
-                                <p>Sin imagen</p>
-                            </div>
-                        <?php endif; ?>
-
-                        <div class="producto-info">
-                            <h2 class="producto-nombre"><?php echo htmlspecialchars($producto['nombre']); ?></h2>
-
-                            <?php if (!empty($producto['descripcion'])): ?>
-                                <p class="producto-descripcion">
-                                    <?php echo htmlspecialchars(substr($producto['descripcion'], 0, 100)); ?>
-                                    <?php if (strlen($producto['descripcion']) > 100): ?>
-                                        ...
-                                    <?php endif; ?>
-                                </p>
+                        <form action="<?php echo $_ENV['BASE_URL'] . '/carrito/agregar'; ?>" method="POST" >
+                            <?php if (!empty($producto['imagen'])): ?>
+                                <div class="producto-imagen">
+                                    <img src="<?php echo htmlspecialchars($producto['imagen']); ?>"
+                                        alt="<?php echo htmlspecialchars($producto['nombre']); ?>">
+                                </div>
+                            <?php else: ?>
+                                <div class="producto-imagen sin-imagen">
+                                    <p>Sin imagen</p>
+                                </div>
                             <?php endif; ?>
 
-                            <div class="producto-precio">
-                                <?php if (!empty($producto['precio_oferta'])): ?>
-                                    <span class="precio-oferta">
-                                        $<?php echo number_format($producto['precio_oferta'], 2); ?> En oferta
-                                    </span>
-                                <?php else: ?>
-                                    <span class="precio">
-                                        $<?php echo number_format($producto['precio'], 2); ?>
-                                    </span>
-                                <?php endif; ?>
-                            </div>
+                            <div class="producto-info">
+                                <h2 class="producto-nombre"><?php echo htmlspecialchars($producto['nombre']); ?></h2>
 
-                            <div class="producto-stock">
-                                <?php if ($producto['stock'] > 0): ?>
-                                    <span class="stock-disponible">
-                                        Stock: <?php echo $producto['stock']; ?>
-                                    </span>
-                                <?php else: ?>
-                                    <span class="stock-agotado">
-                                        Agotado
-                                    </span>
+                                <?php if (!empty($producto['descripcion'])): ?>
+                                    <p class="producto-descripcion">
+                                        <?php echo htmlspecialchars(substr($producto['descripcion'], 0, 100)); ?>
+                                        <?php if (strlen($producto['descripcion']) > 100): ?>
+                                            ...
+                                        <?php endif; ?>
+                                    </p>
                                 <?php endif; ?>
-                            </div>
+
+                                <div class="producto-precio">
+                                    <?php if (!empty($producto['precio_oferta'])): ?>
+                                        <span class="precio-oferta">
+                                            $<?php echo number_format($producto['precio_oferta'], 2); ?> En oferta
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="precio">
+                                            $<?php echo number_format($producto['precio'], 2); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <div class="producto-stock">
+                                    <?php if ($producto['stock'] > 0): ?>
+                                        <span class="stock-disponible">
+                                            Stock: <?php echo $producto['stock']; ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="stock-agotado">
+                                            Agotado
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
 
                             <input type="hidden" name="producto_id" value="<?= $producto["id"] ?>">
                             <div class="producto-acciones">
@@ -104,22 +104,21 @@
                                     <button type="submit" class="btn-agregar-carrito">Agregar al Carrito</button>
                                 <?php endif; ?>
                             </div>
-
-                            <?php if ($isAdmin): ?>
-                                <div class="producto-acciones-admin">
-                                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/<?php echo $producto['id']; ?>/editar" class="btn-action btn-edit" title="Editar">
-                                        <ion-icon name="pencil-outline"></ion-icon> Editar
-                                    </a>
-                                    <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/<?php echo $producto['id']; ?>/eliminar" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');">
-                                        <button type="submit" class="btn-action btn-delete" title="Eliminar" style="border: none; background: none; padding: 0; cursor: pointer;">
-                                            <ion-icon name="trash-outline"></ion-icon> Eliminar
-                                        </button>
-                                    </form>
-                                </div>
-                            <?php endif; ?>
+                </form>
+                        <?php if ($isAdmin): ?>
+                            <div class="producto-acciones-admin">
+                                <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/<?php echo $producto['id']; ?>/editar" class="btn-action btn-edit" title="Editar">
+                                    <ion-icon name="pencil-outline"></ion-icon> Editar
+                                </a>
+                                <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/<?php echo $producto['id']; ?>/eliminar" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');">
+                                    <button type="submit" class="btn-action btn-delete" title="Eliminar" style="border: none; background: none; padding: 0; cursor: pointer;">
+                                        <ion-icon name="trash-outline"></ion-icon> Eliminar
+                                    </button>
+                                </form>
+                            </div>
+                        <?php endif; ?>
                         </div>
                     </div>
-                </form>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
