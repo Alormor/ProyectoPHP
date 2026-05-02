@@ -36,7 +36,8 @@ class AuthController extends Controller
             $userRequest = new UserRequest();
             
             if (!$userRequest->validate_and_sanitize()) {
-                $_SESSION['errors'] = $userRequest->getErrors();
+                $errs = $userRequest->getErrors();
+                $_SESSION['errors'] = $errs;
                 header('Location: ' . $_ENV['BASE_URL'] . '/registro');
                 exit();
             }
@@ -88,7 +89,8 @@ class AuthController extends Controller
             $userRequest = new UserRequest();
             
             if (!$userRequest->validate_and_sanitize('admin')) {
-                $_SESSION['errors'] = $userRequest->getErrors();
+                $errs = $userRequest->getErrors();
+                $_SESSION['errors'] = $errs;
                 $this->redirect('/admin/usuarios/crear');
                 return;
             }

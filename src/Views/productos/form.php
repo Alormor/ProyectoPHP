@@ -21,10 +21,9 @@
         <div class="form-group">
             <label for="categoria_id">Categoría:</label>
             <select id="categoria_id" name="categoria_id" required>
-                <option value="">Selecciona una categoría</option>
                 <?php foreach ($categorias as $categoria): ?>
                     <option value="<?php echo $categoria['id']; ?>" 
-                        <?php echo (($_SESSION['form_data']['categoria_id'] ?? $producto['categoria_id'] ?? '') === (string) $categoria['id']) ? 'selected' : ''; ?>>
+                        <?php echo ($producto['categoria_id']== $categoria['id']) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($categoria['nombre']); ?>
                     </option>
                 <?php endforeach; ?>
@@ -69,7 +68,7 @@
         <button type="submit" class="btn btn-primary">
             <?php echo ($producto) ? 'Actualizar Producto' : 'Crear Producto'; ?>
         </button>
-        <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/gestionar" class="btn btn-secondary">Cancelar</a>
+        <a href="<?php echo $_ENV['BASE_URL']; ?>/productos" class="btn btn-secondary">Cancelar</a>
     </form>
 
     <?php

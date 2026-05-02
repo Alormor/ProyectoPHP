@@ -1,5 +1,6 @@
 <?php
 use Core\Router;
+use Controllers\CategoriaController;
 
 // Rutas principales
 Router::add('GET', '/', function () {
@@ -41,35 +42,6 @@ Router::add('GET', '/confirmar-cuenta', function () {
 
 
 // Rutas admin
-Router::add('GET', '/admin', function () {
-    $controller = new \Controllers\AdminController();
-    return $controller->dashboard();
-});
-
-Router::add('GET', '/admin/dashboard', function () {
-    $controller = new \Controllers\AdminController();
-    return $controller->dashboard();
-});
-
-Router::add('GET', '/admin/estadisticas', function () {
-    $controller = new \Controllers\AdminController();
-    return $controller->estadisticas();
-});
-
-Router::add('GET', '/admin/reportes', function () {
-    $controller = new \Controllers\AdminController();
-    return $controller->reportes();
-});
-
-Router::add('GET', '/admin/configuracion', function () {
-    $controller = new \Controllers\AdminController();
-    return $controller->configuracion();
-});
-
-Router::add('POST', '/admin/configuracion', function () {
-    $controller = new \Controllers\AdminController();
-    return $controller->guardarConfiguracion();
-});
 
 Router::add('GET', '/admin/usuarios', function () {
     $controller = new \Controllers\UsuarioController();
@@ -138,12 +110,6 @@ Router::add('GET', '/usuarios/:id', function ($id) {
     return $controller->show($id);
 });
 
-// Rutas admin de productos
-Router::add('GET', '/admin/productos/gestionar', function () {
-    $controller = new \Controllers\ProductoController();
-    return $controller->index();
-});
-
 Router::add('GET', '/admin/productos/crear', function () {
     $controller = new \Controllers\ProductoController();
     return $controller->create();
@@ -184,7 +150,7 @@ Router::add('GET', '/productos/:id', function ($id) {
 
 // Rutas admin de categorías
 Router::add('GET', '/admin/categorias/gestionar', function () {
-    $controller = new \Controllers\CategoriaController();
+    $controller = new CategoriaController();
     return $controller->gestion();
 });
 

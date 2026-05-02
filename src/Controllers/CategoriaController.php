@@ -2,15 +2,19 @@
 
 namespace Controllers;
 
+use Core\Controller;
+use Request\AdminRequest;
 use Repositories\CategoriaRepository;
 
-class CategoriaController extends AdminController
+class CategoriaController extends Controller
 {
-    private $categoriaRepository;
+    protected $categoriaRepository;
+    protected $adminRequest;
 
     public function __construct()
     {
         $this->categoriaRepository = new CategoriaRepository();
+        $this->adminRequest = new AdminRequest();
     }
 
     public function index()
@@ -49,21 +53,22 @@ class CategoriaController extends AdminController
     
     public function gestion()
     {
-        if (!$this->verificarPermisosAdmin()) {
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
+            $this->redirect('/');
             return;
         }
 
         try {
             $categorias = $this->categoriaRepository->findAll();
 
-            $data = $this->prepararDatosVista(
+            $data = $this->adminRequest->prepararDatosVista(
                 'Gestion de Categorias',
                 'Administra todas las categorías de la tienda.',
                 ['categorias' => $categorias]
             );
             return $this->view('categorias/gestion', $data);
         } catch (\Exception $e) {
-            $this->guardarError('Error al cargar las categorías: ' . $e->getMessage());
+            $this->adminRequest->guardarError('Error al cargar las categorías: ' . $e->getMessage());
             $this->redirect('/');
             return;
         }
@@ -71,11 +76,12 @@ class CategoriaController extends AdminController
     
     public function create()
     {
-        if (!$this->verificarPermisosAdmin()) {
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
+            $this->redirect('/');
             return;
         }
 
-        $data = $this->prepararDatosVista(
+        $data = $this->adminRequest->prepararDatosVista(
             'Crear Categoría',
             'Rellena los datos para crear una nueva categoría.',
             [
@@ -89,7 +95,8 @@ class CategoriaController extends AdminController
     
     public function store()
     {
-        if (!$this->verificarPermisosAdmin()) {
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
+            $this->redirect('/');
             return;
         }
 
@@ -102,8 +109,9 @@ class CategoriaController extends AdminController
         }
 
         $formData = ['nombre' => $nombre, 'descripcion' => $descripcion];
-        $this->guardarErroresYRedirigir($errors, $formData, '/admin/categorias/crear');
-        if (!empty($errors)) {
+        $redirect = $this->adminRequest->guardarErroresYRedirigir($errors, $formData, '/admin/categorias/crear');
+        if ($redirect) {
+            $this->redirect($redirect);
             return;
         }
 
@@ -113,29 +121,34 @@ class CategoriaController extends AdminController
         ]);
 
         if ($resultado) {
-            $this->guardarExito('Categoría creada correctamente.');
+            $this->adminRequest->guardarExito('Categoría creada correctamente.');
             $this->redirect('/admin/categorias/gestionar');
             return;
         }
 
-        $this->guardarErroresYRedirigir(['No se pudo crear la categoría.'], $formData, '/admin/categorias/crear');
+        $redirect = $this->adminRequest->guardarErroresYRedirigir(['No se pudo crear la categoría.'], $formData, '/admin/categorias/crear');
+        if ($redirect) {
+            $this->redirect($redirect);
+            return;
+        }
     }
     
     public function edit($id)
     {
-        if (!$this->verificarPermisosAdmin()) {
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
+            $this->redirect('/');
             return;
         }
 
         $categoria = $this->categoriaRepository->find((int) $id);
 
         if (!$categoria) {
-            $this->guardarError('La categoría no existe.');
+            $this->adminRequest->guardarError('La categoría no existe.');
             $this->redirect('/admin/categorias/gestionar');
             return;
         }
 
-        $data = $this->prepararDatosVista(
+        $data = $this->adminRequest->prepararDatosVista(
             'Editar Categoría',
             'Actualiza los datos de la categoría.',
             [
@@ -149,14 +162,15 @@ class CategoriaController extends AdminController
     
     public function update($id)
     {
-        if (!$this->verificarPermisosAdmin()) {
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
+            $this->redirect('/');
             return;
         }
 
         $categoria = $this->categoriaRepository->find((int) $id);
         if (!$categoria) {
-            $this->guardarError('La categoría no existe.');
-            $this->redirect('/admin/categorias/gestionar');
+            $this->adminRequest->guardarError('La categoría no existe.');
+            $this->redirect('/categorias');
             return;
         }
 
@@ -169,8 +183,9 @@ class CategoriaController extends AdminController
         }
 
         $formData = ['nombre' => $nombre, 'descripcion' => $descripcion];
-        $this->guardarErroresYRedirigir($errors, $formData, '/admin/categorias/' . (int) $id . '/editar');
-        if (!empty($errors)) {
+        $redirect = $this->adminRequest->guardarErroresYRedirigir($errors, $formData, '/admin/categorias/' . (int) $id . '/editar');
+        if ($redirect) {
+            $this->redirect($redirect);
             return;
         }
 
@@ -180,26 +195,31 @@ class CategoriaController extends AdminController
         ]);
 
         if ($resultado) {
-            $this->guardarExito('Categoría actualizada correctamente.');
+            $this->adminRequest->guardarExito('Categoría actualizada correctamente.');
             $this->redirect('/admin/categorias/gestionar');
             return;
         }
 
-        $this->guardarErroresYRedirigir(['No se pudo actualizar la categoría.'], $formData, '/admin/categorias/' . (int) $id . '/editar');
+        $redirect = $this->adminRequest->guardarErroresYRedirigir(['No se pudo actualizar la categoría.'], $formData, '/admin/categorias/' . (int) $id . '/editar');
+        if ($redirect) {
+            $this->redirect($redirect);
+            return;
+        }
     }
     
     public function delete($id)
     {
-        if (!$this->verificarPermisosAdmin()) {
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
+            $this->redirect('/');
             return;
         }
 
         $resultado = $this->categoriaRepository->delete((int) $id);
 
         if ($resultado) {
-            $this->guardarExito('Categoría eliminada correctamente.');
+            $this->adminRequest->guardarExito('Categoría eliminada correctamente.');
         } else {
-            $this->guardarError('No se pudo eliminar la categoría.');
+            $this->adminRequest->guardarError('No se pudo eliminar la categoría.');
         }
 
         $this->redirect('/admin/categorias/gestionar');

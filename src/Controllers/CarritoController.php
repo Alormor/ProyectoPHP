@@ -17,6 +17,7 @@ class CarritoController extends Controller
     public function index() {
         if (!isset($_SESSION['usuario'])) {
             $this->redirect('/login');
+            return;
         }
 
         $usuario_id = $_SESSION['usuario']['id'];
@@ -35,6 +36,7 @@ class CarritoController extends Controller
         if (!isset($_SESSION['usuario'])) {
             $_SESSION['errors'] = ['Debes iniciar sesión para añadir productos al carrito'];
             $this->redirect('/login');
+            return;
         }
 
         $producto_id = $_POST['producto_id'] ?? null;

@@ -2,18 +2,22 @@
 
 namespace Controllers;
 
+use Core\Controller;
+use Request\AdminRequest;
 use Repositories\ProductoRepository;
 use Repositories\CategoriaRepository;
 
-class ProductoController extends AdminController
+class ProductoController extends Controller
 {
-    private $productoRepository;
-    private $categoriaRepository;
+    protected $productoRepository;
+    protected $categoriaRepository;
+    protected $adminRequest;
 
     public function __construct()
     {
         $this->productoRepository = new ProductoRepository();
         $this->categoriaRepository = new CategoriaRepository();
+        $this->adminRequest = new AdminRequest();
     }
 
     public function index()
@@ -104,7 +108,8 @@ class ProductoController extends AdminController
 
     public function store()
     {
-        if (!$this->verificarPermisosAdmin()) {
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
+            $this->redirect('/');
             return;
         }
 
@@ -146,8 +151,9 @@ class ProductoController extends AdminController
             'imagen' => $imagen
         ];
 
-        $this->guardarErroresYRedirigir($errors, $formData, '/admin/productos/crear');
-        if (!empty($errors)) {
+        $redirect = $this->adminRequest->guardarErroresYRedirigir($errors, $formData, '/admin/productos/crear');
+        if ($redirect) {
+            $this->redirect($redirect);
             return;
         }
 
@@ -163,12 +169,16 @@ class ProductoController extends AdminController
         ]);
 
         if ($resultado) {
-            $this->guardarExito('Producto creado correctamente.');
-            $this->redirect('/admin/productos/gestionar');
+            $this->adminRequest->guardarExito('Producto creado correctamente.');
+            $this->redirect('/productos');
             return;
         }
 
-        $this->guardarErroresYRedirigir(['No se pudo crear el producto.'], $formData, '/admin/productos/crear');
+        $redirect = $this->adminRequest->guardarErroresYRedirigir(['No se pudo crear el producto.'], $formData, '/admin/productos/crear');
+        if ($redirect) {
+            $this->redirect($redirect);
+            return;
+        }
     }
 
     public function edit($id)
@@ -183,7 +193,7 @@ class ProductoController extends AdminController
 
         if (!$producto) {
             $_SESSION['errors'] = ['El producto no existe.'];
-            $this->redirect('/admin/productos/gestionar');
+            $this->redirect('/productos');
             return;
         }
 
@@ -211,7 +221,7 @@ class ProductoController extends AdminController
         $producto = $this->productoRepository->find((int) $id);
         if (!$producto) {
             $_SESSION['errors'] = ['El producto no existe.'];
-            $this->redirect('/admin/productos/gestionar');
+            $this->redirect('/productos');
             return;
         }
 
@@ -263,7 +273,7 @@ class ProductoController extends AdminController
         if ($resultado) {
             $_SESSION['success'] = 'Producto actualizado correctamente.';
             unset($_SESSION['form_data']);
-            $this->redirect('/admin/productos/gestionar');
+            $this->redirect('/productos');
             return;
         }
 
@@ -274,19 +284,20 @@ class ProductoController extends AdminController
 
     public function delete($id)
     {
-        if (!$this->verificarPermisosAdmin()) {
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
+            $this->redirect('/');
             return;
         }
 
         $resultado = $this->productoRepository->delete((int) $id);
 
         if ($resultado) {
-            $this->guardarExito('Producto eliminado correctamente.');
+            $this->adminRequest->guardarExito('Producto eliminado correctamente.');
         } else {
-            $this->guardarError('No se pudo eliminar el producto.');
+            $this->adminRequest->guardarError('No se pudo eliminar el producto.');
         }
 
-        $this->redirect('/admin/productos/gestionar');
+        $this->redirect('/productos');
     }
 
 }

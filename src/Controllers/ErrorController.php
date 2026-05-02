@@ -6,50 +6,38 @@ use Core\Controller;
 
 class ErrorController extends Controller
 {
+    private function render(int $code, string $message): string
+    {
+        return $this->view('errors/Error', [
+            'code' => $code,
+            'message' => $message
+        ]);
+    }
+
     public function notFound()
     {
-        $data = [
-            'code' => 404,
-            'message' => 'Página no encontrada'
-        ];
-        
-        return $this->view('errors/404', $data);
+        return $this->render(404, 'Página no encontrada');
     }
     
     public function unauthorized()
     {
-        $data = [
-            'code' => 401,
-            'message' => 'No autorizado'
-        ];
-        
-        return $this->view('errors/401', $data);
+        return $this->render(401, 'No autorizado');
     }
     
     public function forbidden()
     {
-        $data = [
-            'code' => 403,
-            'message' => 'Acceso prohibido'
-        ];
-        
-        return $this->view('errors/403', $data);
+        return $this->render(403, 'Acceso prohibido');
     }
     
     public function serverError()
     {
-        $data = [
-            'code' => 500,
-            'message' => 'Error del servidor'
-        ];
-        
-        return $this->view('errors/500', $data);
+        return $this->render(500, 'Error del servidor');
     }
 
     public static function show_error404(): string
     {
         $controller = new self();
-        return $controller->notFound();
+        return $controller->render(404, 'Página no encontrada');
     }
 }
 
