@@ -22,6 +22,7 @@
 
                 <?php if ($_SESSION['usuario']['rol'] === 'admin'): ?>
                     <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios" class="btn-admin">Gestión de Usuarios</a>
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/categorias/gestionar" class="btn-admin">Gestión de Categorías</a>
                     <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios/crear" class="btn-admin">Crear Usuario</a>
                 <?php endif; ?>
             </div>

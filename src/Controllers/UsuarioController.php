@@ -5,37 +5,42 @@ namespace Controllers;
 use Core\Controller;
 use Core\BaseDatos;
 use Request\UserRequest;
+use Request\AdminRequest;
 use Services\UsuarioService;
 use Repositories\UsuarioRepository;
 
 class UsuarioController extends Controller
 {
+    protected $adminRequest;
+
+    public function __construct()
+    {
+        $this->adminRequest = new AdminRequest();
+    }
 
     public function index()
     {
-        // Verificar que es admin
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-            $_SESSION['errors'] = ['No tienes permisos para acceder a esta página.'];
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
             $this->redirect('/');
             return;
         }
 
         try {
-            $usuarioService = new UsuarioService(BaseDatos::getInstancia());
+            $usuarioService = new UsuarioService();
             $usuarioRepository = new \Repositories\UsuarioRepository(BaseDatos::getInstancia());
             $usuarios = $usuarioRepository->findAll();
 
-            $data = [
-                'title' => 'Gestión de Usuarios',
-                'message' => 'Administra todos los usuarios del sistema.',
-                'usuarios' => $usuarios,
-                'es_admin' => true,
-                'showHeader' => true,
-                'showFooter' => true
-            ];
+            $data = $this->adminRequest->prepararDatosVista(
+                'Gestión de Usuarios',
+                'Administra todos los usuarios del sistema.',
+                [
+                    'usuarios' => $usuarios,
+                    'es_admin' => true
+                ]
+            );
             return $this->view('usuarios/index', $data);
         } catch (\Exception $e) {
-            $_SESSION['errors'] = ['Error al cargar los usuarios: ' . $e->getMessage()];
+            $this->adminRequest->guardarError('Error al cargar los usuarios: ' . $e->getMessage());
             $this->redirect('/');
             return;
         }
@@ -54,20 +59,16 @@ class UsuarioController extends Controller
 
     public function create()
     {
-        // Solo los administradores pueden crear usuarios
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-            $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
+        if (!$this->adminRequest->verificarPermisosAdmin()) {
             $this->redirect('/');
             return;
         }
 
-        $data = [
-            'title' => 'Crear Usuario',
-            'message' => 'Crear nueva cuenta de usuario',
-            'es_admin' => true,
-            'showHeader' => true,
-            'showFooter' => true
-        ];
+        $data = $this->adminRequest->prepararDatosVista(
+            'Crear Usuario',
+            'Crear nueva cuenta de usuario',
+            ['es_admin' => true]
+        );
 
         return $this->view('usuarios/formcreate', $data);
     }
@@ -77,8 +78,7 @@ class UsuarioController extends Controller
     {
         try {
             // Verificar permisos de administrador
-            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-                $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
+            if (!$this->adminRequest->verificarPermisosAdmin()) {
                 $this->redirect('/');
                 return;
             }
@@ -129,20 +129,20 @@ class UsuarioController extends Controller
             }
 
             // Si hay errores, guardarlos en sesión y volver al formulario
-            if (!empty($errors)) {
-                $_SESSION['errors'] = $errors;
-                $_SESSION['form_data'] = [
-                    'nombre' => $nombre,
-                    'apellidos' => $apellidos,
-                    'email' => $email,
-                    'rol' => $rol
-                ];
-                $this->redirect('/admin/usuarios/crear');
+            $formData = [
+                'nombre' => $nombre,
+                'apellidos' => $apellidos,
+                'email' => $email,
+                'rol' => $rol
+            ];
+            $redirect = $this->adminRequest->guardarErroresYRedirigir($errors, $formData, '/admin/usuarios/crear');
+            if ($redirect) {
+                $this->redirect($redirect);
                 return;
             }
 
             // Crear usuario en BD
-            $usuarioService = new UsuarioService(BaseDatos::getInstancia());
+            $usuarioService = new UsuarioService();
             $resultado = $usuarioService->crear([
                 'nombre' => $nombre,
                 'apellidos' => $apellidos,
@@ -152,18 +152,12 @@ class UsuarioController extends Controller
             ], $_SESSION['usuario']['id']);
 
             if ($resultado) {
-                $_SESSION['success'] = 'Usuario creado correctamente.';
-                unset($_SESSION['form_data']);
+                $this->adminRequest->guardarExito('Usuario creado correctamente.');
                 $this->redirect('/admin/usuarios/crear');
                 return;
             } else {
-                $_SESSION['errors'] = ['Error al crear el usuario. El email podría estar duplicado.'];
-                $_SESSION['form_data'] = [
-                    'nombre' => $nombre,
-                    'apellidos' => $apellidos,
-                    'email' => $email,
-                    'rol' => $rol
-                ];
+                $this->adminRequest->guardarError('Error al crear el usuario. El email podría estar duplicado.');
+                $_SESSION['form_data'] = $formData;
                 $this->redirect('/admin/usuarios/crear');
                 return;
             }
@@ -177,20 +171,19 @@ class UsuarioController extends Controller
 
     public function edit($id, $context = 'admin')
     {
-        // Verificar permisos según contexto
-        if ($context === 'admin') {
-            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-                $_SESSION['errors'] = ['No tienes permisos para editar usuarios.'];
-                $this->redirect('/');
-                return;
+            // Verificar permisos según contexto
+            if ($context === 'admin') {
+                if (!$this->adminRequest->verificarPermisosAdmin()) {
+                    $this->redirect('/');
+                    return;
+                }
+            } elseif ($context === 'profile') {
+                if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['id'] != $id) {
+                    $_SESSION['errors'] = ['No tienes permiso para editar este perfil.'];
+                    $this->redirect('/');
+                    return;
+                }
             }
-        } elseif ($context === 'profile') {
-            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['id'] != $id) {
-                $_SESSION['errors'] = ['No tienes permiso para editar este perfil.'];
-                $this->redirect('/');
-                return;
-            }
-        }
 
         try {
             $usuarioRepository = new UsuarioRepository(BaseDatos::getInstancia());
@@ -228,8 +221,7 @@ class UsuarioController extends Controller
         try {
             // Verificar permisos según contexto
             if ($context === 'admin') {
-                if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-                    $_SESSION['errors'] = ['No tienes permisos para editar usuarios.'];
+                if (!$this->adminRequest->verificarPermisosAdmin()) {
                     $this->redirect('/');
                     return;
                 }
@@ -264,16 +256,17 @@ class UsuarioController extends Controller
             }
 
             if (!empty($errors)) {
-                $_SESSION['errors'] = $errors;
-                $_SESSION['form_data'] = array_filter([
+                $formData = array_filter([
                     'nombre' => $nombre,
                     'apellidos' => $apellidos,
                     'email' => $email,
                     'rol' => $context === 'admin' ? $rol : null
                 ]);
-                $redirect = $context === 'admin' ? "/admin/usuarios/$id/editar" : "/profile/$id/editar";
-                $this->redirect($redirect);
-                return;
+                $redirect = $this->adminRequest->guardarErroresYRedirigir($errors, $formData, $context === 'admin' ? "/admin/usuarios/$id/editar" : "/profile/$id/editar");
+                if ($redirect) {
+                    $this->redirect($redirect);
+                    return;
+                }
             }
 
             $usuarioRepository = new UsuarioRepository(BaseDatos::getInstancia());
@@ -288,13 +281,13 @@ class UsuarioController extends Controller
             // Validaciones adicionales para admin
             if ($context === 'admin') {
                 if ($usuarioActual['rol'] === 'admin' && $rol !== 'admin') {
-                    $_SESSION['errors'] = ['No puedes cambiar el rol de un administrador.'];
+                    $this->adminRequest->guardarError('No puedes cambiar el rol de un administrador.');
                     $_SESSION['form_data'] = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'rol' => $rol];
                     $this->redirect("/admin/usuarios/$id/editar");
                     return;
                 }
                 if ($usuarioActual['rol'] === 'admin' && $email !== $usuarioActual['email']) {
-                    $_SESSION['errors'] = ['No puedes cambiar el email de un administrador.'];
+                    $this->adminRequest->guardarError('No puedes cambiar el email de un administrador.');
                     $_SESSION['form_data'] = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'rol' => $rol];
                     $this->redirect("/admin/usuarios/$id/editar");
                     return;
@@ -305,7 +298,7 @@ class UsuarioController extends Controller
             if ($email !== $usuarioActual['email']) {
                 $usuarioExistente = $usuarioRepository->findByEmail($email);
                 if ($usuarioExistente) {
-                    $_SESSION['errors'] = ['El email ya está en uso.'];
+                        $this->adminRequest->guardarError('El email ya está en uso.');
                     $_SESSION['form_data'] = array_filter([
                         'nombre' => $nombre,
                         'apellidos' => $apellidos,
@@ -332,13 +325,12 @@ class UsuarioController extends Controller
                     $_SESSION['usuario']['apellidos'] = $apellidos;
                     $_SESSION['usuario']['email'] = $email;
                 }
-                $_SESSION['success'] = $context === 'admin' ? 'Usuario actualizado correctamente.' : 'Tu perfil ha sido actualizado correctamente.';
-                unset($_SESSION['form_data']);
+                $this->adminRequest->guardarExito($context === 'admin' ? 'Usuario actualizado correctamente.' : 'Tu perfil ha sido actualizado correctamente.');
                 $redirect = $context === 'admin' ? '/admin/usuarios' : '/';
                 $this->redirect($redirect);
                 return;
             } else {
-                $_SESSION['errors'] = ['Error al actualizar ' . ($context === 'admin' ? 'el usuario' : 'tu perfil') . '.'];
+                $this->adminRequest->guardarError('Error al actualizar ' . ($context === 'admin' ? 'el usuario' : 'tu perfil') . '.');
                 $_SESSION['form_data'] = array_filter([
                     'nombre' => $nombre,
                     'apellidos' => $apellidos,

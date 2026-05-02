@@ -38,7 +38,7 @@
             </li>
 
         <li class="list">
-             <a href="<?php echo $_ENV['BASE_URL']; ?>/carrito">
+             <a href="#">
                 <span class="icon">
                     <ion-icon name="cart-outline"></ion-icon>
                 </span>
