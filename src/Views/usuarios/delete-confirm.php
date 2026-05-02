@@ -45,7 +45,7 @@
                 <button type="submit" class="btn btn-danger">
                     <ion-icon name="trash-outline"></ion-icon> Eliminar Mi Cuenta
                 </button>
-                <a href="<?php echo $_ENV['BASE_URL']; ?>/" class="btn btn-secondary">Cancelar</a>
+                <a href="<?php echo $_ENV['BASE_URL']; ?>/usuarios/userprofile" class="btn btn-secondary">Cancelar</a>
             </form>
         <?php else: ?>
             <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios/<?php echo htmlspecialchars($usuario['id']); ?>/eliminar">

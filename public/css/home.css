@@ -1,50 +1,151 @@
-/* Estilos para home.php */
+@import "styleVariables.css";
+/* estilos para home.php*/
+.contenedor-noInicio {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 80vh;
+    padding: 0 10%;
+    background-color: var(--fondo);
+    overflow: hidden;
+}
 
-.home-container {
-    text-align: center;
-    margin: 40px 0;
+.hero-content {
+    flex: 1;
+    text-align: left;
+    max-width: 600px;
+    z-index: 2;
+}
+
+.tagline {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    color: var(--color-text-principal);
+    margin: 10px 0;
+    line-height: 1.1;
+}
+
+.hero-content h1 span {
+    color: var(--quinary-color);
+}
+
+.hero-description {
+    color: var(--color-text-secundario);
+    font-size: 1.1rem;
+    margin-bottom: 30px;
 }
 
 .home-buttons {
     display: flex;
-    gap: 15px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin: 30px 0;
+    gap: 1rem;
+    justify-content: flex-start;
+    margin-bottom: 40px;
 }
 
 .home-buttons a {
-    padding: 12px 24px;
-    color: white;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
     text-decoration: none;
-    border-radius: 5px;
-    font-weight: 500;
-    transition: all 0.3s ease;
 }
 
 .btn-productos {
-    background: #667eea;
-}
-
-.btn-productos:hover {
-    background: #5568d3;
-    transform: translateY(-2px);
+    background: var(--quinary-color);
+    color: var(--fondo) !important;
+    border: 1.5px solid var(--quinary-color);
 }
 
 .btn-registro {
-    background: #764ba2;
-}
-
-.btn-registro:hover {
-    background: #653b8a;
-    transform: translateY(-2px);
+    background: #66d6c1d8;
+    color: var(--color-text-principal) !important;
+    border: 1.5px solid var(--fondo-header);
 }
 
 .btn-login {
-    background: #50c878;
+    background: transparent;
+    color: var(--quinary-color) !important;
+    border: 1.5px solid var(--quinary-color);
+}
+
+.btn-productos:hover {
+    background: #9069b68a;
+}
+
+.btn-registro:hover {
+    background: #86dbcc8a;
 }
 
 .btn-login:hover {
-    background: #3aac5f;
-    transform: translateY(-2px);
+    background:#9069b63f;
+}
+
+.caracteristicas {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.item-caracteristica {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-text-principal);
+}
+
+.item-caracteristica ion-icon {
+    font-size: 30px;
+}
+
+.texto-caracteristica strong {
+    display: block;
+    font-size: 0.85rem;
+}
+
+.texto-caracteristica span {
+    font-size: 0.75rem;
+    color: var(--color-text-secundario);
+}
+
+/* estilos img */
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.img-inicio {
+    width: 40rem;
+    height: auto;
+
+}
+
+/* Responsive móviles */
+@media (max-width: 968px) {
+    .contenedor-noInicio {
+        flex-direction: column;
+        text-align: center;
+        padding: 50px 20px;
+    }
+    .hero-content {
+        text-align: center;
+        order: 2;
+    }
+    .hero-image {
+        order: 1;
+        margin-bottom: 30px;
+    }
+    .home-buttons, .caracteristicas {
+        justify-content: center;
+    }
 }
