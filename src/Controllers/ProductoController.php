@@ -56,35 +56,6 @@ class ProductoController extends Controller
         return $this->view('productos/show', $data);
     }
 
-    public function gestion()
-    {
-        if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-            $_SESSION['errors'] = ['No tienes permisos para gestionar productos.'];
-            $this->redirect('/');
-            return;
-        }
-
-        try {
-            $productos = $this->productoRepository->findAll();
-            $categorias = $this->categoriaRepository->findAll();
-            $categoriasPorId = array_column($categorias, 'nombre', 'id');
-
-            $data = [
-                'title' => 'Gestion de Productos',
-                'message' => 'Administra todos los productos de la tienda.',
-                'productos' => $productos,
-                'categoriasPorId' => $categoriasPorId,
-                'showHeader' => true,
-                'showFooter' => true
-            ];
-            return $this->view('productos/gestion', $data);
-        } catch (\Exception $e) {
-            $_SESSION['errors'] = ['Error al cargar los productos: ' . $e->getMessage()];
-            $this->redirect('/');
-            return;
-        }
-    }
-
     public function create()
     {
         if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {

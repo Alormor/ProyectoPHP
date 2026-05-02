@@ -14,26 +14,6 @@ class ErrorController extends Controller
         ]);
     }
 
-    public function notFound()
-    {
-        return $this->render(404, 'Página no encontrada');
-    }
-    
-    public function unauthorized()
-    {
-        return $this->render(401, 'No autorizado');
-    }
-    
-    public function forbidden()
-    {
-        return $this->render(403, 'Acceso prohibido');
-    }
-    
-    public function serverError()
-    {
-        return $this->render(500, 'Error del servidor');
-    }
-
     public static function show_error404(): string
     {
         $controller = new self();
