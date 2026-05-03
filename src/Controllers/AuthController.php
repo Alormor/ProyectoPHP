@@ -75,47 +75,7 @@ class AuthController extends Controller
         }
     }
 
-    
-    public function store()
-    {
-        try {
-            // Verificar permisos de administrador
-            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-                $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
-                $this->redirect('/');
-                return;
-            }
-            
-            $userRequest = new UserRequest();
-            
-            if (!$userRequest->validate_and_sanitize('admin')) {
-                $errs = $userRequest->getErrors();
-                $_SESSION['errors'] = $errs;
-                $this->redirect('/admin/usuarios/crear');
-                return;
-            }
-            
-            $userData = $userRequest->getSanitized();
-            $usuarioService = new UsuarioService();
-            $resultado = $usuarioService->crear($userData, $_SESSION['usuario']['id']);
-            
-            if ($resultado) {
-                $_SESSION['success'] = 'Usuario creado correctamente.';
-                $this->redirect('/admin/usuarios');
-                return;
-            } else {
-                $_SESSION['errors'] = ['Error al crear el usuario. Intenta de nuevo.'];
-                $this->redirect('/admin/usuarios/crear');
-                return;
-            }
-            
-        } catch (\Exception $e) {
-            $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            $this->redirect('/admin/usuarios/crear');
-            return;
-        }
-    }
-    
+        
     public function login()
     {
         $data = [
@@ -231,4 +191,3 @@ class AuthController extends Controller
         return $this->view('usuarios/resetPassword', ['token' => $token]);
     }
 }
-?>

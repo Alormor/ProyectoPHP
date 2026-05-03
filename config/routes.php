@@ -71,14 +71,18 @@ Router::add('POST', '/admin/usuarios/:id', function ($id) {
 Router::add('GET', '/admin/usuarios/:id/confirmar-eliminacion', function ($id) {
     $controller = new \Controllers\UsuarioController();
     return $controller->confirmDelete($id);
-});
-
+    });
+    
 Router::add('POST', '/admin/usuarios/:id/eliminar', function ($id) {
     $controller = new \Controllers\UsuarioController();
     return $controller->delete($id);
+    });
+    
+Router::add('GET', '/admin/productos/crear', function () {
+    $controller = new \Controllers\ProductoController();
+    return $controller->create();
 });
-
-// Rutas para perfil de usuario
+    // Rutas para perfil de usuario
 Router::add('GET', '/profile/:id/editar', function($id) {
     $controller = new \Controllers\UsuarioController();
     return $controller->edit($id, 'profile');
@@ -110,10 +114,6 @@ Router::add('GET', '/usuarios/:id', function ($id) {
     return $controller->show($id);
 });
 
-Router::add('GET', '/admin/productos/crear', function () {
-    $controller = new \Controllers\ProductoController();
-    return $controller->create();
-});
 
 Router::add('POST', '/admin/productos', function () {
     $controller = new \Controllers\ProductoController();
