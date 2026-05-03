@@ -21,8 +21,9 @@
                 <a href="<?php echo $_ENV['BASE_URL']; ?>/logout" class="btn-logout"><ion-icon name="log-out-outline"></ion-icon>Cerrar Sesión</a>
 
                 <?php if ($_SESSION['usuario']['rol'] === 'admin'): ?>
-                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios" class="btn-admin"><ion-icon name="people-outline"></ion-icon>Gestión de Usuarios</a>
-                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios/crear" class="btn-admin"><ion-icon name="add-circle-outline"></ion-icon>Crear Usuario</a>
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios" class="btn-admin">Gestión de Usuarios</a>
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/categorias/gestionar" class="btn-admin">Gestión de Categorías</a>
+                    <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios/crear" class="btn-admin">Crear Usuario</a>
                 <?php endif; ?>
                 <div class="inicio-image">
                     <img class="img-inicio-user" src="<?php echo $_ENV['BASE_URL']; ?>/images/inicio.png" alt="Foto cubo rubik inicio">

@@ -6,6 +6,7 @@ use Core\BaseDatos;
 use Core\Controller;
 use Request\UserRequest;
 use Services\UsuarioService;
+use Models\Usuario;
 
 class AuthController extends Controller
 {
@@ -36,7 +37,8 @@ class AuthController extends Controller
             $userRequest = new UserRequest();
             
             if (!$userRequest->validate_and_sanitize()) {
-                $_SESSION['errors'] = $userRequest->getErrors();
+                $errs = $userRequest->getErrors();
+                $_SESSION['errors'] = $errs;
                 header('Location: ' . $_ENV['BASE_URL'] . '/registro');
                 exit();
             }
@@ -72,48 +74,8 @@ class AuthController extends Controller
             exit();
         }
     }
-    
 
-    
-    public function store()
-    {
-        try {
-            // Verificar permisos de administrador
-            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-                $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
-                $this->redirect('/');
-                return;
-            }
-            
-            $userRequest = new UserRequest();
-            
-            if (!$userRequest->validate_and_sanitize('admin')) {
-                $_SESSION['errors'] = $userRequest->getErrors();
-                $this->redirect('/admin/usuarios/crear');
-                return;
-            }
-            
-            $userData = $userRequest->getSanitized();
-            $usuarioService = new UsuarioService();
-            $resultado = $usuarioService->crear($userData, $_SESSION['usuario']['id']);
-            
-            if ($resultado) {
-                $_SESSION['success'] = 'Usuario creado correctamente.';
-                $this->redirect('/admin/usuarios');
-                return;
-            } else {
-                $_SESSION['errors'] = ['Error al crear el usuario. Intenta de nuevo.'];
-                $this->redirect('/admin/usuarios/crear');
-                return;
-            }
-            
-        } catch (\Exception $e) {
-            $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            $this->redirect('/admin/usuarios/crear');
-            return;
-        }
-    }
-    
+        
     public function login()
     {
         $data = [
@@ -189,5 +151,43 @@ class AuthController extends Controller
         ]);
     }
 
+
+    public function forgotPassword() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = $_POST['email'] ?? '';
+            // Usamos el servicio que ya tienes
+            if ($this->service->solicitarPassword($email)) {
+                $_SESSION['success'] = "Se ha enviado un enlace para restablecer tu contraseña.";
+            } else {
+                $_SESSION['errors'] = ["El correo no existe."];
+            }
+        }
+        return $this->view('usuarios/passOlvidada');
+    }
+    public function resetPassword()
+    {
+        $token = $_GET['token'] ?? $_POST['token'] ?? null;
+        if (!$token || !$this->service->validarTokenReset($token)) {
+            return $this->view('auth/confirmacion', ['status' => 'expired', 'title' => 'Enlace caducado']);
+        }
+        // Si el usuario envía el formulario con la nueva contraseña
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $password = $_POST['password'] ?? '';
+            $confirm = $_POST['confirm_password'] ?? '';
+            if ($password === $confirm && !empty($password)) {
+                $email = $this->service->validarTokenReset($token);
+                $this->service->completarReset($email, $password);
+                
+               
+                return $this->view('auth/confirmacionPass', [
+                    'title' => 'Exito',
+                    'showHeader' => false,
+                    'showFooter' => false
+                ]);
+            }
+            $_SESSION['errors'] = ["Las contraseñas no coinciden."];
+        }
+        // Si es GET, mostramos el formulario de "Nueva Contraseña"
+        return $this->view('usuarios/resetPassword', ['token' => $token]);
+    }
 }
-?>

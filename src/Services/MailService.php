@@ -49,25 +49,5 @@ class MailService
             return false;
         }
     }
-
-    public function enviarCorreoPedidoConAdjunto(string $emailDestino, string $subject, string $bodyHtml, string $pdfContent, string $pdfName = 'pedido.pdf')
-    {
-        try {
-            $mail = $this->crearMailer();
-            $mail->addAddress($emailDestino);
-
-            $mail->isHTML(true);
-            $mail->Subject = $subject;
-            $mail->Body = $bodyHtml;
-            $mail->AltBody = strip_tags($bodyHtml);
-
-            $mail->addStringAttachment($pdfContent, $pdfName, PHPMailer::ENCODING_BASE64, 'application/pdf');
-
-            $mail->send();
-            return true;
-        } catch (Exception $e) {
-            return false;
-        }
-    }
 }
 

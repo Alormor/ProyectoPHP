@@ -1,6 +1,5 @@
 <?php
 use Core\Router;
-
 // Rutas principales
 Router::add('GET', '/', function () {
     $controller = new \Controllers\HomeController();
@@ -41,6 +40,7 @@ Router::add('GET', '/confirmar-cuenta', function () {
 
 
 // Rutas admin
+
 Router::add('GET', '/admin/usuarios', function () {
     $controller = new \Controllers\UsuarioController();
     return $controller->index();
@@ -69,14 +69,18 @@ Router::add('POST', '/admin/usuarios/:id', function ($id) {
 Router::add('GET', '/admin/usuarios/:id/confirmar-eliminacion', function ($id) {
     $controller = new \Controllers\UsuarioController();
     return $controller->confirmDelete($id);
-});
-
+    });
+    
 Router::add('POST', '/admin/usuarios/:id/eliminar', function ($id) {
     $controller = new \Controllers\UsuarioController();
     return $controller->delete($id);
+    });
+    
+Router::add('GET', '/admin/productos/crear', function () {
+    $controller = new \Controllers\ProductoController();
+    return $controller->create();
 });
-
-// Rutas para perfil de usuario
+    // Rutas para perfil de usuario
 Router::add('GET', '/profile/:id/editar', function($id) {
     $controller = new \Controllers\UsuarioController();
     return $controller->edit($id, 'profile');
@@ -108,6 +112,27 @@ Router::add('GET', '/usuarios/:id', function ($id) {
     return $controller->show($id);
 });
 
+
+Router::add('POST', '/admin/productos', function () {
+    $controller = new \Controllers\ProductoController();
+    return $controller->store();
+});
+
+Router::add('GET', '/admin/productos/:id/editar', function ($id) {
+    $controller = new \Controllers\ProductoController();
+    return $controller->edit($id);
+});
+
+Router::add('POST', '/admin/productos/:id', function ($id) {
+    $controller = new \Controllers\ProductoController();
+    return $controller->update($id);
+});
+
+Router::add('POST', '/admin/productos/:id/eliminar', function ($id) {
+    $controller = new \Controllers\ProductoController();
+    return $controller->delete($id);
+});
+
 // Rutas de productos
 Router::add('GET', '/productos', function () {
     $controller = new \Controllers\ProductoController();
@@ -120,9 +145,36 @@ Router::add('GET', '/productos/:id', function ($id) {
 });
 
 // Rutas de categorías
-Router::add('GET', '/categorias', function () {
+
+// Rutas admin de categorías
+Router::add('GET', '/admin/categorias/gestionar', function () {
     $controller = new \Controllers\CategoriaController();
-    return $controller->index();
+    return $controller->gestion();
+});
+
+Router::add('GET', '/admin/categorias/crear', function () {
+    $controller = new \Controllers\CategoriaController();
+    return $controller->create();
+});
+
+Router::add('POST', '/admin/categorias', function () {
+    $controller = new \Controllers\CategoriaController();
+    return $controller->store();
+});
+
+Router::add('GET', '/admin/categorias/:id/editar', function ($id) {
+    $controller = new \Controllers\CategoriaController();
+    return $controller->edit($id);
+});
+
+Router::add('POST', '/admin/categorias/:id', function ($id) {
+    $controller = new \Controllers\CategoriaController();
+    return $controller->update($id);
+});
+
+Router::add('POST', '/admin/categorias/:id/eliminar', function ($id) {
+    $controller = new \Controllers\CategoriaController();
+    return $controller->delete($id);
 });
 
 Router::add('GET', '/categorias/:id', function ($id) {
@@ -153,6 +205,24 @@ Router::add('GET', '/carrito/incrementar/:id', function ($id) {
 
 Router::add('GET', '/carrito/decrementar/:id', function ($id) {
     return (new \Controllers\CarritoController())->decrementar($id);
+});
+
+// Formulario para pedir el reset
+Router::add('GET', '/passOlvidada', function () {
+    return (new \Controllers\AuthController())->forgotPassword();
+});
+
+Router::add('POST', '/passOlvidada', function () {
+    return (new \Controllers\AuthController())->forgotPassword();
+});
+
+// Formulario para poner la nueva contraseña
+Router::add('GET', '/resetPassword', function () {
+    return (new \Controllers\AuthController())->resetPassword();
+});
+
+Router::add('POST', '/resetPassword', function () {
+    return (new \Controllers\AuthController())->resetPassword();
 });
 
 Router::add('GET', '/pedidos/checkout', function () {

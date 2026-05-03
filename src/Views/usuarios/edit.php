@@ -3,6 +3,11 @@
     <h2><?php echo $title ?? 'Editar Usuario'; ?></h2>
     <p><?php echo $message ?? ''; ?></p>
 
+    <?php
+    $isAdmin = !empty($es_admin);
+    $usuarioData = $usuario ?? [];
+    ?>
+
     <?php if (!empty($_SESSION['errors'])): ?>
         <div class="error">
             <?php foreach ($_SESSION['errors'] as $error): ?>
@@ -19,23 +24,34 @@
         <?php unset($_SESSION['success']); ?>
     <?php endif; ?>
 
-    <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios/<?php echo htmlspecialchars($usuario['id']); ?>">
+    <?php
+    // Determinar el contexto (perfil propio o edición de admin)
+    $es_perfil = isset($es_perfil) && $es_perfil;
+    $form_action = $es_perfil 
+        ? $_ENV['BASE_URL'] . '/profile/' . htmlspecialchars($usuario['id']) 
+        : $_ENV['BASE_URL'] . '/admin/usuarios/' . htmlspecialchars($usuario['id']);
+    $cancelar_url = $es_perfil 
+        ? $_ENV['BASE_URL'] . '/usuarios/userprofile' 
+        : $_ENV['BASE_URL'] . '/admin/usuarios';
+    ?>
+
+    <form method="POST" action="<?php echo $form_action; ?>">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre" placeholder="Nombre" required
-                   value="<?php echo htmlspecialchars($_SESSION['form_data']['nombre'] ?? $usuario['nombre'] ?? ''); ?>">
+                   value="<?php echo htmlspecialchars($_SESSION['form_data']['nombre'] ?? $usuarioData['nombre'] ?? ''); ?>">
         </div>
 
         <div class="form-group">
             <label for="apellidos">Apellidos:</label>
             <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos" required
-                   value="<?php echo htmlspecialchars($_SESSION['form_data']['apellidos'] ?? $usuario['apellidos'] ?? ''); ?>">
+                   value="<?php echo htmlspecialchars($_SESSION['form_data']['apellidos'] ?? $usuarioData['apellidos'] ?? ''); ?>">
         </div>
 
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" placeholder="Email" required
-                   value="<?php echo htmlspecialchars($_SESSION['form_data']['email'] ?? $usuario['email'] ?? ''); ?>">
+                   value="<?php echo htmlspecialchars($_SESSION['form_data']['email'] ?? $usuarioData['email'] ?? ''); ?>">
         </div>
 
         <div class="form-group">

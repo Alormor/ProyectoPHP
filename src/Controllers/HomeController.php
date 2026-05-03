@@ -11,7 +11,6 @@ class HomeController extends Controller
         $data = [
             'title' => 'Bienvenido',
             'message' => 'Bienvenido a tu aplicación',
-            'base_url' => $_ENV['BASE_URL'],
             'showHeader' => true,
             'showFooter' => true
         ];
