@@ -18,14 +18,15 @@ class UsuarioRepository extends Repository
     public function create(Usuario $usuario)
     {
         try{
-            $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol, confirmado, token, token_exp)
-            VALUES (:nombre, :apellidos, :email, :password, :rol, :confirmado, :token, :token_exp)";
+            $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, direccion, rol, confirmado, token, token_exp)
+            VALUES (:nombre, :apellidos, :email, :password, :direccion, :rol, :confirmado, :token, :token_exp)";
 
             $param = [
                 ":nombre" => ['valor' => $usuario->getNombre()],
                 ":apellidos" => ['valor' => $usuario->getApellidos()],
                 ":email" => ['valor' => $usuario->getEmail()],
                 ":password" => ['valor' => $usuario->getPassword()],
+                ":direccion" => ['valor' => $usuario->getDireccion()],
                 ":rol" => ['valor' => $usuario->getRol()],
                 ":confirmado" => ['valor' => $usuario->isConfirmado(), 'tipo' => \PDO::PARAM_BOOL],
                 ":token" => ['valor' => $usuario->getToken()],
@@ -183,6 +184,17 @@ class UsuarioRepository extends Repository
             ":token"     => ['valor' => $usuario->getToken()],
             ":token_exp" => ['valor' => $usuario->getToken_exp()],
             ":id"        => ['valor' => $usuario->getId()],
+        ];
+        
+        return $this->conexion->ejecutar($sql, $param);
+    }
+
+    public function updateDireccion(int $id, string $direccion): bool
+    {
+        $sql = "UPDATE usuarios SET direccion = :direccion WHERE id = :id";
+        $param = [
+            ":direccion" => ['valor' => $direccion],
+            ":id" => ['valor' => $id, 'tipo' => \PDO::PARAM_INT],
         ];
         
         return $this->conexion->ejecutar($sql, $param);

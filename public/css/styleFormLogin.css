@@ -1,7 +1,6 @@
 @import "styleVariables.css";
 
 .login{
-    font-family: "Roboto Light";
     display: flex;
     justify-content: center;
     align-items: center;

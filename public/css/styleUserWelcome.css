@@ -1,39 +1,33 @@
 /* Estilos para usuarios autenticados */
+@import "styleVariables.css";
 
 .user-welcome {
     text-align: center;
-    padding: 40px 20px;
-}
-
-.welcome-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 40px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    padding: 40px 100px;
 }
 
 .welcome-card h2 {
     margin: 0 0 15px 0;
-    font-size: 28px;
-    font-weight: 600;
+    font-size: 3rem;
+    color: var(--color-text-principal);
 }
 
 .user-email {
-    margin: 10px 0;
+    margin: 20px 0;
     font-size: 16px;
     opacity: 0.95;
+    color: var(--color-text-secundario);
 }
 
 .user-role {
-    margin: 10px 0;
+    margin: 20px 0 20px;
     font-size: 16px;
     opacity: 0.95;
+    color: var(--color-text-secundario);
 }
 
 .user-role strong {
-    background: rgba(255, 255, 255, 0.3);
+    background: #39c7ad5f;
     padding: 4px 12px;
     border-radius: 20px;
     display: inline-block;
@@ -43,8 +37,8 @@
 .success-message {
     background: rgba(76, 175, 80, 0.3);
     border: 2px solid rgba(76, 175, 80, 0.8);
-    color: #e8f5e9;
-    padding: 12px 15px;
+    color: rgba(76, 175, 80, 0.8);
+    padding: 18px;
     border-radius: 5px;
     margin-top: 20px;
     font-size: 14px;
@@ -62,37 +56,64 @@
     }
 }
 
+.home-buttons{
+    white-space: nowrap;
+}
+
+.btn-productos{
+    display: inline-block;
+    align-self: center;
+    width: fit-content;
+    
+}
+
 /* Botones adicionales */
 .btn-logout {
-    background: #f44336;
+    background: #e160d893;
     color: white;
     padding: 12px 24px;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 10px;
     font-weight: 500;
     transition: all 0.3s ease;
     display: inline-block;
+    align-self: center;
+    width: fit-content;
+    border: 1.5px solid var(--secondary-color);
 }
 
 .btn-logout:hover {
-    background: #da190b;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+    background: var(--secondary-color);
+    color: var(--fondo);
 }
 
 .btn-admin {
-    background: #ff9800;
-    color: white;
+    background: #39c7ad87;
+    color: var(--color-text-principal);
     padding: 12px 24px;
     text-decoration: none;
     border-radius: 5px;
     font-weight: 500;
     transition: all 0.3s ease;
     display: inline-block;
+    align-self: center;
+    width: fit-content;
+    border: 1.5px solid var(--primary-color);
 }
 
 .btn-admin:hover {
-    background: #e68900;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
+    background-color: var(--primary-color);
+    color: var(--fondo);
+}
+
+.inicio-image {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.img-inicio-user {
+    width: 30rem;
+    height: auto;
 }

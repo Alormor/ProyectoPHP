@@ -15,7 +15,7 @@ class CarritoRepository extends Repository
 
     // Obtener todos los productos del carrito de un usuario
     public function findByUser(int $usuario_id): array {
-        $sql = "SELECT c.*, p.nombre, p.precio, p.imagen, p.stock 
+        $sql = "SELECT c.*, p.nombre, COALESCE(p.precio_oferta, p.precio) AS precio, p.imagen, p.stock 
                 FROM carrito c 
                 JOIN productos p ON c.producto_id = p.id 
                 WHERE c.usuario_id = :usuario_id";

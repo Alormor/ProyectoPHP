@@ -56,7 +56,7 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Crear Usuario</button>
+        <button type="submit" class="btn btn-guardar">Crear Usuario</button>
         <a href="<?php echo $_ENV['BASE_URL']; ?>/" class="btn btn-secondary">Cancelar</a>
     </form>
 

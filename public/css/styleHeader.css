@@ -185,7 +185,10 @@ body {
   transform: translateX(8.75rem);
 }
 
-
+.navigation ul li:nth-child(4).active ~ .indicator, 
+.navigation ul li:nth-child(4):hover ~ .indicator { 
+  transform: translateX(13.1rem);
+}
 
 .navigation ul:has(li:nth-child(1).active) .indicator {
     transform: translateX(0);
@@ -197,4 +200,8 @@ body {
 
 .navigation ul:has(li:nth-child(3).active) .indicator {
     transform: translateX(8.75rem);
+}
+
+.navigation ul:has(li:nth-child(4).active) .indicator {
+    transform: translateX(13.1rem);
 }

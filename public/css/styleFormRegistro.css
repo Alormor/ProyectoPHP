@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+@import "styleVariables.css";
+
+.registro{
+    text-align: center;
+    align-items: center;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-text-principal);
+    margin-top: 7.5rem;
+}
+
+.form-registro{
+    font-family: "Roboto Light";
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 24rem;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: var(--fondo);
+    color: var(--color-text-principal);
+    border: 2px solid var(--primary-color);
+    border-radius: 0.8rem;
+    box-shadow: 0 0 12px rgba(0,0,0,0.12);
+}
+
+.email,
+.passw,
+.passw-confirm{
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.email label,
+.passw label,
+.passw-confirm label{
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+.email input,
+.passw input,
+.passw-confirm input{
+    width: 100%;
+    padding: 0.7rem;
+    border: 1px solid var(--quaternary-color);
+    border-radius: 0.4rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: 0.2s;
+}
+
+.email input:focus,
+.passw input:focus,
+.passw-confirm input:focus{
+    border-color: var(--primary-color);
+    box-shadow: 0 0 4px rgba(57,199,173,0.4);
+}
+
+/* BOTÓN */
+form button{
+    background-color: #9069b63f;
+    color: var(--quinary-color);
+    padding: 0.9rem 1rem;
+    border: 0.1rem solid var(--quinary-color);
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 1rem;
+}
+
+form button:hover{
+    background-color: #9069b6bb;
+    color: var(--fondo);
+}
+
+.volver{
+    background-color: #9069b63f;
+    color: var(--quinary-color);
+    padding: 0.75rem 4rem;
+    border: 0.1rem solid var(--quinary-color);
+    border-radius: 0.4rem;
+    cursor: pointer;
+    width: 50%;
+    text-decoration: none;
+    display: block;
+    width: 50%;
+    margin: 1rem auto 0 auto;
+}
+
+.volver:hover{
+    background-color: #9069b6bb;
+    color:var(--fondo);
+}
+
+.alert-success{
+    width: 24rem;
+    margin: 1rem auto 0 auto;
+    background-color: #d4edda;
+    color: #155724;
+    padding: 0.8rem;
+    border-radius: 0.4rem;
+    border: 1px solid #c3e6cb;
+    font-family: "Roboto Light";
+}
+
+.alert-error{
+    width: 24rem;
+    margin: 1rem auto 0 auto;
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.8rem;
+    border-radius: 0.4rem;
+    border: 1px solid #f5c6cb;
+    font-family: "Roboto Light";
+}
+
+.alert-error ul{
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.alert-error li{
+    margin-bottom: 0.3rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 500px){
+
+    form,
+    .alert-success,
+    .alert-error{
+        width: 90%;
+        padding: 1.5rem;
+    }
+
+    .registro{
+        font-size: 1.6rem;
+    }
+}

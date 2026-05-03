@@ -155,3 +155,36 @@ Router::add('GET', '/carrito/decrementar/:id', function ($id) {
     return (new \Controllers\CarritoController())->decrementar($id);
 });
 
+Router::add('GET', '/pedidos/checkout', function () {
+    return (new \Controllers\PedidoController())->checkout();
+});
+
+Router::add('GET', '/pedidos/confirmar-direccion', function () {
+    return (new \Controllers\PedidoController())->confirmarDireccion();
+});
+
+Router::add('POST', '/pedidos/guardar-direccion', function () {
+    return (new \Controllers\PedidoController())->guardarDireccion();
+});
+
+Router::add('GET', '/mis-pedidos', function () {
+    return (new \Controllers\PedidoController())->index();
+});
+
+Router::add('GET', '/pedidos/pago', function () {
+    return (new \Controllers\PedidoController())->mostrarPago();
+});
+
+Router::add('GET', '/pedidos/:id', function ($id) {
+    return (new \Controllers\PedidoController())->show($id);
+});
+
+Router::add('POST', '/ProyectoPHP/pago/crear-orden', function () {
+    $controller = new \Controllers\PagoController();
+    return $controller->crearOrden();
+});
+
+Router::add('POST', '/pago/capturar/:id', function ($id) {
+    $controller = new \Controllers\PagoController();
+    return $controller->capturarPago($id);
+});

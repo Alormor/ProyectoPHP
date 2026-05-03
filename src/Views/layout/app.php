@@ -7,8 +7,17 @@
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/errors.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleUserProfile.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleFormLogin.css">
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleUserWelcome.css">    
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/home.css">    
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleFormRegistro.css">
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleGestUserIndex.css">
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleUserWelcome.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleEdit.css">  
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleDeleteConfirm.css">    
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/home.css">  
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleProductos.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleCarrito.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleConfirmarDireccion.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleMisPedidos.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/stylePago.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleHeader.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleFooter.css">
 </head>

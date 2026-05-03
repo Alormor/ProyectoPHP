@@ -21,7 +21,6 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 
-        // Remover BASE_URL del URI
         $baseUrl = $_ENV['BASE_URL'] ?? 'http://localhost';
         $basePath = parse_url($baseUrl, PHP_URL_PATH);
         if ($basePath && strpos($uri, $basePath) === 0) {
@@ -29,25 +28,25 @@ class Router {
         }
 
         $uri = trim($uri, '/');
+        //var_dump($uri);
+        //die();
+        
 
         $params = [];
         $callback = null;
 
-        // Buscamos coincidencia exacta o con parámetros en el array con las rutas registradas
         foreach (self::$routes[$method] ?? [] as $action => $controller) {
-            // Reemplazamos, en la ruta, lo que empiece por : seguido de letras o número(ej: 'user/:id')
-            // por una expresión regular, así localiza user/seguido de cualquier cosa que no es barra inclinada
             $pattern = preg_replace('#:([\w]+)#', '([^/]+)', $action);
 
-            if (preg_match('#^' . $pattern . '$#i', $uri, $matches)) {
-                array_shift($matches); // Quitamos la coincidencia completa deja solo los parámetros
+            if (preg_match('#^' . $pattern . '/?$#i', $uri, $matches)) {
+                array_shift($matches);
                 $params = $matches;
-                $callback = $controller;//tenemos la ruta
+                $callback = $controller;
                 break;
             }
         }
-
-        if (!$callback) {//la ruta no está registrada
+        
+        if (!$callback) {
             if (PHP_SAPI !== 'cli') {
                 http_response_code(404);
             }
@@ -55,7 +54,6 @@ class Router {
             return;
         }
 
-        // Ejecutamos el controlador pasando los parámetros detectados
         echo call_user_func_array($callback, $params);
     }
 

@@ -14,7 +14,7 @@ class MailService
         $mail = new PHPMailer(true);
 
         // Configuracion del servidor
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;                      
+        $mail->SMTPDebug = SMTP::DEBUG_OFF;
         $mail->isSMTP();                                            
         $mail->Host       = $_ENV['SMTP_HOST'];                     
         $mail->SMTPAuth   = true;                                   
@@ -42,6 +42,26 @@ class MailService
             $mail->Subject = 'Finaliza tu registro';
             $mail->Body    = "Hola! Haz click aquí para confirmar tu cuenta: <a href='{$enlace}'>Confirmar Cuenta</a>";
             $mail->AltBody = "Hola! Para confirmar tu cuenta copia este enlace: {$enlace}";
+
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
+    public function enviarCorreoPedidoConAdjunto(string $emailDestino, string $subject, string $bodyHtml, string $pdfContent, string $pdfName = 'pedido.pdf')
+    {
+        try {
+            $mail = $this->crearMailer();
+            $mail->addAddress($emailDestino);
+
+            $mail->isHTML(true);
+            $mail->Subject = $subject;
+            $mail->Body = $bodyHtml;
+            $mail->AltBody = strip_tags($bodyHtml);
+
+            $mail->addStringAttachment($pdfContent, $pdfName, PHPMailer::ENCODING_BASE64, 'application/pdf');
 
             $mail->send();
             return true;

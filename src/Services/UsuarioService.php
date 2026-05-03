@@ -128,6 +128,7 @@ class UsuarioService extends Service
                 'nombre'    => $usuario->getNombre(),
                 'apellidos' => $usuario->getApellidos(),
                 'email'     => $usuario->getEmail(),
+                'direccion' => $usuario->getDireccion(),
                 'rol'       => $usuario->getRol(),
             ];
             

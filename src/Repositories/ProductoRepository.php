@@ -139,4 +139,21 @@ class ProductoRepository extends Repository
             return false;
         }
     }
+
+    public function decrementarStock($id, $cantidad)
+    {
+        try {
+            $id = (int)$id;
+            $cantidad = (int)$cantidad;
+            $sql = "UPDATE {$this->table} SET stock = stock - :cantidad WHERE id = :id";
+            $params = [
+                ':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT],
+                ':cantidad' => ['valor' => $cantidad, 'tipo' => \PDO::PARAM_INT],
+            ];
+
+            return $this->db->ejecutar($sql, $params) && $this->db->filasAfectadas() > 0;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

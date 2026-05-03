@@ -18,6 +18,7 @@
         "ext-pdo": "*",
         "symfony/routing": "^7.4",
         "stefangabos/zebra_pagination": "^2.4",
-        "phpmailer/phpmailer": "^7.0"
+        "phpmailer/phpmailer": "^7.0",
+        "guzzlehttp/guzzle": "^7.10"
     }
 }

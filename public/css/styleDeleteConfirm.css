@@ -1,0 +1,131 @@
+@import "styleVariables.css";
+
+.delete-confirm-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    min-height: 70vh;
+}
+
+.delete-confirm-card {
+    background: var(--fondo);
+    max-width: 500px;
+    width: 100%;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.alert-icon {
+    font-size: 4rem;
+    color: var(--tertiary-color);
+    margin-bottom: 15px;
+}
+
+.delete-confirm-card h2 {
+    color: var(--color-text-principal);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.delete-confirm-card p {
+    color: var(--color-text-secundario);
+    margin-bottom: 25px;
+}
+
+.usuario-info {
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.231);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row .label {
+    font-weight: 600;
+    color: var(--color-text-secundario);
+}
+
+.info-row .value {
+    color: var(--color-text-principal);
+}
+
+.rol-badge {
+    padding: 3px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    background: #39c7ad5f;
+    color: var(--color-text-principal);
+}
+
+/* advertencia */
+.warning-box {
+    background: rgba(255, 152, 0, 0.1);
+    border-left: 4px solid var(--tertiary-color);
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.warning-box p {
+    margin: 0;
+    color: var(--tertiary-color);
+    font-size: 0.95rem;
+}
+
+.delete-confirm-card form {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.btn-danger {
+    background: var(--tertiary-color);
+    color: var(--fondo);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.313);
+}
+
+.btn-danger:hover {
+    background: #d32f2f;
+    transform: translateY(2px);
+}
+
+.btn-secondary {
+    background: #e160d893;
+    color: var(--fondo);
+    border: 1.5px solid var(--secondary-color);
+}
+
+.btn-secondary:hover {
+    background: var(--secondary-color);
+    transform: translateY(2px);
+}
