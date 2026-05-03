@@ -3,12 +3,17 @@
 namespace Controllers;
 
 use Core\Controller;
+use Controllers\ProductoController;
+use 
+use Request\AdminRequest;
 
 class PedidoController extends Controller
 {
+    protected $adminRequest;
+    
     public function index()
     {
-        // Listar todos los pedidos
+
     }
     
     public function show($id)
