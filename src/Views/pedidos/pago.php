@@ -7,33 +7,14 @@
     </div>
 
     <div id="paypal-button-container"></div>
+    <?php if (isset($_SESSION['usuario']['rol']) && $_SESSION['usuario']['rol'] === 'admin'): ?>
+    <div style="margin-top:16px;">
+        <button id="simular-pago" class="btn-simular-pago">Simular pago (prueba)</button>
+    </div>
+    <?php endif; ?>
     
     <div class="pago-footer">
         <p>Pago 100% seguro procesado por PayPal</p>
+        <p><a href="<?= $_ENV['BASE_URL'] ?>/carrito">Volver al carrito</a></p>
     </div>
 </div>
-
-<script src="https://www.paypal.com/sdk/js?client-id=ATRXNlNxziN1EJtc7vR1qD-wrIpXR25BMgY6HxIPBn3jvqUm81dIQKRMM2oa2hpQ7ZswJ-x17ec3arAF&currency=EUR"></script>
-
-<script>
-    paypal.Buttons({
-        createOrder: function(data, actions) {
-            return fetch('/ProyectoPHP/pago/crear-orden', {
-                method: 'POST'
-            })
-            .then(response => response.json())
-            .then(order => {
-                return order.id;
-            });
-        },
-        onApprove: function(data, actions) {
-            return fetch('/ProyectoPHP/pago/capturar/' + data.orderID, { method: 'POST' })
-                .then(res => res.json())
-                .then(details => {
-                    if(details.status === 'COMPLETED') {
-                        window.location.href = '/mis-pedidos';
-                    }
-                });
-        }
-    }).render('#paypal-button-container');
-</script>

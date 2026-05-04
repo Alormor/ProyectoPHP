@@ -258,3 +258,8 @@ Router::add('POST', '/pago/capturar/:id', function ($id) {
     $controller = new \Controllers\PagoController();
     return $controller->capturarPago($id);
 });
+
+Router::add('POST', '/pago/simular', function () {
+    $controller = new \Controllers\PagoController();
+    return $controller->simularPago();
+});

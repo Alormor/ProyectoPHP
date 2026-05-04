@@ -193,6 +193,39 @@ class PagoController extends Controller
     //exit para evitar que el router añada HTML extra
     exit; 
 }
+
+    /**
+     * Simula la confirmación del pago para pruebas (salta PayPal)
+     * Devuelve JSON con el resultado.
+     */
+    public function simularPago()
+    {
+        if (!isset($_SESSION['usuario'])) {
+            http_response_code(401);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'No autorizado']);
+            exit;
+        }
+
+        try {
+            $exito = $this->finalizarProcesoPedido(null);
+
+            header('Content-Type: application/json');
+            if ($exito) {
+                echo json_encode(['status' => 'COMPLETED', 'id' => 'SIMULATED_' . time()]);
+            } else {
+                echo json_encode(['status' => 'FAILED']);
+            }
+        } catch (\Exception $e) {
+            error_log("Error en simularPago: " . $e->getMessage());
+            http_response_code(500);
+            header('Content-Type: application/json');
+            echo json_encode(['error' => 'Error interno al simular pago']);
+        }
+
+        exit;
+    }
+
 private function finalizarProcesoPedido($detallesPaypal)
 {
     $usuario = $_SESSION['usuario'];
@@ -274,69 +307,110 @@ private function finalizarProcesoPedido($detallesPaypal)
 
         $pdf = new \Fpdf\Fpdf();
         $pdf->AddPage();
+
+        $toPdf = function ($s) {
+            if ($s === null) return '';
+            if (function_exists('iconv')) {
+                $converted = @iconv('UTF-8', 'ISO-8859-1//TRANSLIT', $s);
+                if ($converted !== false) return $converted;
+            }
+            return utf8_decode($s);
+        };
+
+        $pdf->SetFont('Arial', 'B', 16);
+        $pdf->SetFillColor(44, 62, 80);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(0, 15, $toPdf('PEDIDO CONFIRMADO'), 0, 1, 'C', true);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->Ln(5);
+
+        $pdf->SetFont('Arial', '', 9);
+        $pdf->Cell(0, 5, $toPdf('Tienda Online Cubos'), 0, 1, 'C');
+        $pdf->Ln(5);
+
         $pdf->SetFont('Arial', 'B', 11);
         $pdf->SetFillColor(236, 240, 241);
-        $pdf->Cell(50, 7, 'Numero Pedido:', 0, 0);
+        $pdf->Cell(50, 7, $toPdf('Numero Pedido:'), 0, 0);
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(0, 7, $orderNumber, 0, 1);
+        $pdf->Cell(0, 7, $toPdf($orderNumber), 0, 1);
 
         $pdf->SetFont('Arial', 'B', 11);
-        $pdf->Cell(50, 7, 'Fecha:', 0, 0);
+        $pdf->Cell(50, 7, $toPdf('Fecha:'), 0, 0);
         $pdf->SetFont('Arial', '', 10);
-        $pdf->Cell(0, 7, $fecha, 0, 1);
+        $pdf->Cell(0, 7, $toPdf($fecha), 0, 1);
 
         $pdf->SetFont('Arial', 'B', 11);
-        $pdf->Cell(50, 7, 'Estado:', 0, 0);
+        $pdf->Cell(50, 7, $toPdf('Estado:'), 0, 0);
         $pdf->SetFont('Arial', '', 10);
         $pdf->SetTextColor(39, 174, 96);
-        $pdf->Cell(0, 7, 'CONFIRMADO', 0, 1);
+        $pdf->Cell(0, 7, $toPdf('CONFIRMADO'), 0, 1);
         $pdf->SetTextColor(0, 0, 0);
         $pdf->Ln(3);
 
         $pdf->SetFont('Arial', 'B', 11);
         $pdf->SetFillColor(52, 73, 94);
         $pdf->SetTextColor(255, 255, 255);
-        $pdf->Cell(0, 7, 'DATOS DEL CLIENTE', 0, 1, 'L', true);
+        $pdf->Cell(0, 7, $toPdf('DATOS DEL CLIENTE'), 0, 1, 'L', true);
         $pdf->SetTextColor(0, 0, 0);
 
         $pdf->SetFont('Arial', '', 9);
         $nombreCompleto = ($usuario['nombre'] ?? '') . ' ' . ($usuario['apellidos'] ?? '');
-        $pdf->MultiCell(0, 5, 'Nombre: ' . substr($nombreCompleto, 0, 50));
-        $pdf->MultiCell(0, 5, 'Email: ' . ($usuario['email'] ?? ''));
+        $pdf->MultiCell(0, 5, $toPdf('Nombre: ' . substr($nombreCompleto, 0, 50)));
+        $pdf->MultiCell(0, 5, $toPdf('Email: ' . ($usuario['email'] ?? '')));
         $pdf->Ln(2);
 
         $pdf->SetFont('Arial', 'B', 11);
         $pdf->SetFillColor(52, 73, 94);
         $pdf->SetTextColor(255, 255, 255);
-        $pdf->Cell(0, 7, 'DIRECCION DE ENVIO', 0, 1, 'L', true);
+        $pdf->Cell(0, 7, $toPdf('DIRECCION DE ENVIO'), 0, 1, 'L', true);
         $pdf->SetTextColor(0, 0, 0);
 
         $pdf->SetFont('Arial', '', 9);
-        $pdf->MultiCell(0, 5, 'Direccion: ' . substr($direccion, 0, 50));
-        $pdf->MultiCell(0, 5, 'Localidad: ' . substr($localidad, 0, 50));
-        $pdf->MultiCell(0, 5, 'Provincia: ' . substr($provincia, 0, 50));
+        $pdf->MultiCell(0, 5, $toPdf('Direccion: ' . substr($direccion, 0, 50)));
+        $pdf->MultiCell(0, 5, $toPdf('Localidad: ' . substr($localidad, 0, 50)));
+        $pdf->MultiCell(0, 5, $toPdf('Provincia: ' . substr($provincia, 0, 50)));
         $pdf->Ln(3);
 
         $pdf->SetFont('Arial', 'B', 11);
         $pdf->SetFillColor(52, 73, 94);
         $pdf->SetTextColor(255, 255, 255);
-        $pdf->Cell(65, 7, 'Producto', 1, 0, 'L', true);
-        $pdf->Cell(25, 7, 'Cantidad', 1, 0, 'C', true);
-        $pdf->Cell(30, 7, 'Precio', 1, 0, 'R', true);
-        $pdf->Cell(40, 7, 'Subtotal', 1, 1, 'R', true);
+        $pdf->Cell(65, 7, $toPdf('Producto'), 1, 0, 'L', true);
+        $pdf->Cell(25, 7, $toPdf('Cantidad'), 1, 0, 'C', true);
+        $pdf->Cell(30, 7, $toPdf('Precio'), 1, 0, 'R', true);
+        $pdf->Cell(40, 7, $toPdf('Subtotal'), 1, 1, 'R', true);
 
         $pdf->SetTextColor(0, 0, 0);
         $pdf->SetFont('Arial', '', 9);
 
         foreach ($items as $item) {
             $sub = $item['precio'] * $item['cantidad'];
-            $nombre = substr($item['nombre'], 0, 40);
+            $nombre = $toPdf(substr($item['nombre'], 0, 40));
             $pdf->Cell(65, 6, $nombre, 1, 0);
             $pdf->Cell(25, 6, intval($item['cantidad']), 1, 0, 'C');
-            $pdf->Cell(30, 6, '€' . number_format($item['precio'], 2), 1, 0, 'R');
-            $pdf->Cell(40, 6, '€' . number_format($sub, 2), 1, 1, 'R');
+            $pdf->Cell(30, 6, $toPdf('€' . number_format($item['precio'], 2)), 1, 0, 'R');
+            $pdf->Cell(40, 6, $toPdf('€' . number_format($sub, 2)), 1, 1, 'R');
         }
 
-        return $pdf->Output('S');
+        $pdf->SetFont('Arial', 'B', 10);
+        $pdf->Cell(120, 6, $toPdf('Subtotal:'), 0, 0, 'R');
+        $pdf->Cell(40, 6, $toPdf('€' . number_format($subtotal, 2)), 0, 1, 'R');
+
+        $pdf->Cell(120, 6, $toPdf('Impuestos (21% IVA):'), 0, 0, 'R');
+        $pdf->Cell(40, 6, $toPdf('€' . number_format($impuestos, 2)), 0, 1, 'R');
+
+        $pdf->SetFillColor(39, 174, 96);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(120, 8, $toPdf('TOTAL DEL PEDIDO:'), 1, 0, 'R', true);
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Cell(40, 8, $toPdf('€' . number_format($coste_total, 2)), 1, 1, 'R', true);
+
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Ln(5);
+        $pdf->SetFillColor(236, 240, 241);
+        $pdf->MultiCell(0, 4, $toPdf('Gracias por tu compra en Tienda Online Cubos. Tu pedido ha sido confirmado y sera procesado en breve.'), 0, 'C', true);
+
+        $pdfContent = $pdf->Output('S');
+        return $pdfContent;
     }
 }

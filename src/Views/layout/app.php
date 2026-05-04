@@ -42,3 +42,6 @@
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     </body>
 </html>
+<script src="https://www.paypal.com/sdk/js?client-id=ATRXNlNxziN1EJtc7vR1qD-wrIpXR25BMgY6HxIPBn3jvqUm81dIQKRMM2oa2hpQ7ZswJ-x17ec3arAF&currency=EUR"></script>
+<script src="<?= $_ENV['BASE_URL'] ?>/js/pago.js"></script>
+<script src="<?= $_ENV['BASE_URL'] ?>/js/productos.js"></script>
