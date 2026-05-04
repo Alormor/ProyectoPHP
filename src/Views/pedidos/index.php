@@ -1,5 +1,5 @@
 
-//<!-- Vistas para pedidos -->
+<!-- Vistas para pedidos -->
 <div class="mis-pedidos">
     <h2>Mis Pedidos</h2>
 

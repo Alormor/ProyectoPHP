@@ -19,6 +19,7 @@
         "symfony/routing": "^7.4",
         "stefangabos/zebra_pagination": "^2.4",
         "phpmailer/phpmailer": "^7.0",
-        "guzzlehttp/guzzle": "^7.10"
+        "guzzlehttp/guzzle": "^7.10",
+        "fpdf/fpdf": "^1.86"
     }
 }

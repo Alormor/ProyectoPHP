@@ -99,7 +99,7 @@ class PagoController extends Controller
         $items = $carritoService->obtenerCarrito($usuario_id);
 
         if (empty($items)) {
-            http_response_code(400);x
+            http_response_code(400);
             header('Content-Type: application/json');
             echo json_encode(['error' => 'El carrito está vacío']);
             exit;
@@ -136,9 +136,10 @@ class PagoController extends Controller
             ]
         ]);
 
-        header('Content-Type: application/json');
-        echo $response->getBody();
-        exit; 
+            header('Content-Type: application/json');
+            echo $response->getBody();
+            exit;
+        
 
     } catch (\Exception $e) {
         error_log("Error PayPal crearOrden: " . $e->getMessage()); 
@@ -164,21 +165,22 @@ class PagoController extends Controller
 
         $result = json_decode($response->getBody(), true);
 
-        if (isset($result['status']) && $result['status'] === 'COMPLETED') {
-            $this->finalizarProcesoPedido($result);
+            if (isset($result['status']) && $result['status'] === 'COMPLETED') {
+                $this->finalizarProcesoPedido($result);
+
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status' => 'COMPLETED',
+                    'id' => $result['id']
+                ]);
+            } else {
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status' => 'FAILED',
+                    'details' => $result
+                ]);
+            }
             
-            header('Content-Type: application/json');
-            echo json_encode([
-                'status' => 'COMPLETED',
-                'id' => $result['id'] // ID de PayPal
-            ]);
-        } else {
-            header('Content-Type: application/json');
-            echo json_encode([
-                'status' => 'FAILED',
-                'details' => $result
-            ]);
-        }
 
     } catch (\Exception $e) {
         error_log("Error en capturarPago: " . $e->getMessage());
@@ -270,154 +272,71 @@ private function finalizarProcesoPedido($detallesPaypal)
         $orderNumber = 'PED-' . date('YmdHis') . rand(100, 999);
         $fecha = date('d/m/Y H:i:s');
 
-        $htmlItems = '';
+        $pdf = new \Fpdf\Fpdf();
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->SetFillColor(236, 240, 241);
+        $pdf->Cell(50, 7, 'Numero Pedido:', 0, 0);
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(0, 7, $orderNumber, 0, 1);
+
+        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->Cell(50, 7, 'Fecha:', 0, 0);
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->Cell(0, 7, $fecha, 0, 1);
+
+        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->Cell(50, 7, 'Estado:', 0, 0);
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->SetTextColor(39, 174, 96);
+        $pdf->Cell(0, 7, 'CONFIRMADO', 0, 1);
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->Ln(3);
+
+        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->SetFillColor(52, 73, 94);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(0, 7, 'DATOS DEL CLIENTE', 0, 1, 'L', true);
+        $pdf->SetTextColor(0, 0, 0);
+
+        $pdf->SetFont('Arial', '', 9);
+        $nombreCompleto = ($usuario['nombre'] ?? '') . ' ' . ($usuario['apellidos'] ?? '');
+        $pdf->MultiCell(0, 5, 'Nombre: ' . substr($nombreCompleto, 0, 50));
+        $pdf->MultiCell(0, 5, 'Email: ' . ($usuario['email'] ?? ''));
+        $pdf->Ln(2);
+
+        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->SetFillColor(52, 73, 94);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(0, 7, 'DIRECCION DE ENVIO', 0, 1, 'L', true);
+        $pdf->SetTextColor(0, 0, 0);
+
+        $pdf->SetFont('Arial', '', 9);
+        $pdf->MultiCell(0, 5, 'Direccion: ' . substr($direccion, 0, 50));
+        $pdf->MultiCell(0, 5, 'Localidad: ' . substr($localidad, 0, 50));
+        $pdf->MultiCell(0, 5, 'Provincia: ' . substr($provincia, 0, 50));
+        $pdf->Ln(3);
+
+        $pdf->SetFont('Arial', 'B', 11);
+        $pdf->SetFillColor(52, 73, 94);
+        $pdf->SetTextColor(255, 255, 255);
+        $pdf->Cell(65, 7, 'Producto', 1, 0, 'L', true);
+        $pdf->Cell(25, 7, 'Cantidad', 1, 0, 'C', true);
+        $pdf->Cell(30, 7, 'Precio', 1, 0, 'R', true);
+        $pdf->Cell(40, 7, 'Subtotal', 1, 1, 'R', true);
+
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFont('Arial', '', 9);
+
         foreach ($items as $item) {
             $sub = $item['precio'] * $item['cantidad'];
-            $htmlItems .= '<tr>
-                <td style="padding: 10px; border-bottom: 1px solid #ecf0f1;">' . htmlspecialchars($item['nombre']) . '</td>
-                <td style="padding: 10px; border-bottom: 1px solid #ecf0f1; text-align: center;">' . intval($item['cantidad']) . '</td>
-                <td style="padding: 10px; border-bottom: 1px solid #ecf0f1; text-align: right;">€' . number_format($item['precio'], 2) . '</td>
-                <td style="padding: 10px; border-bottom: 1px solid #ecf0f1; text-align: right;">€' . number_format($sub, 2) . '</td>
-            </tr>';
+            $nombre = substr($item['nombre'], 0, 40);
+            $pdf->Cell(65, 6, $nombre, 1, 0);
+            $pdf->Cell(25, 6, intval($item['cantidad']), 1, 0, 'C');
+            $pdf->Cell(30, 6, '€' . number_format($item['precio'], 2), 1, 0, 'R');
+            $pdf->Cell(40, 6, '€' . number_format($sub, 2), 1, 1, 'R');
         }
 
-        $html = '<!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <style>
-                body { font-family: Arial, sans-serif; color: #333; margin: 0; padding: 20px; background-color: #f5f5f5; }
-                .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-                .header { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2c3e50; padding-bottom: 20px; }
-                .header h1 { margin: 0; color: #2c3e50; font-size: 28px; }
-                .header p { margin: 5px 0; color: #7f8c8d; }
-                .section { margin-bottom: 25px; }
-                .section h3 { background-color: #34495e; color: white; padding: 12px; margin: 0 0 15px 0; border-radius: 3px; }
-                .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-                .info-block { }
-                .info-row { display: flex; padding: 8px 0; border-bottom: 1px solid #ecf0f1; }
-                .info-label { font-weight: bold; color: #2c3e50; min-width: 120px; }
-                .info-value { color: #555; flex: 1; }
-                table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-                th { background-color: #34495e; color: white; padding: 12px; text-align: left; font-weight: bold; }
-                td { padding: 12px; border-bottom: 1px solid #ecf0f1; }
-                tr:nth-child(even) { background-color: #f9f9f9; }
-                .totals { text-align: right; margin-top: 20px; padding-top: 20px; border-top: 2px solid #2c3e50; }
-                .total-row { display: flex; justify-content: flex-end; gap: 20px; margin: 10px 0; font-size: 14px; }
-                .total-label { font-weight: bold; min-width: 160px; }
-                .total-value { min-width: 100px; text-align: right; }
-                .grand-total { font-size: 18px; color: white; background-color: #27ae60; padding: 12px; border-radius: 3px; margin-top: 15px; }
-                .grand-total .total-label { color: white; }
-                .grand-total .total-value { color: white; font-size: 20px; font-weight: bold; }
-                .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #bdc3c7; font-size: 11px; color: #7f8c8d; text-align: center; line-height: 1.6; }
-                .footer strong { color: #2c3e50; }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h1>✓ PEDIDO CONFIRMADO</h1>
-                    <p>Tienda Online Cubos</p>
-                </div>
-
-                <div class="section">
-                    <h3>Información del Pedido</h3>
-                    <div class="info-grid">
-                        <div class="info-block">
-                            <div class="info-row">
-                                <span class="info-label">Número:</span>
-                                <span class="info-value">' . htmlspecialchars($orderNumber) . '</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Fecha:</span>
-                                <span class="info-value">' . htmlspecialchars($fecha) . '</span>
-                            </div>
-                        </div>
-                        <div class="info-block">
-                            <div class="info-row">
-                                <span class="info-label">Estado:</span>
-                                <span class="info-value" style="color: #27ae60; font-weight: bold;">CONFIRMADO</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3>Datos del Cliente</h3>
-                    <div class="info-grid">
-                        <div class="info-block">
-                            <div class="info-row">
-                                <span class="info-label">Nombre:</span>
-                                <span class="info-value">' . htmlspecialchars(($usuario['nombre'] ?? '') . ' ' . ($usuario['apellidos'] ?? '')) . '</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Email:</span>
-                                <span class="info-value">' . htmlspecialchars($usuario['email'] ?? '') . '</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3>Dirección de Envío</h3>
-                    <div class="info-block">
-                        <div class="info-row">
-                            <span class="info-label">Dirección:</span>
-                            <span class="info-value">' . htmlspecialchars($direccion) . '</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Localidad:</span>
-                            <span class="info-value">' . htmlspecialchars($localidad) . '</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Provincia:</span>
-                            <span class="info-value">' . htmlspecialchars($provincia) . '</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <h3>Detalles del Pedido</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Producto</th>
-                                <th style="text-align: center; width: 80px;">Cantidad</th>
-                                <th style="text-align: right; width: 100px;">Precio Unit.</th>
-                                <th style="text-align: right; width: 100px;">Subtotal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ' . $htmlItems . '
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="totals">
-                    <div class="total-row">
-                        <span class="total-label">Subtotal:</span>
-                        <span class="total-value">€' . number_format($subtotal, 2) . '</span>
-                    </div>
-                    <div class="total-row">
-                        <span class="total-label">Impuestos (21% IVA):</span>
-                        <span class="total-value">€' . number_format($impuestos, 2) . '</span>
-                    </div>
-                    <div class="total-row grand-total">
-                        <span class="total-label">TOTAL DEL PEDIDO:</span>
-                        <span class="total-value">€' . number_format($coste_total, 2) . '</span>
-                    </div>
-                </div>
-
-                <div class="footer">
-                    <p><strong>¡Gracias por tu compra en Tienda Online Cubos!</strong></p>
-                    <p>Tu pedido ha sido confirmado y será procesado en breve.</p>
-                    <p>Av. de Francisco Ayala, 18014 Granada | Teléfono: +34 123 456 789</p>
-                    <p>Email: no-reply@cubos3.com</p>
-                </div>
-            </div>
-        </body>
-        </html>';
-
-        return $html;
+        return $pdf->Output('S');
     }
 }
