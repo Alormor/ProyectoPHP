@@ -18,7 +18,7 @@
     font-size: 1.1rem;
 }
 
-form {
+.confirmar-envio-container form {
     background-color: #fff;
     padding: 2.5rem;
     border-radius: 20px;
@@ -26,20 +26,20 @@ form {
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
-form div {
+.confirmar-envio-container form div {
     margin-bottom: 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-form label {
+.confirmar-envio-container form label {
     font-weight: 600;
     color: var(--color-text-principal);
     font-size: 0.95rem;
 }
 
-form input[type="text"] {
+.confirmar-envio-container form input[type="text"] {
     padding: 12px 15px;
     border: 2px solid #eee;
     border-radius: 10px;
@@ -48,13 +48,13 @@ form input[type="text"] {
     transition: all 0.3s ease;
 }
 
-form input[type="text"]:focus {
+.confirmar-envio-container form input[type="text"]:focus {
     border-color: var(--primary-color);
     outline: none;
     box-shadow: 0 0 0 4px #e160d815;
 }
 
-form button[type="submit"] {
+.confirmar-envio-container form button[type="submit"] {
     width: 100%;
     margin-top: 1rem;
     padding: 15px;
@@ -66,9 +66,7 @@ form button[type="submit"] {
     font-weight: 700;
     cursor: pointer;
     transition: transform 0.2s, filter 0.2s;
-}
-
-form button[type="submit"]:hover {
+.confirmar-envio-container form button[type="submit"]:hover {
     filter: brightness(1.1);
     transform: translateY(-2px);
 }

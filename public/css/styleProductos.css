@@ -1,177 +1,216 @@
 @import "styleVariables.css";
 
 .productos-container {
-    margin: 5rem 6rem;
+  margin: 5rem 6rem;
+}
+
+.productos-controles {
+  margin-bottom: 2.5rem;
+}
+
+.admin-acciones {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 1.25rem;
+}
+
+.admin-acciones .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
 }
 
 .productos-container h1 {
-    font-size: 3.5rem;
-    color: var(--color-text-principal);
-    margin-bottom: 1rem;
-    line-height: 1.1;
+  font-size: 3.5rem;
+  color: var(--color-text-principal);
+  margin-bottom: 1rem;
+  line-height: 1.1;
 }
 
 .productos-container p {
-    color: var(--color-text-secundario);
-    margin-bottom: 2rem;
+  color: var(--color-text-secundario);
+  margin-bottom: 2rem;
 }
 
 .filtro-productos {
-    display: flex;
-    gap: 1.5rem;
-    margin-bottom: 3rem;
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
-.filtro-productos input, 
+.filtro-productos input,
 .filtro-productos select {
-    padding: 10px 15px;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    outline: none;
-    font-family: inherit;
+  padding: 10px 15px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+  font-family: inherit;
 }
 
 .filtro-productos input:focus {
-    border-color: var(--secondary-color);
+  border-color: var(--secondary-color);
 }
 
 .productos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2.5rem;
 }
 
 .producto-card {
-    background: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    border: 1px solid #eee;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  border: 1px solid #eee;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .producto-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .producto-imagen {
-    width: 100%;
-    height: 200px;
-    background-color: #f0f0f0;
+  width: 100%;
+  height: 200px;
+  background-color: #f0f0f0;
 }
 
 .producto-imagen img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .producto-imagen.sin-imagen {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
 }
 
 .producto-info {
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .producto-nombre {
-    font-size: 1.4rem;
-    color: var(--color-text-principal);
-    margin-bottom: 0.8rem;
-    height: 3rem;
-    overflow: hidden;
+  font-size: 1.4rem;
+  color: var(--color-text-principal);
+  margin-bottom: 0.8rem;
+  height: 3rem;
+  overflow: hidden;
 }
 
 .producto-descripcion {
-    font-size: 0.9rem;
-    color: var(--color-text-secundario);
-    margin-bottom: 1rem;
-    line-height: 1.4;
+  font-size: 0.9rem;
+  color: var(--color-text-secundario);
+  margin-bottom: 1rem;
+  line-height: 1.4;
 }
 
 .producto-precio {
-    margin-bottom: 1rem;
-    font-weight: bold;
+  margin-bottom: 1rem;
+  font-weight: bold;
 }
 
 .precio {
-    font-size: 1.5rem;
-    color: var(--color-text-principal);
+  font-size: 1.5rem;
+  color: var(--color-text-principal);
 }
 
 .precio-original {
-    text-decoration: line-through;
-    color: #999;
-    margin-right: 0.5rem;
-    font-size: 1rem;
+  text-decoration: line-through;
+  color: #999;
+  margin-right: 0.5rem;
+  font-size: 1rem;
 }
 
 .precio-oferta {
-    font-size: 1.5rem;
-    color: #e74c3c;
+  font-size: 1.5rem;
+  color: #e74c3c;
 }
 
 .producto-stock {
-    margin-bottom: 1.5rem;
-    font-size: 0.85rem;
-    font-weight: 600;
+  margin-bottom: 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
-.stock-disponible { color: #27ae60; }
-.stock-agotado { color: #e74c3c; }
+.stock-disponible {
+  color: #27ae60;
+}
+.stock-agotado {
+  color: #e74c3c;
+}
 
 .producto-acciones {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-top: auto;
 }
 
-.btn-ver-detalles, 
+.producto-acciones-admin {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid #eee;
+}
+
+.producto-acciones-admin .btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  text-decoration: none;
+}
+
+.btn-ver-detalles,
 .btn-agregar-carrito {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    text-align: center;
-    text-decoration: none;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    border: none;
+  display: block;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
 }
 
 .btn-ver-detalles {
-    border: 2px solid var(--secondary-color);
-    color: var(--color-text-principal);
-    background-color: #e160d820;
+  border: 2px solid var(--secondary-color);
+  color: var(--color-text-principal);
+  background-color: #e160d820;
 }
 
 .btn-ver-detalles:hover {
-    background-color: var(--secondary-color);
-    color: white;
+  background-color: var(--secondary-color);
+  color: white;
 }
 
 .btn-agregar-carrito {
-    background-color: var(--quaternary-color);
-    color: var(--fondo);
-    border: 2px solid var(--quaternary-color);
+  background-color: var(--quaternary-color);
+  color: var(--fondo);
+  border: 2px solid var(--quaternary-color);
 }
 
 .btn-agregar-carrito:hover {
-    background-color: transparent;
-    color: var(--color-text-principal);
+  background-color: transparent;
+  color: var(--color-text-principal);
 }
