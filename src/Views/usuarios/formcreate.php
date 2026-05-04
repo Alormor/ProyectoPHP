@@ -1,5 +1,5 @@
 <div class="form-container">
-    <i class="fas fa-user-plus"></i>
+    <ion-icon name="person-outline" class="form-icon"></ion-icon>
     <h2><?php echo $title ?? 'Crear Usuario'; ?></h2>
     <p><?php echo $message ?? ''; ?></p>
     

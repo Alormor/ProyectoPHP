@@ -2,118 +2,193 @@
 @import "styleVariables.css";
 
 .user-welcome {
-    text-align: center;
-    padding: 40px 100px;
+  padding: 40px 20px;
+  background: var(--fondo);
+}
+
+.welcome-card {
+  background: transparent;
+  color: var(--color-text-principal);
+  padding: 0;
+  border-radius: 0;
+  margin: 0 auto 35px;
+  max-width: 1200px;
+  text-align: center;
+  box-shadow: none;
 }
 
 .welcome-card h2 {
-    margin: 0 0 15px 0;
-    font-size: 3rem;
-    color: var(--color-text-principal);
+  margin: 0 0 15px 0;
+  font-size: 3rem;
+  font-weight: 600;
+  color: var(--color-text-principal);
 }
 
 .user-email {
-    margin: 20px 0;
-    font-size: 16px;
-    opacity: 0.95;
-    color: var(--color-text-secundario);
+  margin: 20px 0;
+  font-size: 16px;
+  opacity: 0.95;
+  color: var(--color-text-secundario);
 }
 
 .user-role {
-    margin: 20px 0 20px;
-    font-size: 16px;
-    opacity: 0.95;
-    color: var(--color-text-secundario);
+  margin: 20px 0 20px;
+  font-size: 16px;
+  opacity: 0.95;
+  color: var(--color-text-secundario);
 }
 
 .user-role strong {
-    background: #39c7ad5f;
-    padding: 4px 12px;
-    border-radius: 20px;
-    display: inline-block;
-    margin-left: 5px;
+  background: rgba(57, 199, 173, 0.18);
+  color: var(--color-text-principal);
+  padding: 4px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-left: 5px;
 }
 
 .success-message {
-    background: rgba(76, 175, 80, 0.3);
-    border: 2px solid rgba(76, 175, 80, 0.8);
-    color: rgba(76, 175, 80, 0.8);
-    padding: 18px;
-    border-radius: 5px;
-    margin-top: 20px;
-    font-size: 14px;
-    animation: slideDown 0.3s ease-out;
+  background: rgba(76, 175, 80, 0.3);
+  border: 2px solid rgba(76, 175, 80, 0.8);
+  color: #e8f5e9;
+  padding: 18px;
+  border-radius: 5px;
+  margin-top: 20px;
+  font-size: 14px;
+  animation: slideDown 0.3s ease-out;
 }
 
 @keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.home-buttons{
-    white-space: nowrap;
+.user-home-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.btn-productos{
-    display: inline-block;
-    align-self: center;
-    width: fit-content;
-    
+.home-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 15px;
+  flex-wrap: nowrap;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
 }
 
-/* Botones adicionales */
+.home-buttons a {
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  text-align: center;
+  min-height: 3.2rem;
+  width: auto;
+  min-width: 0;
+  line-height: 1.1;
+  border: 2px solid transparent;
+  overflow: hidden;
+}
+
+.home-buttons a ion-icon {
+  font-size: 1rem;
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1rem;
+  margin-right: 0;
+  flex: 0 0 auto;
+}
+
+.btn-productos {
+  background: var(--quinary-color);
+  color: var(--fondo) !important;
+  border-color: var(--quinary-color);
+}
+
+.btn-productos:hover {
+  background: transparent;
+  color: var(--quinary-color) !important;
+  border-color: var(--quinary-color);
+}
+
 .btn-logout {
-    background: #e160d893;
-    color: white;
-    padding: 12px 24px;
-    text-decoration: none;
-    border-radius: 10px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    display: inline-block;
-    align-self: center;
-    width: fit-content;
-    border: 1.5px solid var(--secondary-color);
+  background: #e160d893;
+  color: white;
+  border-color: var(--secondary-color);
 }
 
 .btn-logout:hover {
-    background: var(--secondary-color);
-    color: var(--fondo);
+  background: var(--secondary-color);
+  color: var(--fondo);
 }
 
 .btn-admin {
-    background: #39c7ad87;
-    color: var(--color-text-principal);
-    padding: 12px 24px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    display: inline-block;
-    align-self: center;
-    width: fit-content;
-    border: 1.5px solid var(--primary-color);
+  background: #39c7ad87;
+  color: var(--color-text-principal);
+  border-color: var(--primary-color);
 }
 
 .btn-admin:hover {
-    background-color: var(--primary-color);
-    color: var(--fondo);
+  background-color: var(--primary-color);
+  color: var(--fondo);
 }
 
 .inicio-image {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    position: relative;
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .img-inicio-user {
-    width: 30rem;
-    height: auto;
+  width: 30rem;
+  height: auto;
+  max-width: 100%;
+}
+
+@media (max-width: 968px) {
+  .user-welcome {
+    padding: 20px;
+  }
+
+  .welcome-card {
+    padding: 30px;
+    margin-bottom: 30px;
+  }
+
+  .user-home-content {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .home-buttons {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .img-inicio-user {
+    width: min(26rem, 100%);
+  }
 }

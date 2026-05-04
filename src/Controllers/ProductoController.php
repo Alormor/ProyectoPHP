@@ -46,9 +46,15 @@ class ProductoController extends Controller
             return;
         }
 
+        $categoria = null;
+        if (!empty($producto['categoria_id'])) {
+            $categoria = $this->categoriaRepository->find((int) $producto['categoria_id']);
+        }
+
         $data = [
             'title' => $producto['nombre'] ?? 'Producto',
             'producto' => $producto,
+            'categoria' => $categoria,
             'showHeader' => true,
             'showFooter' => true
         ];
