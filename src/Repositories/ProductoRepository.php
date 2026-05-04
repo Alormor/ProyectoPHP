@@ -4,17 +4,31 @@ namespace Repositories;
 
 use Core\BaseDatos;
 
+/**
+ * ProductoRepository - Repositorio para gestionar operaciones CRUD de productos
+ *
+ * @package Repositories
+ * @uses BaseDatos
+ */
 class ProductoRepository extends Repository
 {
     protected $table = 'productos';
     protected $db;
 
+    /**
+     * Constructor de ProductoRepository
+     */
     public function __construct()
     {
         parent::__construct();
         $this->db = BaseDatos::getInstancia();
     }
 
+    /**
+     * Obtiene todos los productos activos
+     *
+     * @return array Array de productos
+     */
     public function findAll()
     {
         try {
@@ -30,6 +44,12 @@ class ProductoRepository extends Repository
         }
     }
 
+    /**
+     * Obtiene un producto específico por su identificador
+     *
+     * @param int $id Identificador del producto
+     * @return array|null Datos del producto o null
+     */
     public function find($id)
     {
         try {
@@ -48,6 +68,12 @@ class ProductoRepository extends Repository
         }
     }
 
+    /**
+     * Obtiene todos los productos de una categoría
+     *
+     * @param int $categoria_id Identificador de la categoría
+     * @return array Array de productos de la categoría
+     */
     public function findByCategoria($categoria_id)
     {
         try {
@@ -66,6 +92,12 @@ class ProductoRepository extends Repository
         }
     }
 
+    /**
+     * Crea un nuevo producto
+     *
+     * @param array $data Array con los datos del producto
+     * @return int|false Identificador del producto creado o false
+     */
     public function create($data)
     {
         try {
@@ -95,6 +127,13 @@ class ProductoRepository extends Repository
         }
     }
 
+    /**
+     * Actualiza un producto existente
+     *
+     * @param int $id Identificador del producto
+     * @param array $data Array con los datos a actualizar
+     * @return bool True si se actualiza correctamente, false en caso contrario
+     */
     public function update($id, $data)
     {
         try {
@@ -122,6 +161,12 @@ class ProductoRepository extends Repository
         }
     }
 
+    /**
+     * Elimina un producto
+     *
+     * @param int $id Identificador del producto a eliminar
+     * @return bool True si se elimina correctamente, false en caso contrario
+     */
     public function delete($id)
     {
         try {
@@ -140,6 +185,13 @@ class ProductoRepository extends Repository
         }
     }
 
+    /**
+     * Decrementa el stock de un producto
+     *
+     * @param int $id Identificador del producto
+     * @param int $cantidad Cantidad a decrementar
+     * @return bool True si se actualiza correctamente, false en caso contrario
+     */
     public function decrementarStock($id, $cantidad)
     {
         try {

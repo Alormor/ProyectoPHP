@@ -18,16 +18,16 @@
 <script>
     paypal.Buttons({
         createOrder: function(data, actions) {
-            return fetch('/ProyectoPHP/pago/crear-orden', { 
+            return fetch('/ProyectoPHP/pago/crear-orden', {
                 method: 'POST'
             })
             .then(response => response.json())
             .then(order => {
-                return order.id; 
+                return order.id;
             });
         },
         onApprove: function(data, actions) {
-            return fetch('/pago/capturar/' + data.orderID, { method: 'POST' })
+            return fetch('/ProyectoPHP/pago/capturar/' + data.orderID, { method: 'POST' })
                 .then(res => res.json())
                 .then(details => {
                     if(details.status === 'COMPLETED') {

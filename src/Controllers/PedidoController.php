@@ -9,8 +9,21 @@ use Repositories\ProductoRepository;
 use Repositories\PedidoRepository;
 use Core\BaseDatos;
 
+/**
+ * PedidoController - Controlador para gestionar pedidos y checkout
+ *
+ * @package Controllers
+ * @uses Controller
+ * @uses CarritoService
+ * @uses PedidoRepository
+ */
 class PedidoController extends Controller
 {
+    /**
+     * Inicia el proceso de checkout del carrito
+     *
+     * @return void Redirige a confirmar dirección
+     */
     public function checkout()
     {
         if (!isset($_SESSION['usuario'])) {
@@ -29,6 +42,11 @@ class PedidoController extends Controller
         $this->redirect('/pedidos/confirmar-direccion');
     }
 
+    /**
+     * Muestra el formulario para confirmar dirección de envío
+     *
+     * @return string Vista del formulario de dirección
+     */
     public function confirmarDireccion()
     {
         if (!isset($_SESSION['usuario'])) {
@@ -42,6 +60,11 @@ class PedidoController extends Controller
         ]);
     }
 
+    /**
+     * Guarda la dirección de envío en la sesión
+     *
+     * @return void Redirige a pago
+     */
     public function guardarDireccion()
     {
         if (!isset($_SESSION['usuario'])) {
@@ -66,36 +89,46 @@ class PedidoController extends Controller
         $this->redirect('/pedidos/pago');
     }
 
-public function mostrarPago()
-{
-    if (!isset($_SESSION['usuario']) || !isset($_SESSION['pedido_temporal'])) {
-        $this->redirect('/carrito');
+    /**
+     * Muestra el formulario de pago
+     *
+     * @return string Vista del formulario de pago
+     */
+    public function mostrarPago()
+    {
+        if (!isset($_SESSION['usuario']) || !isset($_SESSION['pedido_temporal'])) {
+            $this->redirect('/carrito');
+        }
+
+        $usuario_id = $_SESSION['usuario']['id'];
+        $carritoService = new \Services\CarritoService();
+        $items = $carritoService->obtenerCarrito($usuario_id);
+
+        // Calculamos el total real
+        $subtotal = 0;
+        $productoRepo = new \Repositories\ProductoRepository();
+        foreach ($items as $item) {
+            $p = $productoRepo->find($item['producto_id']);
+            $precio = $p['precio_oferta'] ?? $p['precio'];
+            $subtotal += $precio * $item['cantidad'];
+        }
+
+        $totalFinal = $subtotal * 1.21; // Aplicando el 21% de IVA
+
+        return $this->view('pedidos/pago', [
+            'title' => 'Finalizar Pago',
+            'total' => $totalFinal,
+            'direccion' => $_SESSION['pedido_temporal'],
+            'showHeader' => true,
+            'showFooter' => true
+        ]);
     }
 
-    $usuario_id = $_SESSION['usuario']['id'];
-    $carritoService = new \Services\CarritoService();
-    $items = $carritoService->obtenerCarrito($usuario_id);
-    
-    // Calculamos el total real
-    $subtotal = 0;
-    $productoRepo = new \Repositories\ProductoRepository();
-    foreach ($items as $item) {
-        $p = $productoRepo->find($item['producto_id']);
-        $precio = $p['precio_oferta'] ?? $p['precio'];
-        $subtotal += $precio * $item['cantidad'];
-    }
-    
-    $totalFinal = $subtotal * 1.21; // Aplicando el 21% de IVA
-
-    return $this->view('pedidos/pago', [
-        'title' => 'Finalizar Pago',
-        'total' => $totalFinal,
-        'direccion' => $_SESSION['pedido_temporal'],
-        'showHeader' => true,
-        'showFooter' => true
-    ]);
-}
-
+    /**
+     * Lista los pedidos del usuario autenticado
+     *
+     * @return string Vista de pedidos del usuario
+     */
     public function index()
     {
         if (!isset($_SESSION['usuario'])) {

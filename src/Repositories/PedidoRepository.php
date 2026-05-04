@@ -7,14 +7,33 @@ use RuntimeException;
 use Core\BaseDatos;
 use Models\Pedido;
 
+/**
+ * PedidoRepository - Repositorio para gestionar operaciones CRUD de pedidos
+ *
+ * @package Repositories
+ * @uses BaseDatos
+ * @uses Pedido
+ */
 class PedidoRepository extends Repository
 {
     protected $table = 'pedidos';
 
+    /**
+     * Constructor de PedidoRepository
+     *
+     * @param BaseDatos $conexion Instancia de la conexión a base de datos
+     */
     public function __construct(
         private readonly BaseDatos $conexion
     ){}
 
+    /**
+     * Crea un nuevo pedido en la base de datos
+     *
+     * @param Pedido $pedido Objeto Pedido a crear
+     * @return bool True si se crea correctamente
+     * @throws RuntimeException Si hay error en la inserción
+     */
     public function create(Pedido $pedido)
     {
         try{
@@ -51,10 +70,16 @@ class PedidoRepository extends Repository
         }
     }
 
+    /**
+     * Obtiene todos los pedidos de un usuario
+     *
+     * @param int $usuarioId Identificador del usuario
+     * @return array Array de pedidos del usuario
+     */
     public function findByUsuario(int $usuarioId): array
     {
-        $sql = "SELECT * FROM pedidos 
-                WHERE usuario_id = :usuario_id 
+        $sql = "SELECT * FROM pedidos
+                WHERE usuario_id = :usuario_id
                 ORDER BY fecha_pedido DESC";
 
         $param = [
@@ -66,7 +91,13 @@ class PedidoRepository extends Repository
         return $this->conexion->extraer_todos();
     }
 
-   public function find($id)
+    /**
+     * Obtiene un pedido específico por su identificador
+     *
+     * @param int $id Identificador del pedido
+     * @return array Array con los datos del pedido
+     */
+    public function find($id)
     {
         $sql = "SELECT * FROM pedidos WHERE id = :id";
         $param = [
@@ -74,7 +105,7 @@ class PedidoRepository extends Repository
         ];
 
         $this->conexion->ejecutar($sql, $param);
-        
-        return $this->conexion->extraer_todos(); 
+
+        return $this->conexion->extraer_todos();
     }
 }

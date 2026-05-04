@@ -28,8 +28,6 @@ class Router {
         }
 
         $uri = trim($uri, '/');
-        //var_dump($uri);
-        //die();
         
 
         $params = [];

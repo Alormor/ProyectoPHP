@@ -249,7 +249,7 @@ Router::add('GET', '/pedidos/:id', function ($id) {
     return (new \Controllers\PedidoController())->show($id);
 });
 
-Router::add('POST', '/ProyectoPHP/pago/crear-orden', function () {
+Router::add('POST', '/pago/crear-orden', function () {
     $controller = new \Controllers\PagoController();
     return $controller->crearOrden();
 });

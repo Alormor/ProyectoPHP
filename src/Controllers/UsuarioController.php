@@ -9,15 +9,31 @@ use Request\AdminRequest;
 use Services\UsuarioService;
 use Repositories\UsuarioRepository;
 
+/**
+ * UsuarioController - Controlador para gestionar usuarios (admin y perfil)
+ *
+ * @package Controllers
+ * @uses Controller
+ * @uses UsuarioService
+ * @uses UsuarioRepository
+ */
 class UsuarioController extends Controller
 {
     protected $adminRequest;
 
+    /**
+     * Constructor de UsuarioController
+     */
     public function __construct()
     {
         $this->adminRequest = new AdminRequest();
     }
 
+    /**
+     * Lista todos los usuarios del sistema (admin)
+     *
+     * @return string Vista de gestión de usuarios
+     */
     public function index()
     {
         if (!$this->adminRequest->verificarPermisosAdmin()) {
@@ -46,6 +62,12 @@ class UsuarioController extends Controller
         }
     }
 
+    /**
+     * Muestra el perfil de un usuario
+     *
+     * @param int $id Identificador del usuario
+     * @return string Vista del perfil de usuario
+     */
     public function show($id)
     {
         $data = [
@@ -57,6 +79,11 @@ class UsuarioController extends Controller
         return $this->view('usuarios/userprofile', $data);
     }
 
+    /**
+     * Muestra el formulario para crear un nuevo usuario (admin)
+     *
+     * @return string Vista del formulario de creación
+     */
     public function create()
     {
         if (!$this->adminRequest->verificarPermisosAdmin()) {
