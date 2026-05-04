@@ -10,6 +10,7 @@ class Usuario{
         private string $apellidos = '',
         private string $email = '',
         private string $password = '',
+        private string $direccion = '',
         private string $rol = 'usuario',
         private bool $confirmado = false,
         private ?string $token = null,
@@ -25,6 +26,7 @@ class Usuario{
             apellidos: $data['apellidos'] ?? '',
             email: $data['email'] ?? '',
             password: $data['password'] ?? '',
+            direccion: $data['direccion'] ?? '',
             rol: $data['rol'] ?? 'usuario',
             confirmado: (bool)($data['confirmado'] ?? false),
             token: $data['token'] ?? null,
@@ -38,10 +40,11 @@ class Usuario{
     public function getApellidos(): string { return $this->apellidos; }
     public function getEmail(): string { return $this->email; }
     public function getPassword(): string { return $this->password; }
+    public function getDireccion(): string { return $this->direccion; }
     public function getRol(): string { return $this->rol; }
     public function isConfirmado(): bool { return $this->confirmado; }
-    public function getToken(): string { return $this->token; }
-    public function getToken_exp(): string { return $this->token_exp; }
+    public function getToken(): ?string { return $this->token; }
+    public function getToken_exp(): ?string { return $this->token_exp; }
 
     // Setters
     public function setId(?int $id): void { $this->id = $id; }
@@ -49,6 +52,7 @@ class Usuario{
     public function setApellidos(string $apellidos): void { $this->apellidos = $apellidos; }
     public function setEmail(string $email): void { $this->email = $email; }
     public function setPassword(string $password): void { $this->password = $password; }
+    public function setDireccion(string $direccion): void { $this->direccion = $direccion; }
     public function setRol(string $rol): void { $this->rol = $rol; }
     public function setConfirmado(bool $confirmado): void { $this->confirmado = $confirmado; }
     public function setToken(string $token): void { $this->token = $token; }

@@ -22,7 +22,22 @@ class ProductoController extends Controller
 
     public function index()
     {
-        $productos = $this->productoRepository->findAll();
+        $numero_elementos_pagina = 15;
+        $todosProductos = $this->productoRepository->findAll();
+
+        $pagination = new \Zebra_Pagination();
+        $pagination->base_url($_ENV['BASE_URL'] . '/productos');
+        $pagination->records(count($todosProductos));
+        $pagination->records_per_page($numero_elementos_pagina);
+
+        $productos = array_slice(
+            $todosProductos,
+            (($pagination->get_page() - 1) * $numero_elementos_pagina),
+            $numero_elementos_pagina
+        );
+
+        $paginationHtml = (string) $pagination->render(true);
+
         $categorias = $this->categoriaRepository->findAll();
 
         $data = [
@@ -30,6 +45,7 @@ class ProductoController extends Controller
             'message' => 'Mostrando todos los productos disponibles',
             'productos' => $productos,
             'categorias' => $categorias,
+            'paginationHtml' => $paginationHtml,
             'showHeader' => true,
             'showFooter' => true
         ];
@@ -46,9 +62,15 @@ class ProductoController extends Controller
             return;
         }
 
+        $categoria = null;
+        if (!empty($producto['categoria_id'])) {
+            $categoria = $this->categoriaRepository->find((int) $producto['categoria_id']);
+        }
+
         $data = [
             'title' => $producto['nombre'] ?? 'Producto',
             'producto' => $producto,
+            'categoria' => $categoria,
             'showHeader' => true,
             'showFooter' => true
         ];

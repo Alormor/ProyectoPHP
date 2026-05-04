@@ -45,4 +45,3 @@ class AdminRequest extends Request
     }
 }
 
-?>

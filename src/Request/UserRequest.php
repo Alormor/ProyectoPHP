@@ -38,6 +38,11 @@ class UserRequest extends Request
             $this->sanitized['password_confirm'] = trim($data['password_confirm']);
         }
         
+        // Sanitizar dirección
+        if (isset($data['direccion'])) {
+            $this->sanitized['direccion'] = trim(htmlspecialchars($data['direccion'], ENT_QUOTES, 'UTF-8'));
+        }
+        
         // Sanitizar rol (solo si viene en los datos)
         if (isset($data['rol'])) {
             $this->sanitized['rol'] = trim(strtolower($data['rol']));
@@ -75,6 +80,14 @@ class UserRequest extends Request
     
     public function validateUser()
     {
+        if (empty($this->sanitized['nombre'])) {
+            $this->errors[] = 'El nombre es requerido';
+        }
+        
+        if (empty($this->sanitized['apellidos'])) {
+            $this->errors[] = 'Los apellidos son requeridos';
+        }
+        
         if (empty($this->sanitized['email'])) {
             $this->errors[] = 'El email es requerido';
         } else {
@@ -99,6 +112,10 @@ class UserRequest extends Request
             if ($this->sanitized['password'] !== $this->sanitized['password_confirm']) {
                 $this->errors[] = 'Las contraseñas no coinciden';
             }
+        }
+        
+        if (empty($this->sanitized['direccion'])) {
+            $this->errors[] = 'La dirección es requerida';
         }
         
         return empty($this->errors);

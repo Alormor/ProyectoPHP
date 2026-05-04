@@ -1,7 +1,5 @@
 <?php
 use Core\Router;
-use Controllers\CategoriaController;
-
 // Rutas principales
 Router::add('GET', '/', function () {
     $controller = new \Controllers\HomeController();
@@ -150,7 +148,7 @@ Router::add('GET', '/productos/:id', function ($id) {
 
 // Rutas admin de categorías
 Router::add('GET', '/admin/categorias/gestionar', function () {
-    $controller = new CategoriaController();
+    $controller = new \Controllers\CategoriaController();
     return $controller->gestion();
 });
 
@@ -227,3 +225,36 @@ Router::add('POST', '/resetPassword', function () {
     return (new \Controllers\AuthController())->resetPassword();
 });
 
+Router::add('GET', '/pedidos/checkout', function () {
+    return (new \Controllers\PedidoController())->checkout();
+});
+
+Router::add('GET', '/pedidos/confirmar-direccion', function () {
+    return (new \Controllers\PedidoController())->confirmarDireccion();
+});
+
+Router::add('POST', '/pedidos/guardar-direccion', function () {
+    return (new \Controllers\PedidoController())->guardarDireccion();
+});
+
+Router::add('GET', '/mis-pedidos', function () {
+    return (new \Controllers\PedidoController())->index();
+});
+
+Router::add('GET', '/pedidos/pago', function () {
+    return (new \Controllers\PedidoController())->mostrarPago();
+});
+
+Router::add('GET', '/pedidos/:id', function ($id) {
+    return (new \Controllers\PedidoController())->show($id);
+});
+
+Router::add('POST', '/ProyectoPHP/pago/crear-orden', function () {
+    $controller = new \Controllers\PagoController();
+    return $controller->crearOrden();
+});
+
+Router::add('POST', '/pago/capturar/:id', function ($id) {
+    $controller = new \Controllers\PagoController();
+    return $controller->capturarPago($id);
+});

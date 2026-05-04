@@ -1,6 +1,6 @@
 <div class="productos-container">
-    <h1><?php echo $title; ?></h1>
-    <p><?php echo $message; ?></p>
+    <h1><?php echo htmlspecialchars($title ?? ''); ?></h1>
+    <p><?php echo htmlspecialchars($message ?? ''); ?></p>
 
     <?php if (isset($_SESSION['success'])): ?>
         <div class="success-message">
@@ -25,7 +25,7 @@
             <input type="text" id="filtro-nombre" placeholder="Filtrar por nombre...">
             <select id="filtro-categoria">
                 <option value="">Todas las categorías</option>
-                <?php foreach ($categorias as $categoria): ?>
+                <?php foreach (($categorias ?? []) as $categoria): ?>
                     <option value="<?php echo htmlspecialchars($categoria['id']); ?>">
                         <?php echo htmlspecialchars($categoria['nombre']); ?>
                     </option>
@@ -121,6 +121,12 @@
                     </div>
             <?php endforeach; ?>
         </div>
+
+        <?php if (!empty($paginationHtml)): ?>
+            <div class="productos-pagination">
+                <?php echo $paginationHtml; ?>
+            </div>
+        <?php endif; ?>
     <?php endif; ?>
 </div>
 

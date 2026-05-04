@@ -62,8 +62,10 @@
             </select>
         </div>
 
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-        <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios" class="btn btn-secondary">Cancelar</a>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-guardar">Guardar Cambios</button>
+            <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios" class="btn btn-secondary">Cancelar</a>
+        </div>
     </form>
 
     <?php

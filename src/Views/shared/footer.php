@@ -5,9 +5,9 @@
     </div>
     <div class="div-footer">
         <ul class="ul-footer">
-            <li class="li-enlace"><a href="#">Contacto</a></li>
-            <li class="li-enlace"><a href="#">Ubicaci&oacute;n</a></li>
-            <li class="li-enlace"><a href="#">Sobre Nosotros</a></li>
+            <li class="li-enlace">Contacto</li>
+            <li class="li-enlace">Ubicaci&oacute;n</li>
+            <li class="li-enlace">Sobre Nosotros</li>
             <li>
                 <p class="p-redes">Redes Sociales</p>
                 <span class="icon">

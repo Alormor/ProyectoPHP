@@ -1,0 +1,99 @@
+@import "styleVariables.css";
+
+.confirmar-envio-container {
+    margin: 5rem 6rem;
+    max-width: 600px;
+}
+
+.confirmar-envio-container h2 {
+    font-size: 3.5rem;
+    color: var(--color-text-principal);
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.confirmar-envio-container p {
+    color: var(--color-text-secundario);
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+}
+
+.confirmar-envio-container form {
+    background-color: #fff;
+    padding: 2.5rem;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.confirmar-envio-container form div {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.confirmar-envio-container form label {
+    font-weight: 600;
+    color: var(--color-text-principal);
+    font-size: 0.95rem;
+}
+
+.confirmar-envio-container form input[type="text"] {
+    padding: 12px 15px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.confirmar-envio-container form input[type="text"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 4px #e160d815;
+}
+
+.confirmar-envio-container form button[type="submit"] {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 15px;
+    background-color: var(--quaternary-color);
+    color: var(--fondo);
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, filter 0.2s;
+.confirmar-envio-container form button[type="submit"]:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+.alert-error {
+    margin-top: 2rem;
+    background-color: #fff5f5;
+    border-left: 5px solid #fc8181;
+    padding: 1rem;
+    border-radius: 8px;
+    color: #c53030;
+}
+
+.alert-error ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.confirmar-envio-container a {
+    display: inline-block;
+    margin-top: 2rem;
+    color: var(--color-text-secundario);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.confirmar-envio-container a:hover {
+    color: var(--secondary-color);
+}
