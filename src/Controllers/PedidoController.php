@@ -146,23 +146,5 @@ class PedidoController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-        if (!isset($_SESSION['usuario'])) {
-            $this->redirect('/login');
-        }
 
-        $pedidoRepository = new PedidoRepository(BaseDatos::getInstancia());
-        $pedido = $pedidoRepository->find($id);
-
-        if (!$pedido || $pedido['usuario_id'] != $_SESSION['usuario']['id']) {
-            $_SESSION['errors'] = ['Pedido no encontrado'];
-            $this->redirect('/mis-pedidos');
-        }
-
-        return $this->view('pedidos/detalle', [
-            'pedido' => $pedido,
-            'title' => 'Detalle del pedido'
-        ]);
-    }
 }

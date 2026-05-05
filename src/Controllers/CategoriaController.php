@@ -17,39 +17,6 @@ class CategoriaController extends Controller
         $this->adminRequest = new AdminRequest();
     }
 
-    public function index()
-    {
-        $categorias = $this->categoriaRepository->findAll();
-
-        $data = [
-            'title' => 'Categorías',
-            'message' => 'Todas las categorías disponibles',
-            'categorias' => $categorias,
-            'showHeader' => true,
-            'showFooter' => true
-        ];
-
-        return $this->view('categorias/index', $data);
-    }
-    
-    public function show($id)
-    {
-        $categoria = $this->categoriaRepository->find($id);
-
-        if (!$categoria) {
-            $this->redirect('/categorias');
-            return;
-        }
-
-        $data = [
-            'title' => $categoria['nombre'] ?? 'Categoría',
-            'categoria' => $categoria,
-            'showHeader' => true,
-            'showFooter' => true
-        ];
-
-        return $this->view('categorias/show', $data);
-    }
     
     public function gestion()
     {
