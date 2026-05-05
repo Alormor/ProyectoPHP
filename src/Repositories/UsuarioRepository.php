@@ -35,7 +35,8 @@ class UsuarioRepository extends Repository
      * @throws RuntimeException Si hay error en la inserción
      */
     public function create(Usuario $usuario)
-    {
+    {   
+        
         try{
             $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, direccion, rol, confirmado, token, token_exp)
             VALUES (:nombre, :apellidos, :email, :password, :direccion, :rol, :confirmado, :token, :token_exp)";
@@ -51,9 +52,7 @@ class UsuarioRepository extends Repository
                 ":token" => ['valor' => $usuario->getToken()],
                 ":token_exp" => ['valor' => $usuario->getToken_exp()],
             ];
-
             $exito = $this->conexion->ejecutar($sql, $param);
-
             if($exito){
                 $nuevoId = $this->conexion->ultimoIdInsertado();
                 if($nuevoId > 0){
@@ -64,6 +63,7 @@ class UsuarioRepository extends Repository
             return $exito;
         }catch (PDOException $e) {
             throw new RuntimeException(
+                
                 "Error al insertar al realizar el registro: {$e->getMessage()}",
                 previous: $e
             );
@@ -80,6 +80,9 @@ class UsuarioRepository extends Repository
     public function findByEmail(string $email): ?Usuario
     {
         try {
+            // Normalizar el email para evitar discrepancias por espacios o mayúsculas
+            $email = trim(strtolower($email));
+
             $sql = "SELECT * FROM usuarios WHERE email = :email";
             $params = [
                 ":email" => ['valor' => $email]

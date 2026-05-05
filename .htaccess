@@ -1,17 +1,21 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /ProyectoPHP/
-    
-    # No reescribir archivos o directorios que existan
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    
-    # Si la solicitud no es para /public, redirigir a public/
-    RewriteRule ^(?!public/)(.*)$ public/$1 [L]
-    
-    # Evitar acceso directo a carpetas sensibles
-    RewriteRule ^vendor/ - [F,L]
-    RewriteRule ^config/ - [F,L]
-    RewriteRule ^src/ - [F,L]
+    # Evitar acceso directo a carpetas sensibles (primero)
+    RewriteRule ^(vendor|config|src)(/|$) - [F,L]
+
+    # Si la solicitud es para un archivo o directorio existente, servirlo tal cual
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Si la solicitud ya apunta a public/, servirla directamente
+    RewriteRule ^public/ - [L]
+
+    # En caso contrario, reenviar internamente al front controller en public/index.php
+    RewriteRule ^(.*)$ public/index.php [L,QSA]
+
+    # Índice por defecto
+    DirectoryIndex public/index.php index.php index.html
 </IfModule>
 

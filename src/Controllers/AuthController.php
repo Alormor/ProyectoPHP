@@ -6,6 +6,7 @@ use Core\BaseDatos;
 use Core\Controller;
 use Request\UserRequest;
 use Services\UsuarioService;
+use Services\MailService;
 use Models\Usuario;
 
 /**
@@ -25,7 +26,6 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $conexion = BaseDatos::getInstancia();
         $this->service = new UsuarioService();
     }
 
@@ -79,9 +79,14 @@ class AuthController extends Controller
                     $_SESSION['message'] = "Ya tenías una cuenta pendiente. Te hemos enviado un nuevo código a {$userData['email']}.";
                     $this->redirect('/registro');
                 })(),
+
+                "correo_en_uso" => (function() {
+                    $_SESSION['errors'] = ['Ese correo ya está registrado.'];
+                    $this->redirect('/registro');
+                })(),
                 
                 false => (function() {
-                    $_SESSION['errors'] = ['Correo en uso.'];
+                    $_SESSION['errors'] = ['No se pudo completar el registro. Inténtalo de nuevo.'];
                     $this->redirect('/registro');
                 })(),
             };
@@ -226,8 +231,11 @@ class AuthController extends Controller
             $confirm = $_POST['confirm_password'] ?? '';
             if ($password === $confirm && !empty($password)) {
                 $email = $this->service->validarTokenReset($token);
-                $this->service->completarReset($email, $password);
-
+                if ($this->service->completarReset($email, $password)) {
+                    // Enviar notificación al usuario de que la contraseña fue cambiada
+                    $mailService = new MailService();
+                    $mailService->enviarCorreoCambioPassword($email);
+                }
 
                 return $this->view('auth/confirmacionPass', [
                     'title' => 'Exito',

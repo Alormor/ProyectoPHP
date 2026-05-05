@@ -37,45 +37,63 @@ class UsuarioService extends Service
     public function registrar($userData)
     {
         try {
-            $usuarioExistente = $this->repository->findByEmail($userData['email']);
+            // Normalizar email para evitar falsos positivos por mayúsculas/espacios
+            $email = isset($userData['email']) ? trim(strtolower($userData['email'])) : '';
 
-            $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
-            $token = bin2hex(random_bytes(16));
-            $token_exp = date('Y-m-d H:i:s', strtotime('+10 minutes'));
-
-            if ($usuarioExistente) {
-                // Si ya está confirmado, no se le deja registrar
-                if ($usuarioExistente->isConfirmado()) {
-                    return false;
+            if (empty($email) || empty($userData['password'])) {
+                // Datos incompletos
+                return false;
                 }
-
-                // Se actualiza password, token y expiración
-                $usuarioExistente->setPassword($passwordHash);
-                $usuarioExistente->setToken($token);
+                
+                $usuarioExistente = $this->repository->findByEmail($email);
+                
+                $passwordHash = password_hash($userData['password'], PASSWORD_BCRYPT, ['cost' => 12]);
+                $token = bin2hex(random_bytes(16));
+                $token_exp = date('Y-m-d H:i:s', strtotime('+10 minutes'));
+                
+                if (!is_null($usuarioExistente)) {
+                    // Si ya está confirmado, no se le deja registrar
+                    if ($usuarioExistente->isConfirmado()) {
+                        return 'correo_en_uso';
+                        }
+                        
+                        // Se actualiza password, token y expiración
+                        $usuarioExistente->setNombre($userData['nombre'] ?? $usuarioExistente->getNombre());
+                        $usuarioExistente->setApellidos($userData['apellidos'] ?? $usuarioExistente->getApellidos());
+                        $usuarioExistente->setDireccion($userData['direccion'] ?? $usuarioExistente->getDireccion());
+                        $usuarioExistente->setPassword($passwordHash);
+                        $usuarioExistente->setToken($token);
                 $usuarioExistente->setToken_exp($token_exp);
                 $this->repository->updateRegistro($usuarioExistente);
 
                 $mailService = new MailService();
-                $mailService->enviarCorreoConfirmacion($userData['email'], $token);
-
+                $mailService->enviarCorreoConfirmacion($email, $token);
+                
                 return "reenviado";
-            }
+                }
+                
+                $nuevoUsuario = Usuario::fromArray([
+                    'nombre' => $userData['nombre'] ?? '',
+                    'apellidos' => $userData['apellidos'] ?? '',
+                    'email' => $email,
+                    'password' => $passwordHash,
+                    'direccion' => $userData['direccion'] ?? '',
+                    'token' => $token,
+                    'token_exp' => $token_exp
+                    ]);
 
-            $nuevoUsuario = Usuario::fromArray([
-                'email' => $userData['email'],
-                'password' => $passwordHash,
-                'token' => $token,
-                'token_exp' => $token_exp
-            ]);
-
-            $exito = $this->repository->create($nuevoUsuario);
-
+                    
+                    $exito = $this->repository->create($nuevoUsuario);
+                    
+            // Log resultado de la inserción para depuración
+            
             if ($exito) {
                 $mailService = new MailService();
-                $mailService->enviarCorreoConfirmacion($userData['email'], $token);
+                $mailService->enviarCorreoConfirmacion($email, $token);
                 return "creado";
             }
 
+            // Si la inserción falló y no se lanzó excepción, registrar y devolver false
             return false;
 
         } catch (\Exception $e) {
@@ -134,7 +152,7 @@ class UsuarioService extends Service
      *
      * @param string $email Email del usuario
      * @param string $password Contraseña del usuario
-     * @return array|bool Array con datos del usuario o false/string de error
+     * @return array|bool|string Array con datos del usuario, 'no_confirmado' o false
      */
     public function autenticar($email, $password)
     {
@@ -203,16 +221,22 @@ class UsuarioService extends Service
      */
     public function solicitarPassword($email)
     {
+        $email = trim(strtolower($email));
         $usuario = $this->repository->findByEmail($email);
-        if ($usuario) {
-            $token = bin2hex(random_bytes(32));
-            $expiracion = date("Y-m-d H:i:s", strtotime('+10 minutes'));
 
-            $this->repository->guardarTokenPassword($email, $token, $expiracion);
-            $mailService = new MailService();
-            return $mailService->enviarEmailReset($email, $token);
+        if (!$usuario) {
+            return false;
         }
-        return false;
+
+        $mailService = new MailService();
+        $token = bin2hex(random_bytes(32));
+        $expiracion = date("Y-m-d H:i:s", strtotime('+10 minutes'));
+
+        if (!$this->repository->guardarTokenPassword($email, $token, $expiracion)) {
+            return false;
+        }
+
+        return $mailService->enviarEmailReset($email, $token);
     }
 
     /**
@@ -223,8 +247,8 @@ class UsuarioService extends Service
      */
     public function validarTokenReset($token) {
         return $this->repository->validarToken($token);
+                
     }
-
     /**
      * Completa el reset de contraseña de un usuario
      *

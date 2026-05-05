@@ -42,7 +42,6 @@ class UsuarioController extends Controller
         }
 
         try {
-            $usuarioService = new UsuarioService();
             $usuarioRepository = new \Repositories\UsuarioRepository(BaseDatos::getInstancia());
             $usuarios = $usuarioRepository->findAll();
 
