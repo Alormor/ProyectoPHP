@@ -1,34 +1,44 @@
 document.addEventListener("DOMContentLoaded", function () {
   const filtroNombre = document.getElementById("filtro-nombre");
   const filtroCategoria = document.getElementById("filtro-categoria");
-  const productosGrid = document.getElementById("productos-grid");
 
-  if (!productosGrid) return;
+  if (!filtroNombre || !filtroCategoria) return;
 
-  const productosCards = productosGrid.querySelectorAll(".producto-card");
+  let debounceTimer;
 
-  function aplicarFiltros() {
-    const nombreFiltro = filtroNombre.value.toLowerCase();
+  function navegarConFiltros() {
+    const nombreFiltro = filtroNombre.value.trim();
     const categoriaFiltro = filtroCategoria.value;
+    const params = new URLSearchParams(window.location.search);
 
-    //Recojo por cada producto el nombre y la categoria, en realidad todo esta
-    //bloqueo las cards de los productos no hago ninguna consulta sql.
-    productosCards.forEach((card) => {
-      const nombre = card.getAttribute("data-nombre").toLocaleLowerCase();
-      const categoria = card.getAttribute("data-categoria");
+    if (nombreFiltro) {
+      params.set("nombre", nombreFiltro);
+    } else {
+      params.delete("nombre");
+    }
 
-      const coincideNombre = nombre.includes(nombreFiltro.toLowerCase());
-      const coincideCategoria =
-        !categoriaFiltro || categoria === categoriaFiltro;
+    if (categoriaFiltro) {
+      params.set("categoria", categoriaFiltro);
+    } else {
+      params.delete("categoria");
+    }
 
-      if (coincideNombre && coincideCategoria) {
-        card.style.display = "block";
-      } else {
-        card.style.display = "none";
-      }
-    });
+    // Si cambian filtros, siempre volvemos a la página 1.
+    params.delete("page");
+
+    const query = params.toString();
+    const urlDestino = query
+      ? `${window.location.pathname}?${query}`
+      : window.location.pathname;
+
+    window.location.assign(urlDestino);
   }
 
-  filtroNombre.addEventListener("input", aplicarFiltros);
-  filtroCategoria.addEventListener("change", aplicarFiltros);
+  function navegarConDebounce() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(navegarConFiltros, 250);
+  }
+
+  filtroNombre.addEventListener("input", navegarConDebounce);
+  filtroCategoria.addEventListener("change", navegarConFiltros);
 });

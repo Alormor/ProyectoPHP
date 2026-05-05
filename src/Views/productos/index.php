@@ -22,11 +22,11 @@
 
     <div class="productos-controles">
         <div class="filtro-productos">
-            <input type="text" id="filtro-nombre" placeholder="Filtrar por nombre...">
+            <input type="text" id="filtro-nombre" placeholder="Filtrar por nombre..." value="<?php echo htmlspecialchars($filtroNombre ?? ''); ?>">
             <select id="filtro-categoria">
                 <option value="">Todas las categorías</option>
                 <?php foreach (($categorias ?? []) as $categoria): ?>
-                    <option value="<?php echo htmlspecialchars($categoria['id']); ?>">
+                    <option value="<?php echo htmlspecialchars($categoria['id']); ?>" <?php echo (string)($filtroCategoria ?? '') === (string)$categoria['id'] ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($categoria['nombre']); ?>
                     </option>
                 <?php endforeach; ?>

@@ -25,18 +25,44 @@ class ProductoController extends Controller
         $numero_elementos_pagina = 15;
         $todosProductos = $this->productoRepository->findAll();
 
+        $filtroNombre = trim($_GET['nombre'] ?? '');
+        $filtroCategoria = trim($_GET['categoria'] ?? '');
+
+        $productosFiltrados = array_values(array_filter($todosProductos, function ($producto) use ($filtroNombre, $filtroCategoria) {
+            $nombreProducto = strtolower((string) ($producto['nombre'] ?? ''));
+            $coincideNombre = $filtroNombre === '' || strpos($nombreProducto, strtolower($filtroNombre)) !== false;
+            $coincideCategoria = $filtroCategoria === '' || (string) ($producto['categoria_id'] ?? '') === $filtroCategoria;
+
+            return $coincideNombre && $coincideCategoria;
+        }));
+
         $pagination = new \Zebra_Pagination();
-        $pagination->base_url($_ENV['BASE_URL'] . '/productos');
-        $pagination->records(count($todosProductos));
+        $queryParams = [];
+        if ($filtroNombre !== '') {
+            $queryParams['nombre'] = $filtroNombre;
+        }
+        if ($filtroCategoria !== '') {
+            $queryParams['categoria'] = $filtroCategoria;
+        }
+
+        $baseUrl = $_ENV['BASE_URL'] . '/productos';
+        if (!empty($queryParams)) {
+            $baseUrl .= '?' . http_build_query($queryParams);
+        }
+
+        $pagination->base_url($baseUrl);
+        $pagination->records(count($productosFiltrados));
         $pagination->records_per_page($numero_elementos_pagina);
 
         $productos = array_slice(
-            $todosProductos,
+            $productosFiltrados,
             (($pagination->get_page() - 1) * $numero_elementos_pagina),
             $numero_elementos_pagina
         );
 
-        $paginationHtml = (string) $pagination->render(true);
+        $paginationHtml = count($productosFiltrados) > $numero_elementos_pagina
+            ? (string) $pagination->render(true)
+            : '';
 
         $categorias = $this->categoriaRepository->findAll();
 
@@ -45,6 +71,8 @@ class ProductoController extends Controller
             'message' => 'Mostrando todos los productos disponibles',
             'productos' => $productos,
             'categorias' => $categorias,
+            'filtroNombre' => $filtroNombre,
+            'filtroCategoria' => $filtroCategoria,
             'paginationHtml' => $paginationHtml,
             'showHeader' => true,
             'showFooter' => true
