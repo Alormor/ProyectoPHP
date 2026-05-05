@@ -83,11 +83,11 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: stretch;
-  gap: 15px;
-  flex-wrap: nowrap;
+  gap: 30px;
+  flex-wrap: wrap;
   flex: 1 1 auto;
   min-width: 0;
-  white-space: nowrap;
+  white-space: wrap;
 }
 
 .home-buttons a {
@@ -98,7 +98,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 10px;
   transition: all 0.3s ease;
   text-decoration: none;
   text-align: center;

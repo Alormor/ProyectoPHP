@@ -25,6 +25,7 @@
                         <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios" class="btn-admin"><ion-icon name="people-outline"></ion-icon>Gestión de Usuarios</a>
                         <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/categorias/crear" class="btn-admin"><ion-icon name="add-circle-outline"></ion-icon>Crear Categoría</a>
                         <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/usuarios/crear" class="btn-admin"><ion-icon name="add-circle-outline"></ion-icon>Crear Usuario</a>
+                        <a href="<?php echo $_ENV['BASE_URL'];?>/admin/categorias/gestionar" class="btn-admin"><ion-icon name="list-outline"></ion-icon>Ver Categorías</a> 
                     <?php endif; ?>
                 </div>
 
