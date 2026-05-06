@@ -18,7 +18,6 @@ class AdminRequest extends Request
     public function verificarPermisosAdmin()
     {
         if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-            $_SESSION['errors'] = ['No tienes permisos para realizar esta acción.'];
             return false;
         }
         return true;

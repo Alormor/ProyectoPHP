@@ -1,0 +1,157 @@
+@import "styleVariables.css";
+
+.confirmacion-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--fondo);
+    padding: 2rem;
+    font-family: 'Skranji', cursive;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: #ffffff;
+    color: var(--color-text-principal);
+    padding: 3rem 2rem;
+    border-radius: 0.8rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    border: 2px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #39c7ad0d;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.card > * {
+    position: relative;
+    z-index: 1;
+}
+
+.card h1 {
+    font-size: 2rem;
+    margin: 0;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.card p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+    color: var(--color-text-secundario);
+}
+
+/* Estilos para diferentes tipos de tarjetas */
+.card.success {
+    border-color: var(--primary-color);
+}
+
+.card.success h1 {
+    color: var(--primary-color);
+}
+
+.card.warning {
+    border-color: var(--quaternary-color);
+}
+
+.card.warning h1 {
+    color: var(--quaternary-color);
+}
+
+.card.error {
+    border-color: var(--tertiary-color);
+}
+
+.card.error h1 {
+    color: var(--tertiary-color);
+}
+
+/* Botones */
+.card a {
+    background-color: #9069b63f;
+    color: var(--quinary-color);
+    padding: 0.9rem 2rem;
+    border: 2px solid var(--quinary-color);
+    border-radius: 0.4rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+.card a:hover {
+    background-color: #9069b6bb;
+    color: var(--fondo);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-login,
+.btn-registro,
+.btn-inicio {
+    background-color: #9069b63f;
+    color: var(--quinary-color);
+    padding: 0.9rem 2rem;
+    border: 2px solid var(--quinary-color);
+    border-radius: 0.4rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 0.5rem;
+}
+
+.btn-login:hover,
+.btn-registro:hover,
+.btn-inicio:hover {
+    background-color: #9069b6bb;
+    color: var(--fondo);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .confirmacion-container {
+        padding: 1rem;
+    }
+
+    .card {
+        padding: 2rem 1.5rem;
+        max-width: 100%;
+    }
+
+    .card h1 {
+        font-size: 1.5rem;
+    }
+
+    .card p {
+        font-size: 0.95rem;
+    }
+
+    .card a {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.95rem;
+    }
+}

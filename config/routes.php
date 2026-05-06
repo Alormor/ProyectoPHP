@@ -177,11 +177,6 @@ Router::add('POST', '/admin/categorias/:id/eliminar', function ($id) {
     return $controller->delete($id);
 });
 
-Router::add('GET', '/categorias/:id', function ($id) {
-    $controller = new \Controllers\CategoriaController();
-    return $controller->show($id);
-});
-
 //Rutas del carrito
 Router::add('GET', '/carrito', function () {
     return (new \Controllers\CarritoController())->index();
@@ -243,10 +238,6 @@ Router::add('GET', '/mis-pedidos', function () {
 
 Router::add('GET', '/pedidos/pago', function () {
     return (new \Controllers\PedidoController())->mostrarPago();
-});
-
-Router::add('GET', '/pedidos/:id', function ($id) {
-    return (new \Controllers\PedidoController())->show($id);
 });
 
 Router::add('POST', '/pago/crear-orden', function () {
