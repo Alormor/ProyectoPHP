@@ -1,0 +1,156 @@
+@import "styleVariables.css";
+
+/* Contenedor Principal */
+.usuarios-container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: var(--color-text-principal);
+}
+
+.usuarios-container h1 {
+    font-size: 2.5rem;
+    color: var(--color-text-principal);
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.usuarios-container p {
+    text-align: center;
+    color: var(--color-text-secundario);
+    margin-bottom: 30px;
+}
+
+/* Botones Superiores */
+.usuarios-acciones {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: #39c7adb3; 
+    color: var(--color-text-principal);
+    border: 1.5px solid var(--color-text-principal);
+}
+
+.btn-secondary {
+    background: #e160d893;
+    color: var(--fondo);
+    border: 1.5px solid var(--secondary-color);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* Tabla */
+.table-responsive {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    overflow-x: auto;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.usuarios-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.usuarios-table th {
+    padding: 15px;
+    border-bottom: 2px solid rgba(57, 199, 173, 0.3);
+    color: var(--primary-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.usuarios-table td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+
+/* Roles y Confirmación */
+.rol-badge, .confirmado-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.rol-admin, .rol-administrador { 
+    background: #39c7ad5f; 
+    color: var(--fondo); 
+}
+.rol-user, .rol-usuario { 
+    background: rgba(255, 255, 255, 0.1); 
+    color: var(--color-text-secundario); 
+}
+
+.confirmado-si { 
+    background: rgba(76, 175, 80, 0.2); 
+    color: #4caf50; 
+}
+.confirmado-no { 
+    background: rgba(244, 67, 54, 0.2); 
+    color: #f44336; 
+}
+
+/* btn de accion */
+.acciones-cell {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-action {
+    font-size: 1.2rem;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    color: var(--color-text-principal);
+}
+
+.btn-edit:hover { 
+    background: rgba(57, 199, 173, 0.2); 
+    color: var(--primary-color); 
+}
+.btn-delete:hover { 
+    background: rgba(225, 96, 216, 0.2); 
+    color: var(--secondary-color); 
+}
+
+/* Mensaje error y correcto */
+.success-message {
+    background: rgba(76, 175, 80, 0.1);
+    border-left: 4px solid #4caf50;
+    color: #4caf50;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.error-message {
+    background: rgba(244, 67, 54, 0.1);
+    border-left: 4px solid #f44336;
+    color: #f44336;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}

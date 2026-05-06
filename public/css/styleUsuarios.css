@@ -1,8 +1,3 @@
-/* ============================================================
-   ESTILOS PARA ADMINISTRACIÓN DE USUARIOS
-   ============================================================ */
-
-/* Contenedor principal */
 .usuarios-container {
     max-width: 1200px;
     margin: 40px auto;
@@ -23,7 +18,6 @@
     font-size: 16px;
 }
 
-/* Acciones (botones) */
 .usuarios-acciones {
     display: flex;
     gap: 10px;
@@ -31,7 +25,6 @@
     flex-wrap: wrap;
 }
 
-/* Tabla responsiva */
 .table-responsive {
     width: 100%;
     overflow-x: auto;
@@ -76,7 +69,6 @@
     color: #333;
 }
 
-/* Badges para rol */
 .rol-badge {
     display: inline-block;
     padding: 6px 12px;
@@ -96,8 +88,6 @@
     background: linear-gradient(135deg, #4facfe, #00f2fe);
     color: white;
 }
-
-/* Badges para confirmación */
 .confirmado-badge {
     display: inline-block;
     padding: 6px 12px;
@@ -116,14 +106,12 @@
     color: #d32f2f;
 }
 
-/* Celda de acciones */
 .acciones-cell {
     display: flex;
     gap: 8px;
     align-items: center;
 }
 
-/* Botones de acción */
 .btn-action {
     display: inline-flex;
     align-items: center;
@@ -161,7 +149,6 @@
     box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
 }
 
-/* Botones generales */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -287,7 +274,6 @@
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/* Mensajes de error y éxito */
 .error {
     background: rgba(244, 67, 54, 0.1);
     border: 2px solid #f44336;

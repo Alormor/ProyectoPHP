@@ -6,38 +6,59 @@ use Core\BaseDatos;
 use Core\Controller;
 use Request\UserRequest;
 use Services\UsuarioService;
+use Services\MailService;
 use Models\Usuario;
 
+/**
+ * AuthController - Controlador para autenticación y gestión de cuentas
+ *
+ * @package Controllers
+ * @uses Controller
+ * @uses UsuarioService
+ * @uses UserRequest
+ */
 class AuthController extends Controller
 {
     private UsuarioService $service;
+
+    /**
+     * Constructor de AuthController
+     */
     public function __construct()
     {
-        $conexion = BaseDatos::getInstancia();
         $this->service = new UsuarioService();
     }
-    
+
+    /**
+     * Muestra el formulario de registro
+     *
+     * @return string Vista del formulario de registro
+     */
     public function register()
     {
-        // Preparar datos para la vista
         $data = [
             'title' => 'Registro de Usuario',
             'message' => 'Crear una nueva cuenta',
             'showHeader' => false,
             'showFooter' => false
         ];
-        
-        // Renderizar la vista del formulario de registro
+
         return $this->view('usuarios/formRegistro', $data);
     }
-    
+
+    /**
+     * Registra un nuevo usuario o reenvía confirmación
+     *
+     * @return void Redirige al formulario de registro
+     */
     public function save()
     {
         try {
             $userRequest = new UserRequest();
             
             if (!$userRequest->validate_and_sanitize()) {
-                $_SESSION['errors'] = $userRequest->getErrors();
+                $errs = $userRequest->getErrors();
+                $_SESSION['errors'] = $errs;
                 header('Location: ' . $_ENV['BASE_URL'] . '/registro');
                 exit();
             }
@@ -58,9 +79,14 @@ class AuthController extends Controller
                     $_SESSION['message'] = "Ya tenías una cuenta pendiente. Te hemos enviado un nuevo código a {$userData['email']}.";
                     $this->redirect('/registro');
                 })(),
+
+                "correo_en_uso" => (function() {
+                    $_SESSION['errors'] = ['Ese correo ya está registrado.'];
+                    $this->redirect('/registro');
+                })(),
                 
                 false => (function() {
-                    $_SESSION['errors'] = ['Correo en uso.'];
+                    $_SESSION['errors'] = ['No se pudo completar el registro. Inténtalo de nuevo.'];
                     $this->redirect('/registro');
                 })(),
             };
@@ -74,46 +100,12 @@ class AuthController extends Controller
         }
     }
 
-    
-    public function store()
-    {
-        try {
-            // Verificar permisos de administrador
-            if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'admin') {
-                $_SESSION['errors'] = ['No tienes permisos para crear usuarios.'];
-                $this->redirect('/');
-                return;
-            }
-            
-            $userRequest = new UserRequest();
-            
-            if (!$userRequest->validate_and_sanitize('admin')) {
-                $_SESSION['errors'] = $userRequest->getErrors();
-                $this->redirect('/admin/usuarios/crear');
-                return;
-            }
-            
-            $userData = $userRequest->getSanitized();
-            $usuarioService = new UsuarioService();
-            $resultado = $usuarioService->crear($userData, $_SESSION['usuario']['id']);
-            
-            if ($resultado) {
-                $_SESSION['success'] = 'Usuario creado correctamente.';
-                $this->redirect('/admin/usuarios');
-                return;
-            } else {
-                $_SESSION['errors'] = ['Error al crear el usuario. Intenta de nuevo.'];
-                $this->redirect('/admin/usuarios/crear');
-                return;
-            }
-            
-        } catch (\Exception $e) {
-            $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
-            $this->redirect('/admin/usuarios/crear');
-            return;
-        }
-    }
-    
+
+    /**
+     * Muestra el formulario de login
+     *
+     * @return string Vista del formulario de login
+     */
     public function login()
     {
         $data = [
@@ -122,25 +114,30 @@ class AuthController extends Controller
             'showHeader' => false,
             'showFooter' => false
         ];
-        
+
         return $this->view('usuarios/formLogin', $data);
     }
-    
+
+    /**
+     * Autentica un usuario con email y contraseña
+     *
+     * @return void Redirige según el resultado de autenticación
+     */
     public function authenticate()
     {
         try {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
-            
+
             if (empty($email) || empty($password)) {
                 $_SESSION['errors'] = ['Email y contraseña son requeridos'];
                 $this->redirect('/login');
                 return;
             }
-            
+
             $usuarioService = new UsuarioService();
             $usuario = $usuarioService->autenticar($email, $password);
-            
+
             if ($usuario === "no_confirmado") {
                 $_SESSION['errors'] = ['Tu cuenta no está confirmada. Por favor, revisa tu correo o regístrate de nuevo para recibir otro enlace.'];
                 $this->redirect('/login');
@@ -152,13 +149,18 @@ class AuthController extends Controller
                 $_SESSION['errors'] = ['Email o contraseña incorrectos'];
                 $this->redirect('/login');
             }
-            
+
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error: ' . $e->getMessage()];
             $this->redirect('/login');
         }
     }
-    
+
+    /**
+     * Cierra la sesión del usuario
+     *
+     * @return void Redirige a la página de inicio
+     */
     public function logout()
     {
         session_destroy();
@@ -166,6 +168,11 @@ class AuthController extends Controller
         return;
     }
 
+    /**
+     * Confirma la cuenta de un usuario mediante token
+     *
+     * @return string Vista de confirmación
+     */
     public function confirmar()
     {
         $token = $_GET['token'] ?? null;
@@ -174,14 +181,14 @@ class AuthController extends Controller
         // Si el token existe, se confirma la cuenta
         if ($token) {
             $resultado = $this->service->confirmarCuenta($token);
-            
+
             if ($resultado === true) {
                 $status = 'success';
             } elseif ($resultado === "expirado") {
                 $status = 'expired';
             }
         }
-        
+
         // Se carga la vista pasándole el estado
         return $this->view('auth/confirmacion', [
             'status' => $status,
@@ -189,7 +196,11 @@ class AuthController extends Controller
         ]);
     }
 
-
+    /**
+     * Solicita reset de contraseña
+     *
+     * @return string Vista del formulario de contraseña olvidada
+     */
     public function forgotPassword() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
@@ -202,6 +213,12 @@ class AuthController extends Controller
         }
         return $this->view('usuarios/passOlvidada');
     }
+
+    /**
+     * Restablece la contraseña de un usuario mediante token
+     *
+     * @return string Vista del reset de contraseña
+     */
     public function resetPassword()
     {
         $token = $_GET['token'] ?? $_POST['token'] ?? null;
@@ -214,9 +231,12 @@ class AuthController extends Controller
             $confirm = $_POST['confirm_password'] ?? '';
             if ($password === $confirm && !empty($password)) {
                 $email = $this->service->validarTokenReset($token);
-                $this->service->completarReset($email, $password);
-                
-               
+                if ($this->service->completarReset($email, $password)) {
+                    // Enviar notificación al usuario de que la contraseña fue cambiada
+                    $mailService = new MailService();
+                    $mailService->enviarCorreoCambioPassword($email);
+                }
+
                 return $this->view('auth/confirmacionPass', [
                     'title' => 'Exito',
                     'showHeader' => false,
@@ -229,4 +249,3 @@ class AuthController extends Controller
         return $this->view('usuarios/resetPassword', ['token' => $token]);
     }
 }
-?>

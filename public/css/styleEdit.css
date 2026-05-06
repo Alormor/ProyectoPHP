@@ -1,0 +1,144 @@
+@import "styleVariables.css";
+
+/* formulario */
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-container .form-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+    margin:10px 0 10px 0;
+}
+
+/* Icono */
+.form-icon {
+    font-size: 3rem;
+    color: var(--primary-color);
+    display: block;
+    margin: 10px auto 15px auto;
+}
+
+.form-container h2 {
+    color: var(--color-text-principal);
+    font-size: 2rem;
+    margin: 10px 0 10px 0;
+}
+
+.form-container p {
+    color: var(--color-text-secundario);
+    margin-bottom: 25px;
+}
+
+/* Grupos  */
+.form-group {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--fondo-header);
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-left: 5px;
+}
+
+/* Inputs y Selects */
+.form-group input, 
+.form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1.5px solid var(--color-text-secundario);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-text-principal);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.form-group input:focus, 
+.form-group select:focus {
+    border-color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 0 8px rgba(57, 199, 173, 0.2);
+}
+
+.form-group select option {
+    background-color: var(--fondo-header);
+    color: var(--fondo);
+}
+
+/* Botones */
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.btn {
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
+.btn-guardar {
+    background: #39c7ad87;
+    color: var(--color-text-principal);
+    border: 1.5px solid var(--primary-color);
+}
+
+.btn-guardar:hover{
+    background: var(--primary-color);
+}
+
+.btn-secondary {
+    background: #e160d893;
+    color: var(--fondo);
+    border: 1.5px solid var(--secondary-color);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+/* error y bien */
+.error, .success {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.error {
+    background: rgba(244, 67, 54, 0.2);
+    color: #ff8a80;
+    border: 1px solid #f44336;
+}
+
+.success {
+    background: rgba(76, 175, 80, 0.2);
+    color: #b9f6ca;
+    border: 1px solid #4caf50;
+}

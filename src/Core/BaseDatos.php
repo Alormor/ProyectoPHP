@@ -82,7 +82,6 @@ class BaseDatos
     public function ejecutar(string $sql, array $params = []): bool
     {
         $this->stmt = $this->conexion->prepare($sql);
-
         foreach ($params as $clave => $datos) {
             $valor = $datos['valor'];
             $tipo = $datos['tipo'] ?? match (true) {

@@ -7,8 +7,17 @@
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/errors.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleUserProfile.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleFormLogin.css">
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleUserWelcome.css">    
-    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/home.css">    
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleFormRegistro.css">
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleGestUserIndex.css">
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleUserWelcome.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleEdit.css">  
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleDeleteConfirm.css">    
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/home.css">  
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleProductos.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleCarrito.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleConfirmarDireccion.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleMisPedidos.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/stylePago.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleHeader.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleFooter.css">
 </head>
@@ -33,3 +42,6 @@
         <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     </body>
 </html>
+<script src="https://www.paypal.com/sdk/js?client-id=ATRXNlNxziN1EJtc7vR1qD-wrIpXR25BMgY6HxIPBn3jvqUm81dIQKRMM2oa2hpQ7ZswJ-x17ec3arAF&currency=EUR"></script>
+<script src="<?= $_ENV['BASE_URL'] ?>/js/pago.js"></script>
+<script src="<?= $_ENV['BASE_URL'] ?>/js/productos.js"></script>

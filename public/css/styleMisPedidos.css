@@ -1,0 +1,103 @@
+/* Importar variables si es necesario, aunque asumimos que ya están en el flujo */
+@import "styleVariables.css";
+
+.mis-pedidos {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white; /* O un tono muy claro para resaltar del fondo */
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.mis-pedidos h2{
+    color: var(--fondo-header);
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    overflow: hidden;
+    border-radius: 10px;
+    border: none;
+}
+
+thead {
+    background-color: var(--fondo-header);
+    color: white;
+}
+
+th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    color: #444;
+    vertical-align: middle;
+}
+
+.estado {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.estado.pendiente {
+    background-color: #ffeeba;
+    color: #856404;
+}
+
+.estado.confirmado, .estado.enviado {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.estado.completado {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+table a {
+    color: var(--tertiary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+table a:hover {
+    color: var(--fondo-header);
+    text-decoration: underline;
+}
+
+.mis-pedidos p {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 2rem;
+}
+
+/* Responsividad para móviles */
+@media (max-width: 768px) {
+    .mis-pedidos {
+        margin: 1rem;
+        padding: 1rem;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto; /* Permite scroll horizontal en móviles */
+    }
+}

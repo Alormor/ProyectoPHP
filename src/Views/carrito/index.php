@@ -1,5 +1,19 @@
 <div class="carrito-container">
-    <h1><?= $title ?></h1>
+    <h2><?= $title ?></h2>
+
+    <?php if (!empty($_SESSION['success'])): ?>
+        <div class="alert alert-success"><?php echo htmlspecialchars($_SESSION['success']); ?></div>
+        <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
+
+    <?php if (!empty($_SESSION['errors'])): ?>
+        <div class="alert alert-danger">
+            <?php foreach ($_SESSION['errors'] as $error): ?>
+                <p><?php echo htmlspecialchars($error); ?></p>
+            <?php endforeach; ?>
+        </div>
+        <?php unset($_SESSION['errors']); ?>
+    <?php endif; ?>
 
     <?php if (empty($items)): ?>
         <p>Tu carrito está vacío.</p>

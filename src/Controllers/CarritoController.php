@@ -5,18 +5,33 @@ namespace Controllers;
 use Core\Controller;
 use Services\CarritoService;
 
+/**
+ * CarritoController - Controlador para gestionar el carrito de compras
+ *
+ * @package Controllers
+ * @uses Controller
+ * @uses CarritoService
+ */
 class CarritoController extends Controller
 {
     private CarritoService $service;
 
+    /**
+     * Constructor de CarritoController
+     */
     public function __construct() {
         $this->service = new CarritoService();
     }
 
-    // Mostrar el carrito de compras
+    /**
+     * Muestra el carrito de compras del usuario autenticado
+     *
+     * @return string Vista del carrito
+     */
     public function index() {
         if (!isset($_SESSION['usuario'])) {
             $this->redirect('/login');
+            return;
         }
 
         $usuario_id = $_SESSION['usuario']['id'];
@@ -25,16 +40,21 @@ class CarritoController extends Controller
         return $this->view('carrito/index', [
             'title' => 'Mi Carrito de Compras',
             'items' => $items,
-            'showHeader' => true, 
-            'showFooter' => true 
+            'showHeader' => true,
+            'showFooter' => true
         ]);
     }
 
-    // Agregar un producto al carrito de un usuario
+    /**
+     * Agrega un producto al carrito del usuario autenticado
+     *
+     * @return void Redirige a la página del producto
+     */
     public function agregar() {
         if (!isset($_SESSION['usuario'])) {
             $_SESSION['errors'] = ['Debes iniciar sesión para añadir productos al carrito'];
             $this->redirect('/login');
+            return;
         }
 
         $producto_id = $_POST['producto_id'] ?? null;
@@ -44,11 +64,15 @@ class CarritoController extends Controller
             $_SESSION['success'] = 'Producto añadido al carrito';
         }
 
-        // Redireccionamos al producto con un fragmento para que el navegador se desplace a ese elemento
         $this->redirect('/productos#prod-' . $producto_id);
     }
 
-    // Eliminar un producto del carrito de un usuario
+    /**
+     * Elimina completamente un producto del carrito
+     *
+     * @param int $producto_id Identificador del producto a eliminar
+     * @return void Redirige al carrito
+     */
     public function eliminar($producto_id) {
         if (isset($_SESSION['usuario'])) {
             $this->service->eliminarProducto($_SESSION['usuario']['id'], $producto_id);
@@ -56,7 +80,11 @@ class CarritoController extends Controller
         $this->redirect('/carrito');
     }
 
-    // Vaciar el carrito de un usuario
+    /**
+     * Vacía completamente el carrito del usuario
+     *
+     * @return void Redirige al carrito
+     */
     public function vaciar() {
         if (isset($_SESSION['usuario'])) {
             $this->service->vaciarCarrito($_SESSION['usuario']['id']);
@@ -64,8 +92,12 @@ class CarritoController extends Controller
         $this->redirect('/carrito');
     }
 
-
-    // Incrementar la cantidad de un producto en el carrito
+    /**
+     * Incrementa en una unidad la cantidad de un producto en el carrito
+     *
+     * @param int $producto_id Identificador del producto
+     * @return void Redirige al carrito
+     */
     public function incrementar($producto_id) {
         if (isset($_SESSION['usuario'])) {
             $this->service->agregarProducto($_SESSION['usuario']['id'], $producto_id, 1);
@@ -73,7 +105,12 @@ class CarritoController extends Controller
         $this->redirect('/carrito');
     }
 
-    // Elimina una unidad de un producto del carrito
+    /**
+     * Decrementa en una unidad la cantidad de un producto en el carrito
+     *
+     * @param int $producto_id Identificador del producto
+     * @return void Redirige al carrito
+     */
     public function decrementar($producto_id) {
         if (isset($_SESSION['usuario'])) {
             $this->service->borrarUno($_SESSION['usuario']['id'], $producto_id);

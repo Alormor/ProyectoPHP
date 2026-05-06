@@ -38,6 +38,11 @@ class UserRequest extends Request
             $this->sanitized['password_confirm'] = trim($data['password_confirm']);
         }
         
+        // Sanitizar dirección
+        if (isset($data['direccion'])) {
+            $this->sanitized['direccion'] = trim(htmlspecialchars($data['direccion'], ENT_QUOTES, 'UTF-8'));
+        }
+        
         // Sanitizar rol (solo si viene en los datos)
         if (isset($data['rol'])) {
             $this->sanitized['rol'] = trim(strtolower($data['rol']));

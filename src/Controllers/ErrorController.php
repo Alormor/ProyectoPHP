@@ -4,52 +4,38 @@ namespace Controllers;
 
 use Core\Controller;
 
+/**
+ * ErrorController - Controlador para mostrar páginas de error
+ *
+ * @package Controllers
+ * @uses Controller
+ */
 class ErrorController extends Controller
 {
-    public function notFound()
+    /**
+     * Renderiza una página de error genérica
+     *
+     * @param int $code Código de error HTTP
+     * @param string $message Mensaje de error a mostrar
+     * @return string Vista renderizada del error
+     */
+    private function render(int $code, string $message): string
     {
-        $data = [
-            'code' => 404,
-            'message' => 'Página no encontrada'
-        ];
-        
-        return $this->view('errors/404', $data);
-    }
-    
-    public function unauthorized()
-    {
-        $data = [
-            'code' => 401,
-            'message' => 'No autorizado'
-        ];
-        
-        return $this->view('errors/401', $data);
-    }
-    
-    public function forbidden()
-    {
-        $data = [
-            'code' => 403,
-            'message' => 'Acceso prohibido'
-        ];
-        
-        return $this->view('errors/403', $data);
-    }
-    
-    public function serverError()
-    {
-        $data = [
-            'code' => 500,
-            'message' => 'Error del servidor'
-        ];
-        
-        return $this->view('errors/500', $data);
+        return $this->view('errors/Error', [
+            'code' => $code,
+            'message' => $message
+        ]);
     }
 
+    /**
+     * Muestra la página de error 404 (no encontrado)
+     *
+     * @return string Vista renderizada del error 404
+     */
     public static function show_error404(): string
     {
         $controller = new self();
-        return $controller->notFound();
+        return $controller->render(404, 'Página no encontrada');
     }
 }
 

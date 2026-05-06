@@ -4,17 +4,31 @@ namespace Repositories;
 
 use Core\BaseDatos;
 
+/**
+ * CategoriaRepository - Repositorio para gestionar operaciones CRUD de categorías
+ *
+ * @package Repositories
+ * @uses BaseDatos
+ */
 class CategoriaRepository extends Repository
 {
     protected $table = 'categorias';
     protected $db;
 
+    /**
+     * Constructor de CategoriaRepository
+     */
     public function __construct()
     {
         parent::__construct();
         $this->db = BaseDatos::getInstancia();
     }
 
+    /**
+     * Obtiene todas las categorías ordenadas alfabéticamente
+     *
+     * @return array Array de categorías
+     */
     public function findAll()
     {
         try {
@@ -30,6 +44,12 @@ class CategoriaRepository extends Repository
         }
     }
 
+    /**
+     * Obtiene una categoría específica por su identificador
+     *
+     * @param int $id Identificador de la categoría
+     * @return array|null Datos de la categoría o null
+     */
     public function find($id)
     {
         try {
@@ -48,6 +68,12 @@ class CategoriaRepository extends Repository
         }
     }
 
+    /**
+     * Crea una nueva categoría
+     *
+     * @param array $data Array con los datos de la categoría
+     * @return int|false Identificador de la categoría creada o false
+     */
     public function create($data)
     {
         try {
@@ -67,6 +93,13 @@ class CategoriaRepository extends Repository
         }
     }
 
+    /**
+     * Actualiza una categoría existente
+     *
+     * @param int $id Identificador de la categoría
+     * @param array $data Array con los datos a actualizar
+     * @return bool True si se actualiza correctamente, false en caso contrario
+     */
     public function update($id, $data)
     {
         try {
@@ -94,6 +127,12 @@ class CategoriaRepository extends Repository
         }
     }
 
+    /**
+     * Elimina una categoría
+     *
+     * @param int $id Identificador de la categoría a eliminar
+     * @return bool True si se elimina correctamente, false en caso contrario
+     */
     public function delete($id)
     {
         try {

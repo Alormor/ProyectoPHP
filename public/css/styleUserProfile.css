@@ -23,7 +23,7 @@
   color: var(--color-text-secundario);
 }
 
-.enlace {
+.enlace-eliminar{
   border: 2px solid var(--secondary-color);
   color: var(--color-text-principal);
   border-radius: 10px;
@@ -32,14 +32,49 @@
   width: fit-content;
   text-align: center;
   margin: 0;
+  text-decoration: none;
+  padding: 10px;
 }
 
-.enlace:hover {
+.enlace-eliminar:hover {
   background-color: var(--secondary-color);
   color: var(--fondo);
 }
 
-.enlace-registro {
+.enlace{
+  border: 2px solid var(--secondary-color);
+  color: var(--color-text-principal);
+  border-radius: 10px;
+  display: inline-block;
+  width: fit-content;
+  text-align: center;
+  margin: 0;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.enlace:hover {
+  background-color: #e160d86f;
+  color: var(--fondo);
+}
+
+.enlace-cerrar:hover{
+    background-color: #c360e16f;
+}
+
+.enlace-cerrar{
+  border: 2px solid var(--quinary-color);
+  color: var(--color-text-principal);
+  border-radius: 10px;
+  display: inline-block;
+  width: fit-content;
+  text-align: center;
+  margin: 0;
+  text-decoration: none;
+  padding: 10px;
+}
+
+.enlace-registro{
   border: 2px solid var(--quaternary-color);
   color: var(--fondo);
   border-radius: 10px;

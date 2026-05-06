@@ -1,12 +1,19 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /ProyectoPHP/
+    Options -Indexes
+
+    # Cargar el front controller cuando la URL es exactamente /ProyectoPHP/
+    RewriteRule ^$ public/index.php [L]
+
+    # Si alguien entra con /public, redirigir a URL limpia
+    RewriteRule ^public/(.*)$ /ProyectoPHP/$1 [R=301,L]
     
     # No reescribir archivos o directorios que existan
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     
-    # Si la solicitud no es para /public, redirigir a public/
+    # Reescritura interna hacia /public sin mostrarlo en la URL
     RewriteRule ^(?!public/)(.*)$ public/$1 [L]
     
     # Evitar acceso directo a carpetas sensibles

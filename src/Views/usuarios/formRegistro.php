@@ -1,19 +1,32 @@
-<h2>Registrarse</h2>
+<h2 class="registro">Registrarse</h2>
 
-<form action="<?= $_ENV['BASE_URL'] ?>/registro" method="POST">
-    <div>
+<form class="form-registro" action="<?= $_ENV['BASE_URL'] ?>/registro" method="POST">
+    <div class="nombre">
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="data[nombre]" id="nombre">
+    </div>
+    <div class="apellidos">
+        <label for="apellidos">Apellidos:</label>
+        <input type="text" name="data[apellidos]" id="apellidos">
+    </div>
+    <div class="email">
         <label for="email">Email:</label>
         <input type="email" name="data[email]" id="email" required>
     </div>
-    <div>
+    <div class="direccion">
+        <label for="direccion">Dirección:</label>
+        <input type="text" name="data[direccion]" id="direccion">
+    </div>
+    <div class="passw">
         <label for="password">Contraseña:</label>
         <input type="password" name="data[password]" id="password" required>
     </div>
-    <div>
+    <div class="passw-confirm">
         <label for="password_confirm">Confirmar contraseña:</label>
         <input type="password" name="data[password_confirm]" id="password_confirm" required>
     </div>
     <button type="submit">Registrarse</button>
+    <p><a class="volver" href="<?php echo $_ENV['BASE_URL']; ?>/">Inicio</a></p>
 </form>
 
 <!-- Mensaje de Éxito -->
