@@ -49,7 +49,7 @@
                                     <ion-icon name="pencil-outline"></ion-icon>
                                 </a>
                                 <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/admin/categorias/<?php echo $categoria['id']; ?>/eliminar" style="display: inline;" onsubmit="return confirm('¿Estás seguro?');">
-                                    <button type="submit" class="btn-action btn-delete" title="Eliminar" style="border: none; background: none; padding: 0; cursor: pointer;">
+                                    <button type="submit" class="btn-action btn-delete-gestionCategoria" title="Eliminar">
                                         <ion-icon name="trash-outline"></ion-icon>
                                     </button>
                                 </form>

@@ -465,7 +465,13 @@
   background: var(--tertiary-color);
   color: var(--fondo);
 }
-
+.btn-delete-gestionCategoria {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: #f44336;
+}
 @media (max-width: 968px) {
   .producto-detalle-container {
     margin: 2rem 1rem;
