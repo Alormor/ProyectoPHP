@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleUserWelcome.css">   
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleEdit.css">  
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleDeleteConfirm.css">    
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleConfirmacion.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/home.css">  
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleProductos.css">   
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleCarrito.css">   

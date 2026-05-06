@@ -9,13 +9,13 @@
         <label for="apellidos">Apellidos:</label>
         <input type="text" name="data[apellidos]" id="apellidos">
     </div>
-    <div class="email">
-        <label for="email">Email:</label>
-        <input type="email" name="data[email]" id="email" required>
-    </div>
     <div class="direccion">
         <label for="direccion">Dirección:</label>
         <input type="text" name="data[direccion]" id="direccion">
+    </div>
+    <div class="email">
+        <label for="email">Email:</label>
+        <input type="email" name="data[email]" id="email" required>
     </div>
     <div class="passw">
         <label for="password">Contraseña:</label>

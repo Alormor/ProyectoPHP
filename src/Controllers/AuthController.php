@@ -192,7 +192,9 @@ class AuthController extends Controller
         // Se carga la vista pasándole el estado
         return $this->view('auth/confirmacion', [
             'status' => $status,
-            'title' => 'Confirmación de cuenta'
+            'title' => 'Confirmación de cuenta',
+            'showHeader' => false,
+            'showFooter' => false
         ]);
     }
 
