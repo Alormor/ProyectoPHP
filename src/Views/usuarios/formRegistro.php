@@ -3,11 +3,11 @@
 <form class="form-registro" action="<?= $_ENV['BASE_URL'] ?>/registro" method="POST">
     <div class="nombre">
         <label for="nombre">Nombre:</label>
-        <input type="text" name="data[nombre]" id="nombre" required>
+        <input type="text" name="data[nombre]" id="nombre">
     </div>
     <div class="apellidos">
         <label for="apellidos">Apellidos:</label>
-        <input type="text" name="data[apellidos]" id="apellidos" required>
+        <input type="text" name="data[apellidos]" id="apellidos">
     </div>
     <div class="email">
         <label for="email">Email:</label>
@@ -15,7 +15,7 @@
     </div>
     <div class="direccion">
         <label for="direccion">Dirección:</label>
-        <input type="text" name="data[direccion]" id="direccion" required>
+        <input type="text" name="data[direccion]" id="direccion">
     </div>
     <div class="passw">
         <label for="password">Contraseña:</label>
