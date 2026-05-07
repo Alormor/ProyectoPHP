@@ -54,11 +54,19 @@ class AuthController extends Controller
     public function save()
     {
         try {
+            $oldInput = [
+                'nombre' => $_POST['data']['nombre'] ?? '',
+                'apellidos' => $_POST['data']['apellidos'] ?? '',
+                'direccion' => $_POST['data']['direccion'] ?? '',
+                'email' => $_POST['data']['email'] ?? ''
+            ];
+
             $userRequest = new UserRequest();
             
             if (!$userRequest->validate_and_sanitize()) {
                 $errs = $userRequest->getErrors();
                 $_SESSION['errors'] = $errs;
+                $_SESSION['old_register'] = $oldInput;
                 header('Location: ' . $_ENV['BASE_URL'] . '/registro');
                 exit();
             }
@@ -69,24 +77,28 @@ class AuthController extends Controller
             
             match ($resultado) {
                 "creado" => (function() use ($userData) {
+                    unset($_SESSION['old_register']);
                     $_SESSION['register'] = 'success';
                     $_SESSION['message'] = "¡Registro casi completado! Te hemos enviado un correo a {$userData['email']}.";
                     $this->redirect('/registro');
                 })(),
                 
                 "reenviado" => (function() use ($userData) {
+                    unset($_SESSION['old_register']);
                     $_SESSION['register'] = 'success';
                     $_SESSION['message'] = "Ya tenías una cuenta pendiente. Te hemos enviado un nuevo código a {$userData['email']}.";
                     $this->redirect('/registro');
                 })(),
 
-                "correo_en_uso" => (function() {
+                "correo_en_uso" => (function() use ($oldInput) {
                     $_SESSION['errors'] = ['Ese correo ya está registrado.'];
+                    $_SESSION['old_register'] = $oldInput;
                     $this->redirect('/registro');
                 })(),
                 
-                false => (function() {
+                false => (function() use ($oldInput) {
                     $_SESSION['errors'] = ['No se pudo completar el registro. Inténtalo de nuevo.'];
+                    $_SESSION['old_register'] = $oldInput;
                     $this->redirect('/registro');
                 })(),
             };
@@ -95,6 +107,7 @@ class AuthController extends Controller
             
         } catch (\Exception $e) {
             $_SESSION['errors'] = ['Error del servidor: ' . $e->getMessage()];
+            $_SESSION['old_register'] = $oldInput ?? [];
             header('Location: ' . $_ENV['BASE_URL'] . '/registro');
             exit();
         }

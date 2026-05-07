@@ -38,14 +38,20 @@
     <form method="POST" action="<?php echo $form_action; ?>">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Nombre" required
+            <input type="text" id="nombre" name="nombre" placeholder="Nombre" 
                    value="<?php echo htmlspecialchars($_SESSION['form_data']['nombre'] ?? $usuarioData['nombre'] ?? ''); ?>">
         </div>
 
         <div class="form-group">
             <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos" required
+            <input type="text" id="apellidos" name="apellidos" placeholder="Apellidos" 
                    value="<?php echo htmlspecialchars($_SESSION['form_data']['apellidos'] ?? $usuarioData['apellidos'] ?? ''); ?>">
+        </div>
+        
+        <div class="form-group">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" placeholder="Dirección" 
+                   value="<?php echo htmlspecialchars($_SESSION['form_data']['direccion'] ?? $usuarioData['direccion'] ?? ''); ?>">
         </div>
 
         <div class="form-group">
@@ -53,7 +59,7 @@
             <input type="email" id="email" name="email" placeholder="Email" required
                    value="<?php echo htmlspecialchars($_SESSION['form_data']['email'] ?? $usuarioData['email'] ?? ''); ?>">
         </div>
-
+        
         <div class="form-group">
             <label for="rol">Rol de Usuario:</label>
             <select id="rol" name="rol" required>

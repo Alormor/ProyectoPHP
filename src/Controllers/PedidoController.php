@@ -53,10 +53,15 @@ class PedidoController extends Controller
             $this->redirect('/login');
         }
 
+        $usuario_id = $_SESSION['usuario']['id'];
+        $usuarioRepository = new \Repositories\UsuarioRepository(BaseDatos::getInstancia());
+        $usuario = $usuarioRepository->find($usuario_id);
+
         return $this->view('pedidos/confirmar-direccion', [
             'title' => 'Confirmar Dirección',
             'showHeader' => true,
-            'showFooter' => true
+            'showFooter' => true,
+            'usuario' => $usuario
         ]);
     }
 

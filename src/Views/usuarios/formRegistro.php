@@ -1,21 +1,25 @@
 <h2 class="registro">Registrarse</h2>
 
+<?php
+$oldRegister = $_SESSION['old_register'] ?? [];
+?>
+
 <form class="form-registro" action="<?= $_ENV['BASE_URL'] ?>/registro" method="POST">
     <div class="nombre">
         <label for="nombre">Nombre:</label>
-        <input type="text" name="data[nombre]" id="nombre">
+        <input type="text" name="data[nombre]" id="nombre" value="<?= htmlspecialchars($oldRegister['nombre'] ?? '') ?>">
     </div>
     <div class="apellidos">
         <label for="apellidos">Apellidos:</label>
-        <input type="text" name="data[apellidos]" id="apellidos">
+        <input type="text" name="data[apellidos]" id="apellidos" value="<?= htmlspecialchars($oldRegister['apellidos'] ?? '') ?>">
     </div>
     <div class="direccion">
         <label for="direccion">Dirección:</label>
-        <input type="text" name="data[direccion]" id="direccion">
+        <input type="text" name="data[direccion]" id="direccion" value="<?= htmlspecialchars($oldRegister['direccion'] ?? '') ?>">
     </div>
     <div class="email">
         <label for="email">Email:</label>
-        <input type="email" name="data[email]" id="email" required>
+        <input type="email" name="data[email]" id="email" value="<?= htmlspecialchars($oldRegister['email'] ?? '') ?>" required>
     </div>
     <div class="passw">
         <label for="password">Contraseña:</label>
@@ -45,6 +49,6 @@
                 <li><?= $error ?></li>
             <?php endforeach; ?>
         </ul>
-        <?php unset($_SESSION['errors']); ?>
+        <?php unset($_SESSION['errors'], $_SESSION['old_register']); ?>
     </div>
 <?php endif; ?>
