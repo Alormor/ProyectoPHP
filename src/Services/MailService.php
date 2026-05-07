@@ -156,16 +156,16 @@ class MailService
     public function enviarCorreoConfirmacion($emailDestino, $token)
     {
         $enlace = $_ENV['APP_URL'] . "/confirmar-cuenta?token=" . $token;
-        $body = "Hola! Haz click aquí para confirmar tu cuenta: <a href='{$enlace}'>Confirmar Cuenta</a>";
-        $altBody = "Hola! Para confirmar tu cuenta copia este enlace: {$enlace}";
+        $body = "¡Hola! Haz click aquí para confirmar tu cuenta: <a href='{$enlace}'>Confirmar Cuenta</a>";
+        $altBody = "¡Hola! Para confirmar tu cuenta copia este enlace: {$enlace}";
 
         return $this->enviarDuplicado($emailDestino, 'Finaliza tu registro', $body, $altBody);
     }
 
     public function enviarEmailReset($emailDestino, $token) {
-        $enlace = $_ENV['APP_URL'] . "/reset-password?token=" . $token;
-        $body = "Hola! Haz click aquí para restablecer tu contraseña: <a href='{$enlace}'>Restablecer Contraseña</a>";
-        $altBody = "Hola! Para restablecer tu contraseña copia este enlace: {$enlace}";
+        $enlace = $_ENV['APP_URL'] . "/resetPassword?token=" . $token;
+        $body = "¡Hola! Haz click aquí para restablecer tu contraseña: <a href='{$enlace}'>Restablecer Contraseña</a>";
+        $altBody = "¡Hola! Para restablecer tu contraseña copia este enlace: {$enlace}";
 
         return $this->enviarDuplicado($emailDestino, 'Solicitud de restablecimiento de contraseña', $body, $altBody);
     }
