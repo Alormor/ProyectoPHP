@@ -263,9 +263,9 @@ class UsuarioRepository extends Repository
      * @param string $email Email del usuario
      * @param string $token Token de recuperación
      * @param string $expiracion Fecha de expiración del token
-     * @return void
+     * @return bool True si se guarda correctamente
      */
-    public function guardarTokenPassword($email, $token, $expiracion) {
+    public function guardarTokenPassword($email, $token, $expiracion): bool {
         $sql = "UPDATE usuarios SET token = :token, token_exp = :exp WHERE email = :email";
         $param =[
             ":email" => ['valor' => $email],
@@ -273,7 +273,7 @@ class UsuarioRepository extends Repository
             ":exp" => ['valor' => $expiracion],
         ];
 
-        $this->conexion->ejecutar($sql, $param);
+        return $this->conexion->ejecutar($sql, $param);
     }
 
     /**
