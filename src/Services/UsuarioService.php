@@ -128,6 +128,7 @@ class UsuarioService extends Service
             $nuevoUsuario = Usuario::fromArray([
                 'nombre' => $userData['nombre'] ?? '',
                 'apellidos' => $userData['apellidos'] ?? '',
+                'direccion' => $userData['direccion'] ?? '',
                 'email' => $userData['email'],
                 'password' => $passwordHash,
                 'rol' => $userData['rol'] ?? 'usuario',

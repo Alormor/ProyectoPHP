@@ -33,6 +33,12 @@
         </div>
 
         <div class="form-group">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" placeholder="Dirección"
+                   value="<?php echo htmlspecialchars($_SESSION['form_data']['direccion'] ?? $_POST['direccion'] ?? ''); ?>">
+        </div>
+
+        <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" placeholder="Email" required
                    value="<?php echo htmlspecialchars($_SESSION['form_data']['email'] ?? $_POST['email'] ?? ''); ?>">

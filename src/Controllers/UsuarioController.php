@@ -118,6 +118,7 @@ class UsuarioController extends Controller
             $password = trim($_POST['password'] ?? '');
             $password_confirm = trim($_POST['password_confirm'] ?? '');
             $rol = trim(strtolower($_POST['rol'] ?? 'usuario'));
+            $direccion = trim($_POST['direccion'] ?? '');
 
             // Validar datos
             if (empty($nombre)) {
@@ -159,7 +160,8 @@ class UsuarioController extends Controller
                 'nombre' => $nombre,
                 'apellidos' => $apellidos,
                 'email' => $email,
-                'rol' => $rol
+                'rol' => $rol,
+                'direccion' => $direccion
             ];
             $redirect = $this->adminRequest->guardarErroresYRedirigir($errors, $formData, '/admin/usuarios/crear');
             if ($redirect) {
@@ -172,6 +174,7 @@ class UsuarioController extends Controller
             $resultado = $usuarioService->crear([
                 'nombre' => $nombre,
                 'apellidos' => $apellidos,
+                'direccion' => $direccion,
                 'email' => $email,
                 'password' => $password,
                 'rol' => $rol
@@ -263,15 +266,11 @@ class UsuarioController extends Controller
             $nombre = trim($_POST['nombre'] ?? '');
             $apellidos = trim($_POST['apellidos'] ?? '');
             $email = trim(strtolower($_POST['email'] ?? ''));
+            $direccion = trim($_POST['direccion'] ?? '');
             $rol = $context === 'admin' ? trim(strtolower($_POST['rol'] ?? 'usuario')) : null;
 
             // Validar datos
-            if (empty($nombre)) {
-                $errors[] = 'El nombre es requerido';
-            }
-            if (empty($apellidos)) {
-                $errors[] = 'Los apellidos son requeridos';
-            }
+            // Solo validar email que es obligatorio
             if (empty($email)) {
                 $errors[] = 'El email es requerido';
             } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -286,6 +285,7 @@ class UsuarioController extends Controller
                     'nombre' => $nombre,
                     'apellidos' => $apellidos,
                     'email' => $email,
+                    'direccion' => $direccion,
                     'rol' => $context === 'admin' ? $rol : null
                 ]);
                 $redirect = $this->adminRequest->guardarErroresYRedirigir($errors, $formData, $context === 'admin' ? "/admin/usuarios/$id/editar" : "/profile/$id/editar");
@@ -308,13 +308,13 @@ class UsuarioController extends Controller
             if ($context === 'admin') {
                 if ($usuarioActual['rol'] === 'admin' && $rol !== 'admin') {
                     $this->adminRequest->guardarError('No puedes cambiar el rol de un administrador.');
-                    $_SESSION['form_data'] = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'rol' => $rol];
+                    $_SESSION['form_data'] = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'rol' => $rol, 'direccion' => $direccion];
                     $this->redirect("/admin/usuarios/$id/editar");
                     return;
                 }
                 if ($usuarioActual['rol'] === 'admin' && $email !== $usuarioActual['email']) {
                     $this->adminRequest->guardarError('No puedes cambiar el email de un administrador.');
-                    $_SESSION['form_data'] = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'rol' => $rol];
+                    $_SESSION['form_data'] = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email, 'rol' => $rol, 'direccion' => $direccion];
                     $this->redirect("/admin/usuarios/$id/editar");
                     return;
                 }
@@ -329,7 +329,8 @@ class UsuarioController extends Controller
                         'nombre' => $nombre,
                         'apellidos' => $apellidos,
                         'email' => $email,
-                        'rol' => $context === 'admin' ? $rol : null
+                        'rol' => $context === 'admin' ? $rol : null,
+                        'direccion' => $direccion
                     ]);
                     $redirect = $context === 'admin' ? "/admin/usuarios/$id/editar" : "/profile/$id/editar";
                     $this->redirect($redirect);
@@ -338,7 +339,7 @@ class UsuarioController extends Controller
             }
 
             // Preparar datos para actualizar
-            $updateData = ['nombre' => $nombre, 'apellidos' => $apellidos, 'email' => $email];
+            $updateData = ['nombre' => $nombre, 'apellidos' => $apellidos, 'direccion' => $direccion, 'email' => $email];
             if ($context === 'admin') {
                 $updateData['rol'] = $rol;
             }
@@ -349,6 +350,7 @@ class UsuarioController extends Controller
                 if ($context === 'profile') {
                     $_SESSION['usuario']['nombre'] = $nombre;
                     $_SESSION['usuario']['apellidos'] = $apellidos;
+                    $_SESSION['usuario']['direccion'] = $direccion;
                     $_SESSION['usuario']['email'] = $email;
                 }
                 $this->adminRequest->guardarExito($context === 'admin' ? 'Usuario actualizado correctamente.' : 'Tu perfil ha sido actualizado correctamente.');
@@ -361,6 +363,7 @@ class UsuarioController extends Controller
                     'nombre' => $nombre,
                     'apellidos' => $apellidos,
                     'email' => $email,
+                    'direccion' => $direccion,
                     'rol' => $context === 'admin' ? $rol : null
                 ]);
                 $redirect = $context === 'admin' ? "/admin/usuarios/$id/editar" : "/profile/$id/editar";
