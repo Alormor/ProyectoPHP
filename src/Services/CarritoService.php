@@ -90,4 +90,16 @@ class CarritoService extends Service {
             return $this->repository->delete($usuario_id, $producto_id);
         }
     }
+
+    public function fusionarCarritoInvitado($usuario_id, $carrito_temporal) {
+        foreach ($carrito_temporal as $producto_id => $cantidad) {
+            $this->agregarProducto($usuario_id, $producto_id, $cantidad);
+        }
+    }
+
+    /** Obtiene la información de un producto específico*/
+    public function obtenerProductoPorId($producto_id) {
+        // Usamos el repositorio para buscar los datos del producto
+        return $this->repository->findProductoDatos($producto_id);
+    }
 }

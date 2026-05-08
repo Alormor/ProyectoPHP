@@ -1,5 +1,20 @@
 <?php
+    //var_dump($_SESSION['carrito_temporal']);
     $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+
+    $totalProductosDistintos = 0;
+
+    if (isset($_SESSION['usuario'])) {
+        $db = \Core\BaseDatos::getInstancia();
+        $sql = "SELECT COUNT(*) as total FROM carrito WHERE usuario_id = :uid";
+        $db->ejecutar($sql, [':uid' => ['valor' => $_SESSION['usuario']['id'], 'tipo' => \PDO::PARAM_INT]]);
+        $res = $db->extraer_registro();
+        $totalProductosDistintos = (int)($res['total'] ?? 0);
+    } else {
+        // Aquí es donde está entrando tu var_dump
+        $totalProductosDistintos = isset($_SESSION['carrito_temporal']) ? count($_SESSION['carrito_temporal']) : 0;
+    }
+
     $basePath = parse_url($_ENV['BASE_URL'] ?? '', PHP_URL_PATH) ?: '';
     if ($basePath !== '' && str_starts_with($uri, $basePath)) {
         $uri = substr($uri, strlen($basePath));
@@ -45,8 +60,13 @@
                 </li>
 
                 <li class="list <?php echo str_starts_with($uri, '/carrito') ? 'active' : ''; ?>">
-                    <a href="<?= $_ENV['BASE_URL'] ?>/carrito">
-                        <span class="icon"><ion-icon name="cart-outline"></ion-icon></span>
+                    <a href="<?= $_ENV['BASE_URL'] ?>/carrito" style="position: relative;">
+                        <span class="icon">
+                            <ion-icon name="cart-outline"></ion-icon>
+                            <?php if ($totalProductosDistintos > 0): ?>
+                                <span class="carrito-badge"><?= $totalProductosDistintos ?></span>
+                            <?php endif; ?>
+                        </span>
                         <span class="text">Carrito</span>
                     </a>
                 </li>
