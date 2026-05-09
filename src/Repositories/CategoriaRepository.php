@@ -148,4 +148,22 @@ class CategoriaRepository extends Repository
             return false;
         }
     }
+
+
+
+    public function findByName($nombre)
+    {
+        try {
+            $sql = "SELECT * FROM {$this->table} WHERE nombre Like :nombre LIMIT 1";
+            $params = [
+                ':nombre' => ['valor' => $nombre]
+            ];
+
+            if ($this->db->ejecutar($sql, $params)) {
+                return $this->db->extraer_registro();
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

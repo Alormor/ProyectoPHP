@@ -34,6 +34,7 @@ class UsuarioRepository extends Repository
      * @return bool True si se crea correctamente
      * @throws RuntimeException Si hay error en la inserción
      */
+    
     public function create(Usuario $usuario)
     {   
         

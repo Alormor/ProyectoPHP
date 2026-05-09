@@ -5,6 +5,7 @@ namespace Controllers;
 use Core\Controller;
 use Request\AdminRequest;
 use Repositories\CategoriaRepository;
+use Repositories\ProductoRepository;
 
 class CategoriaController extends Controller
 {
@@ -176,11 +177,17 @@ class CategoriaController extends Controller
     
     public function delete($id)
     {
+        $productoRepository = new ProductoRepository();
         if (!$this->adminRequest->verificarPermisosAdmin()) {
             $this->redirect('/');
             return;
         }
-
+        $productosenCategoria = $productoRepository->findByCategoria((int) $id);
+        if(count($productosenCategoria)>0){
+            foreach($productosenCategoria as $producto){
+                $productoRepository->update($producto['id'],['categoria_id' => $this->categoriaRepository->findByName('Vacia')->id]);   
+            }
+        }
         $resultado = $this->categoriaRepository->delete((int) $id);
 
         if ($resultado) {
@@ -191,5 +198,5 @@ class CategoriaController extends Controller
 
         $this->redirect('/admin/categorias/gestionar');
     }
+    
 }
-?>
