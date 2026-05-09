@@ -23,7 +23,10 @@ class ProductoController extends Controller
     public function index()
     {
         $numero_elementos_pagina = 15;
-        $todosProductos = $this->productoRepository->findAll();
+        $esAdmin = $this->adminRequest->verificarPermisosAdmin();
+        $todosProductos = $esAdmin
+            ? $this->productoRepository->findAll()
+            : $this->productoRepository->findAllActive();
 
         $filtroNombre = trim($_GET['nombre'] ?? '');
         $filtroCategoria = trim($_GET['categoria'] ?? '');
@@ -254,6 +257,7 @@ class ProductoController extends Controller
         $precio_oferta = trim($_POST['precio_oferta'] ?? '') === '' ? null : (float) $_POST['precio_oferta'];
         $stock = (int) ($_POST['stock'] ?? 0);
         $imagen = trim($_POST['imagen'] ?? '');
+        $activo= (int) ($_POST['activo'] ?? 0);
 
         if ($categoria_id <= 0) {
             $errors[] = 'Debes seleccionar una categoria';
@@ -276,11 +280,23 @@ class ProductoController extends Controller
 
         if (!empty($errors)) {
             $_SESSION['errors'] = $errors;
-            $_SESSION['form_data'] = ['categoria_id' => $categoria_id, 'nombre' => $nombre, 'descripcion' => $descripcion, 'precio' => $precio, 'precio_oferta' => $precio_oferta, 'stock' => $stock, 'imagen' => $imagen];
+            $_SESSION['form_data'] = [
+                'categoria_id' => $categoria_id,
+                'nombre' => $nombre, 
+                'descripcion' => $descripcion,
+                'precio' => $precio,
+                'precio_oferta' => $precio_oferta, 
+                'stock' => $stock,
+                'imagen' => $imagen,
+                'activo' => $activo
+            ];
             $this->redirect('/admin/productos/' . (int) $id . '/editar');
             return;
         }
-
+        if($stock==0 && $activo==1){
+            $activo = 0;
+        }
+        
         $resultado = $this->productoRepository->update((int) $id, [
             'categoria_id' => $categoria_id,
             'nombre' => $nombre,
@@ -288,7 +304,8 @@ class ProductoController extends Controller
             'precio' => $precio,
             'precio_oferta' => $precio_oferta,
             'stock' => $stock,
-            'imagen' => $imagen ?: null
+            'imagen' => $imagen ?: null,
+            'activo' => $activo
         ]);
 
         if ($resultado) {
@@ -299,7 +316,16 @@ class ProductoController extends Controller
         }
 
         $_SESSION['errors'] = ['No se pudo actualizar el producto.'];
-        $_SESSION['form_data'] = ['categoria_id' => $categoria_id, 'nombre' => $nombre, 'descripcion' => $descripcion, 'precio' => $precio, 'precio_oferta' => $precio_oferta, 'stock' => $stock, 'imagen' => $imagen];
+        $_SESSION['form_data'] = [
+            'categoria_id' => $categoria_id,
+            'nombre' => $nombre,
+            'descripcion' => $descripcion,
+            'precio' => $precio,
+            'precio_oferta' => $precio_oferta,
+            'stock' => $stock,
+            'imagen' => $imagen,
+            'activo' => $activo
+        ];
         $this->redirect('/admin/productos/' . (int) $id . '/editar');
     }
 
@@ -309,8 +335,13 @@ class ProductoController extends Controller
             $this->redirect('/');
             return;
         }
-
-        $resultado = $this->productoRepository->delete((int) $id);
+        $producto = $this->productoRepository->find((int) $id);
+        if (!$producto) {
+            $this->adminRequest->guardarError('El producto no existe.');
+            $this->redirect('/productos');
+            return;
+        }
+        $resultado = $this->productoRepository->update((int) $id, ['activo' => 0]);
 
         if ($resultado) {
             $this->adminRequest->guardarExito('Producto eliminado correctamente.');

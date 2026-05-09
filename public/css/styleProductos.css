@@ -74,6 +74,13 @@
   display: flex;
   flex-direction: column;
 }
+.producto-card_inactivo {
+  opacity: 0.8;
+  border-radius: 20px;
+  border: 1px solid #ff0000;
+
+  overflow: hidden;
+}
 
 .producto-card:hover {
   transform: translateY(-10px);
