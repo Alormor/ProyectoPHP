@@ -13,13 +13,12 @@
 </form>
 
 <!-- Mensaje de Éxito -->
-<?php if (isset($_SESSION['register']) && $_SESSION['register'] == 'success'): ?>
-    <div class="alert alert-success">
-        <?= $_SESSION['message'] ?>
+<?php if (!empty($_SESSION['success'])): ?>
+    <div class="success">
+        <p><?php echo htmlspecialchars($_SESSION['success']); ?></p>
     </div>
-    <?php unset($_SESSION['register'], $_SESSION['message']); ?>
+    <?php unset($_SESSION['success']); ?>
 <?php endif; ?>
-
 <!-- Mensaje de Error -->
 <?php if (isset($_SESSION['errors'])): ?>
     <div class="alert alert-error">

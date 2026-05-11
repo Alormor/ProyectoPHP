@@ -138,17 +138,20 @@ class ProductoController extends Controller
         }
 
         $errors = [];
-        $categoria_id = (int) ($_POST['categoria_id'] ?? 0);
         $nombre = trim($_POST['nombre'] ?? '');
         $descripcion = trim($_POST['descripcion'] ?? '');
         $precio = (float) ($_POST['precio'] ?? 0);
         $precio_oferta = trim($_POST['precio_oferta'] ?? '') === '' ? null : (float) $_POST['precio_oferta'];
         $stock = (int) ($_POST['stock'] ?? 0);
         $imagen = trim($_POST['imagen'] ?? '');
-
-        if ($categoria_id <= 0) {
-            $errors[] = 'Debes seleccionar una categoria';
+        $categoria_id = ($_POST['categoria_id'] ?? null);
+        if ($categoria_id == '') {
+            $categoria_id = null;
         }
+        else{
+            $categoria_id = (int) $categoria_id;
+        }
+
         if (empty($nombre)) {
             $errors[] = 'El nombre es obligatorio';
         }
@@ -250,7 +253,6 @@ class ProductoController extends Controller
         }
 
         $errors = [];
-        $categoria_id = (int) ($_POST['categoria_id'] ?? 0);
         $nombre = trim($_POST['nombre'] ?? '');
         $descripcion = trim($_POST['descripcion'] ?? '');
         $precio = (float) ($_POST['precio'] ?? 0);
@@ -258,10 +260,15 @@ class ProductoController extends Controller
         $stock = (int) ($_POST['stock'] ?? 0);
         $imagen = trim($_POST['imagen'] ?? '');
         $activo= (int) ($_POST['activo'] ?? 0);
-
-        if ($categoria_id <= 0) {
-            $errors[] = 'Debes seleccionar una categoria';
+        
+        $categoria_id = ($_POST['categoria_id'] ?? null);
+        if ($categoria_id == '') {
+            $categoria_id = null;
         }
+        else{
+            $categoria_id = (int) $categoria_id;
+        }
+        
         if (empty($nombre)) {
             $errors[] = 'El nombre es obligatorio';
         }
