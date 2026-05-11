@@ -230,7 +230,6 @@ class AuthController extends Controller
     public function forgotPassword() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
-            // Usamos el servicio que ya tienes
             if ($this->service->solicitarPassword($email)) {
                 $_SESSION['success'] = "Se ha enviado un enlace para restablecer tu contraseña.";
             } else {

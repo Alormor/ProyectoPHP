@@ -107,7 +107,14 @@ class PagoController extends Controller
 
         $subtotal = 0.0;
         $productoRepo = new \Repositories\ProductoRepository();
-
+        foreach($items as $item){
+            if($item['cantidad'] <= 0){
+                http_response_code(400);
+                header('Content-Type: application/json');
+                echo json_encode(['error' => 'Cantidad inválida para el producto: ' . $item['nombre']]);
+                exit;
+            }
+        }
         foreach ($items as $item) {
             $p = $productoRepo->find($item['producto_id']);
             if ($p) {
@@ -167,7 +174,7 @@ class PagoController extends Controller
 
             if (isset($result['status']) && $result['status'] === 'COMPLETED') {
                 $this->finalizarProcesoPedido($result);
-
+        
                 header('Content-Type: application/json');
                 echo json_encode([
                     'status' => 'COMPLETED',
@@ -243,6 +250,9 @@ private function finalizarProcesoPedido($detallesPaypal)
     $productoRepository = new \Repositories\ProductoRepository();
     $subtotal = 0.0;
     foreach ($items as &$item) {
+        if($item['cantidad'] <= 0){
+            return false;
+        }
         $producto = $productoRepository->find($item['producto_id']);
         $item['precio'] = $producto['precio_oferta'] ?? $producto['precio'];
         $item['nombre'] = $producto['nombre'];
@@ -268,6 +278,9 @@ private function finalizarProcesoPedido($detallesPaypal)
     if ($exito) {
         foreach ($items as $item) {
             $productoRepository->decrementarStock($item['producto_id'], $item['cantidad']);
+            if($productoRepository->obtenerStock($item['producto_id']) <= 0){
+                $productoRepository->desactivarProducto($item['producto_id']);
+            }
         }
 
         try {

@@ -62,6 +62,14 @@
             <input type="number" id="stock" name="stock" placeholder="Stock" min="0" required
                    value="<?php echo htmlspecialchars($_SESSION['form_data']['stock'] ?? $producto['stock'] ?? '0'); ?>">
         </div>
+        <div class="form-group">
+            <label for="activo">Activo:</label>
+            <select id="activo" name="activo" required>
+                <option value="1" <?php echo (string)($_SESSION['form_data']['activo'] ?? ($producto['activo'] ?? '1')) === '1' ? 'selected' : ''; ?>>Sí</option>
+                <option value="0" <?php echo (string)($_SESSION['form_data']['activo'] ?? ($producto['activo'] ?? '1')) === '0' ? 'selected' : ''; ?>>No</option>
+            </select>
+
+        </div>
 
         <div class="form-group">
             <label for="imagen">URL de Imagen:</label>

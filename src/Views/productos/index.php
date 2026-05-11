@@ -47,7 +47,7 @@
     <?php else: ?>
         <div class="productos-grid" id="productos-grid">
             <?php foreach ($productos as $producto): ?>
-                    <div class="producto-card" id="prod-<?= $producto['id'] ?>" data-categoria="<?php echo htmlspecialchars($producto['categoria_id']); ?>" data-nombre="<?php echo htmlspecialchars(strtolower($producto['nombre'])); ?>">
+                    <div class="producto-card<?php echo $producto['activo']==1 ? '' : '_inactivo'; ?>" id="prod-<?= $producto['id'] ?>" data-categoria="<?php echo htmlspecialchars($producto['categoria_id']); ?>" data-nombre="<?php echo htmlspecialchars(strtolower($producto['nombre'])); ?>">
                         <form action="<?php echo $_ENV['BASE_URL'] . '/carrito/agregar'; ?>" method="POST" >
                             <?php if (!empty($producto['imagen'])): ?>
                                 <div class="producto-imagen">
@@ -97,24 +97,28 @@
                                 </div>
 
                             <input type="hidden" name="producto_id" value="<?= $producto["id"] ?>">
-                            <div class="producto-acciones">
-                                <a href="<?php echo $_ENV['BASE_URL']; ?>/productos/<?php echo $producto['id']; ?>"
-                                class="btn-ver-detalles">Ver Detalles</a>
-                                <?php if ($producto['stock'] > 0): ?>
-                                    <button type="submit" class="btn-agregar-carrito">Agregar al Carrito</button>
-                                <?php endif; ?>
-                            </div>
+                            <?php if ($producto['activo'] == 1): ?>
+                                <div class="producto-acciones">
+                                    <a href="<?php echo $_ENV['BASE_URL']; ?>/productos/<?php echo $producto['id']; ?>"
+                                    class="btn-ver-detalles">Ver Detalles</a>
+                                    <?php if ($producto['stock'] > 0): ?>
+                                        <button type="submit" class="btn-agregar-carrito">Agregar al Carrito</button>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
                 </form>
                         <?php if ($isAdmin): ?>
                             <div class="producto-acciones-admin">
                                 <a href="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/<?php echo $producto['id']; ?>/editar" class="btn-action btn-edit" title="Editar">
                                     <ion-icon name="pencil-outline"></ion-icon> Editar
                                 </a>
-                                <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/<?php echo $producto['id']; ?>/eliminar" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');">
-                                    <button type="submit" class="btn-action btn-delete" title="Eliminar" style="border: none; background: none; padding: 0; cursor: pointer;">
-                                        <ion-icon name="trash-outline"></ion-icon> Eliminar
-                                    </button>
-                                </form>
+                                <?php if($producto['activo'] == 1): ?>
+                                    <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/admin/productos/<?php echo $producto['id']; ?>/eliminar" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este producto?');">
+                                        <button type="submit" class="btn-action btn-delete" title="Eliminar" style="border: none; background: none; padding: 0; cursor: pointer;">
+                                            <ion-icon name="trash-outline"></ion-icon> Eliminar
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
                             </div>
                         <?php endif; ?>
                         </div>

@@ -2,7 +2,7 @@
     <?php if (isset($_SESSION['usuario'])): ?>
         <div class="user-welcome">
             <div class="welcome-card">
-                <h2>¡Bienvenido, <?php echo htmlspecialchars($_SESSION['usuario']['nombre']); ?>!</h2>
+                <h2>¡Bienvenido, <?php echo htmlspecialchars($_SESSION['usuario']['nombre'])=='' ? $_SESSION['usuario']['email'] : $_SESSION['usuario']['nombre']; ?>!</h2>
                 <p class="user-email">Email: <?php echo htmlspecialchars($_SESSION['usuario']['email']); ?></p>
                 <p class="user-role">
                     Rol: <strong><?php echo $_SESSION['usuario']['rol'] === 'admin' ? 'Administrador' : 'Usuario Normal'; ?></strong>

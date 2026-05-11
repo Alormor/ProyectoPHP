@@ -25,12 +25,26 @@ class ProductoRepository extends Repository
     }
 
     /**
-     * Obtiene todos los productos activos
+     * Obtiene todos los productos
      *
      * @return array Array de productos
      */
     public function findAll()
     {
+        try {
+            $sql = "SELECT * FROM {$this->table}";
+
+            if ($this->db->ejecutar($sql)) {
+                return $this->db->extraer_todos();
+            }
+
+            return [];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    public function findAllActive(){
         try {
             $sql = "SELECT * FROM {$this->table} WHERE activo = 1";
 
@@ -53,7 +67,7 @@ class ProductoRepository extends Repository
     public function find($id)
     {
         try {
-            $sql = "SELECT * FROM {$this->table} WHERE id = :id AND activo = 1 LIMIT 1";
+            $sql = "SELECT * FROM {$this->table} WHERE id = :id LIMIT 1";
             $params = [
                 ':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT]
             ];
@@ -77,7 +91,7 @@ class ProductoRepository extends Repository
     public function findByCategoria($categoria_id)
     {
         try {
-            $sql = "SELECT * FROM {$this->table} WHERE categoria_id = :categoria_id AND activo = 1";
+            $sql = "SELECT * FROM {$this->table} WHERE categoria_id = :categoria_id";
             $params = [
                 ':categoria_id' => ['valor' => $categoria_id, 'tipo' => \PDO::PARAM_INT]
             ];
@@ -197,6 +211,9 @@ class ProductoRepository extends Repository
         try {
             $id = (int)$id;
             $cantidad = (int)$cantidad;
+            if ($cantidad <= 0) {
+                return false;
+            }
             $sql = "UPDATE {$this->table} SET stock = stock - :cantidad WHERE id = :id";
             $params = [
                 ':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT],
@@ -208,4 +225,48 @@ class ProductoRepository extends Repository
             return false;
         }
     }
+    /**
+     * Summary of obtenerStock
+     * @param mixed $id
+     * @return int|null
+     */
+    public function obtenerStock($id)
+    {
+        try {
+            $sql = "SELECT stock FROM {$this->table} WHERE id = :id";
+            $params = [
+                ':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT]
+            ];
+
+            if ($this->db->ejecutar($sql, $params)) {
+                $resultado = $this->db->extraer_registro();
+                return $resultado ? (int)$resultado['stock'] : null;
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Desactiva un producto (lo marca como inactivo)
+     *
+     * @param int $id Identificador del producto
+     * @return bool True si se actualiza correctamente, false en caso contrario
+     */
+    public function desactivarProducto($id)
+    {
+        try {
+            $sql = "UPDATE {$this->table} SET activo = 0 WHERE id = :id";
+            $params = [
+                ':id' => ['valor' => $id, 'tipo' => \PDO::PARAM_INT]
+            ];
+
+            return $this->db->ejecutar($sql, $params) && $this->db->filasAfectadas() > 0;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
 }
