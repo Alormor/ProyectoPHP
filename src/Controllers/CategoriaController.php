@@ -185,11 +185,10 @@ class CategoriaController extends Controller
         $productosenCategoria = $productoRepository->findByCategoria((int) $id);
         if(count($productosenCategoria)>0){
             foreach($productosenCategoria as $producto){
-                $productoRepository->update($producto['id'],['categoria_id' => $this->categoriaRepository->findByName('Vacia')->id]);   
+                $productoRepository->update($producto['id'],['categoria_id' => null]);   
             }
         }
         $resultado = $this->categoriaRepository->delete((int) $id);
-
         if ($resultado) {
             $this->adminRequest->guardarExito('Categoría eliminada correctamente.');
         } else {

@@ -21,10 +21,8 @@
     <form method="POST" action="<?php echo $_ENV['BASE_URL']; ?>/admin/productos<?php echo ($producto) ? '/' . htmlspecialchars($producto['id']) : ''; ?>">
         <div class="form-group">
             <label for="categoria_id">Categoría:</label>
-            <select id="categoria_id" name="categoria_id" required>
-                <?php if ($categoriaSeleccionada === '' || $categoriaSeleccionada === null): ?>
-                    <option value="" selected>Añadir categoría</option >
-                <?php endif;?>
+            <select id="categoria_id" name="categoria_id">
+                <option value="" selected>Añadir categoría</option >
                 <?php foreach ($categorias as $categoria): ?>
                     <option value="<?php echo $categoria['id']; ?>" 
                         <?php echo ((string) $categoriaSeleccionada === (string) $categoria['id']) ? 'selected' : ''; ?>>
