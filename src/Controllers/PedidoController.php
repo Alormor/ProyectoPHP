@@ -106,19 +106,19 @@ class PedidoController extends Controller
         }
 
         $usuario_id = $_SESSION['usuario']['id'];
-        $carritoService = new \Services\CarritoService();
+        $carritoService = new CarritoService();
         $items = $carritoService->obtenerCarrito($usuario_id);
 
         // Calculamos el total real
         $subtotal = 0;
-        $productoRepo = new \Repositories\ProductoRepository();
+        $productoRepo = new ProductoRepository();
         foreach ($items as $item) {
             $p = $productoRepo->find($item['producto_id']);
             $precio = $p['precio_oferta'] ?? $p['precio'];
             $subtotal += $precio * $item['cantidad'];
         }
 
-        $totalFinal = $subtotal * 1.21; // Aplicando el 21% de IVA
+        $totalFinal = $subtotal;
 
         return $this->view('pedidos/pago', [
             'title' => 'Finalizar Pago',

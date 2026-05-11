@@ -95,7 +95,7 @@ class PagoController extends Controller
         }
 
         $usuario_id = $_SESSION['usuario']['id'];
-        $carritoService = new \Services\CarritoService();
+        $carritoService = new CarritoService();
         $items = $carritoService->obtenerCarrito($usuario_id);
 
         if (empty($items)) {
@@ -106,7 +106,7 @@ class PagoController extends Controller
         }
 
         $subtotal = 0.0;
-        $productoRepo = new \Repositories\ProductoRepository();
+        $productoRepo = new ProductoRepository();
         foreach($items as $item){
             if($item['cantidad'] <= 0){
                 http_response_code(400);
@@ -123,7 +123,7 @@ class PagoController extends Controller
             }
         }
 
-        $total = $subtotal * 1.21;
+        $total = $subtotal;
 
         try {
             $accessToken = $this->getAccessToken();
@@ -244,10 +244,10 @@ private function finalizarProcesoPedido($detallesPaypal)
         return false;
     }
 
-    $carritoService = new \Services\CarritoService();
+    $carritoService = new CarritoService();
     $items = $carritoService->obtenerCarrito($usuario_id);
 
-    $productoRepository = new \Repositories\ProductoRepository();
+    $productoRepository = new ProductoRepository();
     $subtotal = 0.0;
     foreach ($items as &$item) {
         if($item['cantidad'] <= 0){
@@ -260,7 +260,7 @@ private function finalizarProcesoPedido($detallesPaypal)
     }
 
     $impuestos = $subtotal * 0.21;
-    $total = $subtotal + $impuestos;
+    $total = $subtotal;
 
     $pedido = new \Models\Pedido();
     $pedido->setUsuarioId($usuario_id);
@@ -272,7 +272,7 @@ private function finalizarProcesoPedido($detallesPaypal)
     $pedido->setCosteTotal($total);
     $pedido->setEstado('confirmado');
 
-    $pedidoRepository = new \Repositories\PedidoRepository(\Core\BaseDatos::getInstancia());
+    $pedidoRepository = new PedidoRepository(BaseDatos::getInstancia());
     $exito = $pedidoRepository->create($pedido);
 
     if ($exito) {
