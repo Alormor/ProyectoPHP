@@ -1,0 +1,89 @@
+@import "styleVariables.css";
+
+.recuperar-pass-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border: 2px solid var(--primary-color);
+}
+
+.recuperar-pass-container h2 {
+    color: var(--color-text-principal);
+    margin-bottom: 1rem;
+    line-height: 1.1;
+}
+
+.recuperar-pass-container p {
+    color: var(--color-text-secundario);
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    line-height: 1.4;
+}
+
+.recuperar-pass-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.recuperar-pass-container input[type="email"] {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.recuperar-pass-container input[type="email"]:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* Estilo del botón */
+.recuperar-pass-container button {
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.recuperar-pass-container button:active {
+    transform: scale(0.98);
+}
+
+.recuperar-pass-container .volver-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: var(--color-text-principal);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.3s ease; 
+    position: relative;
+    padding-bottom: 2px;
+}
+
+.recuperar-pass-container .volver-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: var(--quinary-color);
+    transition: width 0.3s ease-in-out;
+}
+
+.recuperar-pass-container .volver-link:hover {
+    color: var(--quinary-color);
+}
+
+.recuperar-pass-container .volver-link:hover::after {
+    width: 100%;
+}

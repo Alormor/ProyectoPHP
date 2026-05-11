@@ -116,4 +116,23 @@ class CarritoRepository extends Repository
         $sql = "DELETE FROM {$this->table} WHERE usuario_id = :uid";
         return $this->db->ejecutar($sql, [':uid' => ['valor' => $usuario_id]]);
     }
+
+    /**
+     * Obtiene los datos de un producto para el carrito de invitados
+     * 
+     * @param int $producto_id
+     * @return array|null
+    */
+    public function findProductoDatos(int $producto_id) {
+        $sql = "SELECT id, nombre, COALESCE(precio_oferta, precio) AS precio, imagen 
+                FROM productos 
+                WHERE id = :pid LIMIT 1";
+        
+        $params = [
+            ':pid' => ['valor' => $producto_id, 'tipo' => \PDO::PARAM_INT]
+        ];
+
+        $this->db->ejecutar($sql, $params);
+        return $this->db->extraer_registro();
+    }
 }

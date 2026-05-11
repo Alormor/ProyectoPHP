@@ -7,6 +7,7 @@ use Core\Controller;
 use Request\UserRequest;
 use Services\UsuarioService;
 use Services\MailService;
+use Services\CarritoService;
 use Models\Usuario;
 
 /**
@@ -157,6 +158,16 @@ class AuthController extends Controller
             }elseif ($usuario) {
                 $_SESSION['usuario'] = $usuario;
                 $_SESSION['success'] = 'Sesión iniciada correctamente';
+                if(!empty($_SESSION['carrito_temporal'])){
+                    $carritoService = new CarritoService();
+                    foreach ($_SESSION['carrito_temporal'] as $producto_id => $cantidad){
+                        $carritoService -> agregarProducto($usuario['id'], $producto_id, $cantidad);
+                    }
+
+                    //limpiar carrito temporal
+                    unset($_SESSION['carrito_temporal']);
+                }
+
                 $this->redirect('/');
             } else {
                 $_SESSION['errors'] = ['Email o contraseña incorrectos'];

@@ -104,20 +104,44 @@ body {
   align-items: center;
 }
 
-/* Reset para todos */
 .navigation ul li a .icon {
-  position: relative;
-  display: block;
-  line-height: 4.5rem;
-  font-size: 1.5rem;
-  text-align: center;
-  transition: 0.5s;
-  color: var(--fondo);
-  transform: translateY(0);
+    display: inline-block;
+    line-height: 1;
+    margin-top: 1.5rem;
+    font-size: 1.5rem;
+    text-align: center;
+    transition: 0.5s;
+    color: var(--fondo);
+    transform: translateY(0);
+    position: relative;
+}
+
+
+
+/* cantidad en el carrito */
+.navigation ul li a .icon .carrito-badge {
+    display: flex;
+    position: absolute;
+    top: 0px; 
+    right: -10px;
+    
+    /* Diseño del círculo */
+    background-color: var(--tertiary-color);
+    color: var(--fondo);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 11px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border: 1px solid var(--fondo);
+    transform: none;
+    opacity: 1;
 }
 
 .navigation ul li a .text {
-  position: absolute;
+  margin-top: -1rem;
   color: var(--fondo);
   font-weight: 400rem;
   font-size: 0.75rem;

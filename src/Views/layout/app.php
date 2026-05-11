@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleCarrito.css">   
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleConfirmarDireccion.css">   
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleMisPedidos.css">   
+    <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleRecuperarPass.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/stylePago.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleHeader.css">
     <link rel="stylesheet" href="<?php echo $_ENV['BASE_URL']; ?>/css/styleFooter.css">
