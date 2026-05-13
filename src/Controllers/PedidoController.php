@@ -118,7 +118,7 @@ class PedidoController extends Controller
             $subtotal += $precio * $item['cantidad'];
         }
 
-        $totalFinal = $subtotal * 1.21; // Aplicando el 21% de IVA
+        $totalFinal = $subtotal;
 
         return $this->view('pedidos/pago', [
             'title' => 'Finalizar Pago',
