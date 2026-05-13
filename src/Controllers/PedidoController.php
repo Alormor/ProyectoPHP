@@ -118,14 +118,16 @@ class PedidoController extends Controller
             $subtotal += $precio * $item['cantidad'];
         }
 
-        $totalFinal = $subtotal;
+        $totalFinal = $subtotal * 1.21; // Aplicando el 21% de IVA
 
         return $this->view('pedidos/pago', [
             'title' => 'Finalizar Pago',
             'total' => $totalFinal,
             'direccion' => $_SESSION['pedido_temporal'],
             'showHeader' => true,
-            'showFooter' => true
+            'showFooter' => true,
+            'totalSin' => $subtotal,
+            'descuento' => $descuento
         ]);
     }
 

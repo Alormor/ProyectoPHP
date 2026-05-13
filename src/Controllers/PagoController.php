@@ -123,7 +123,7 @@ class PagoController extends Controller
             }
         }
 
-        $total = $subtotal;
+        $total = $subtotal * 1.21;
 
         try {
             $accessToken = $this->getAccessToken();
@@ -260,7 +260,7 @@ private function finalizarProcesoPedido($detallesPaypal)
     }
 
     $impuestos = $subtotal * 0.21;
-    $total = $subtotal;
+    $total = $subtotal + $impuestos;
 
     $pedido = new \Models\Pedido();
     $pedido->setUsuarioId($usuario_id);

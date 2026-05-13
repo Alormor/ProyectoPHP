@@ -3,6 +3,7 @@
     
     <div class="pago-info">
         <p><strong>Dirección:</strong> <?= $direccion['direccion'] ?>, <?= $direccion['localidad'] ?></p>
+        <p><strong>Precio sin descuento:</strong><span><?= number_format(($totalSin), 2) ?>€</span></p>
         <p><strong>Total a pagar:</strong> <span><?= number_format($total, 2) ?>€</span></p>
     </div>
 
